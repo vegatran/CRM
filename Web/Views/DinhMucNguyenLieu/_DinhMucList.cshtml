@@ -1,0 +1,58 @@
+@model IEnumerable<Domain.Entities.DinhMucNguyenLieu>
+
+@if (Model.Any())
+{
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>STT</th>
+                    <th>Nguyên liệu</th>
+                    <th>Số lượng cần</th>
+                    <th>Đơn vị tính</th>
+                    <th>Đơn giá</th>
+                    <th>Thành tiền</th>
+                    <th>Ghi chú</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    int stt = 1;
+                    decimal tongTien = 0;
+                }
+                @foreach (var item in Model)
+                {
+                    var thanhTien = item.SoLuongCan * (item.NguyenLieu?.GiaNhap ?? 0);
+                    tongTien += thanhTien;
+                    <tr>
+                        <td>@stt</td>
+                        <td>
+                            <strong>@item.NguyenLieu?.TenNguyenLieu</strong><br />
+                            <small class="text-muted">@item.NguyenLieu?.MaNguyenLieu</small>
+                        </td>
+                        <td>@item.SoLuongCan.ToString("N2")</td>
+                        <td>@item.DonViTinh</td>
+                        <td>@((item.NguyenLieu?.GiaNhap ?? 0).ToString("N0")) VNĐ</td>
+                        <td><strong>@thanhTien.ToString("N0") VNĐ</strong></td>
+                        <td>@item.GhiChu</td>
+                    </tr>
+                    stt++;
+                }
+            </tbody>
+            <tfoot>
+                <tr class="table-info">
+                    <th colspan="5" class="text-right"><strong>Tổng chi phí nguyên liệu:</strong></th>
+                    <th><strong>@tongTien.ToString("N0") VNĐ</strong></th>
+                    <th></th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+}
+else
+{
+    <div class="alert alert-info">
+        <i class="fas fa-info-circle"></i>
+        Chưa có định mức nguyên liệu cho sản phẩm này.
+    </div>
+} 

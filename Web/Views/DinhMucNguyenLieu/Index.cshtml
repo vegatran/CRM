@@ -1,0 +1,85 @@
+@model IEnumerable<Domain.Entities.DinhMucNguyenLieu>
+
+@{
+    ViewData["Title"] = "Quản lý Định mức nguyên liệu";
+}
+
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Danh sách Định mức nguyên liệu</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#createModal">
+                <i class="fas fa-plus"></i> Thêm mới
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <table id="dinhMucTable" class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>STT</th>
+                    <th>Sản phẩm</th>
+                    <th>Nguyên liệu</th>
+                    <th>Số lượng cần</th>
+                    <th>Đơn vị tính</th>
+                    <th>Đơn giá</th>
+                    <th>Thành tiền</th>
+                    <th>Ghi chú</th>
+                    <th>Trạng thái</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    int stt = 1;
+                }
+                @foreach (var item in Model)
+                {
+                    var thanhTien = item.SoLuongCan * (item.NguyenLieu?.GiaNhap ?? 0);
+                    <tr>
+                        <td>@stt</td>
+                        <td>
+                            <strong>@item.SanPham?.TenSanPham</strong><br />
+                            <small class="text-muted">@item.SanPham?.MaSanPham</small>
+                        </td>
+                        <td>
+                            <strong>@item.NguyenLieu?.TenNguyenLieu</strong><br />
+                            <small class="text-muted">@item.NguyenLieu?.MaNguyenLieu</small>
+                        </td>
+                        <td>@item.SoLuongCan.ToString("N2")</td>
+                        <td>@item.DonViTinh</td>
+                        <td>@((item.NguyenLieu?.GiaNhap ?? 0).ToString("N0")) VNĐ</td>
+                        <td><strong>@thanhTien.ToString("N0") VNĐ</strong></td>
+                        <td>@item.GhiChu</td>
+                        <td>
+                            @if (item.TrangThai)
+                            {
+                                <span class="badge badge-success">Hoạt động</span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-danger">Ngừng hoạt động</span>
+                            }
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-warning btn-sm edit-btn" data-id="@item.Id">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button type="button" class="btn btn-danger btn-sm delete-btn" data-id="@item.Id">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    stt++;
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal Containers -->
+<div id="modalContainer"></div>
+
+@section Scripts {
+    <script src="~/js/dinhmucnguyenlieu.js"></script>
+} 

@@ -6,6 +6,7 @@ namespace Application.Interfaces
     {
         Task<NguyenLieu?> GetByIdAsync(int id);
         Task<IEnumerable<NguyenLieu>> GetAllAsync();
+        Task<IEnumerable<NguyenLieu>> GetAllWithDetailsAsync();
         Task<NguyenLieu> CreateAsync(NguyenLieu nguyenLieu);
         Task UpdateAsync(NguyenLieu nguyenLieu);
         Task DeleteAsync(int id);

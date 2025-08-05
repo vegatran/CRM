@@ -1,0 +1,55 @@
+@model Domain.Entities.QuyTrinhSanXuat
+
+<div class="modal-header">
+    <h5 class="modal-title">
+        <i class="fas fa-edit"></i> Chỉnh sửa quy trình sản xuất
+    </h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+<form id="editQuyTrinhForm" asp-action="Edit" asp-controller="QuyTrinhSanXuat">
+    @Html.AntiForgeryToken()
+    <div class="modal-body">
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="SanPhamId" />
+        <input type="hidden" asp-for="TrangThai" />
+
+        <div class="form-group">
+            <label asp-for="TenCongDoan" class="control-label">Tên công đoạn <span class="text-danger">*</span></label>
+            <input asp-for="TenCongDoan" class="form-control" placeholder="VD: Cắt vải, May thân áo..." />
+            <span asp-validation-for="TenCongDoan" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="MoTa" class="control-label">Mô tả</label>
+            <textarea asp-for="MoTa" class="form-control" rows="3" placeholder="Mô tả chi tiết công đoạn..."></textarea>
+            <span asp-validation-for="MoTa" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="ChiPhiNhanCong" class="control-label">Chi phí nhân công (VNĐ) <span class="text-danger">*</span></label>
+            <input asp-for="ChiPhiNhanCong" class="form-control currency-input" placeholder="VD: 15000" />
+            <span asp-validation-for="ChiPhiNhanCong" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="ThuTu" class="control-label">Thứ tự <span class="text-danger">*</span></label>
+            <input asp-for="ThuTu" class="form-control" type="number" min="1" placeholder="VD: 1, 2, 3..." />
+            <small class="form-text text-muted">Thứ tự thực hiện công đoạn</small>
+            <span asp-validation-for="ThuTu" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+            <i class="fas fa-times"></i> Hủy
+        </button>
+        <button type="submit" class="btn btn-primary">
+            <i class="fas fa-save"></i> Cập nhật
+        </button>
+    </div>
+</form>
+
+<script src="~/js/quyTrinhSanXuat.js"></script> 

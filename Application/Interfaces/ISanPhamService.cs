@@ -5,6 +5,7 @@ namespace Application.Interfaces
     public interface ISanPhamService
     {
         Task<SanPham?> GetByIdAsync(int id);
+        Task<SanPham?> GetByIdWithDetailsAsync(int id);
         Task<IEnumerable<SanPham>> GetAllAsync();
         Task<SanPham> CreateAsync(SanPham sanPham);
         Task UpdateAsync(SanPham sanPham);

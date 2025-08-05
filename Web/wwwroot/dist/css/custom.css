@@ -1,7 +1,232 @@
-﻿/* Custom CSS de fix mot so van de voi AdminLTE tu CDN */
-.sidebar-mini .main-sidebar { width: 250px; }
-.sidebar-mini.sidebar-collapse .main-sidebar { width: 4.6rem; }
-.content-wrapper { margin-left: 250px; }
-.sidebar-collapse .content-wrapper { margin-left: 4.6rem; }
-@media (max-width: 767.98px) { .content-wrapper { margin-left: 0; } }
+﻿/* Custom CSS for CRM May Mặc */
+
+/* Sidebar Header Styling */
+.nav-header {
+    color: #6c757d !important;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 0.75rem 1rem 0.25rem 1rem;
+    margin-top: 0.5rem;
+    border-bottom: 1px solid #4b545c;
+}
+
+/* Active menu item */
+.nav-sidebar .nav-link.active {
+    background-color: #007bff !important;
+    color: white !important;
+}
+
+/* Hover effect for menu items */
+.nav-sidebar .nav-link:hover {
+    background-color: #495057;
+    color: white;
+}
+
+/* Card styling */
+.card {
+    box-shadow: 0 0 1px rgba(0,0,0,.125), 0 1px 3px rgba(0,0,0,.2);
+    margin-bottom: 1rem;
+}
+
+.card-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+}
+
+/* Button styling */
+.btn {
+    border-radius: 0.25rem;
+    font-weight: 500;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+
+/* Table styling */
+.table th {
+    background-color: #f8f9fa;
+    border-top: none;
+    font-weight: 600;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(0,0,0,.02);
+}
+
+/* Badge styling */
+.badge {
+    font-size: 0.75em;
+    padding: 0.25em 0.6em;
+}
+
+/* Modal styling */
+.modal-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.modal-footer {
+    background-color: #f8f9fa;
+    border-top: 1px solid #dee2e6;
+}
+
+/* Form styling */
+.form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+}
+
+.form-group label {
+    font-weight: 500;
+    color: #495057;
+}
+
+/* Alert styling */
+.alert {
+    border-radius: 0.25rem;
+    border: none;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.alert-info {
+    background-color: #d1ecf1;
+    color: #0c5460;
+}
+
+/* DataTables styling */
+.dataTables_wrapper .dataTables_length,
+.dataTables_wrapper .dataTables_filter {
+    margin-bottom: 1rem;
+}
+
+.dataTables_wrapper .dataTables_info,
+.dataTables_wrapper .dataTables_paginate {
+    margin-top: 1rem;
+}
+
+/* Color picker styling */
+input[type="color"] {
+    width: 50px;
+    height: 38px;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    cursor: pointer;
+}
+
+/* Image preview styling */
+.image-preview {
+    max-width: 200px;
+    max-height: 200px;
+    border: 1px solid #dee2e6;
+    border-radius: 0.25rem;
+    padding: 0.25rem;
+}
+
+/* Currency input styling */
+.currency-input {
+    text-align: right;
+    font-weight: 500;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 100%;
+        position: relative;
+    }
+    
+    .main-sidebar {
+        transform: translateX(-100%);
+    }
+    
+    .sidebar-open .main-sidebar {
+        transform: translateX(0);
+    }
+}
+
+/* Loading spinner */
+.spinner-border-sm {
+    width: 1rem;
+    height: 1rem;
+}
+
+/* Toastr customization */
+.toastr-success {
+    background-color: #d4edda !important;
+    color: #155724 !important;
+}
+
+.toastr-error {
+    background-color: #f8d7da !important;
+    color: #721c24 !important;
+}
+
+/* Breadcrumb styling */
+.breadcrumb {
+    background-color: transparent;
+    padding: 0.75rem 0;
+    margin-bottom: 0;
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+    content: ">";
+    color: #6c757d;
+}
+
+/* Small box styling for dashboard */
+.small-box {
+    border-radius: 0.25rem;
+    box-shadow: 0 0 1px rgba(0,0,0,.125), 0 1px 3px rgba(0,0,0,.2);
+}
+
+.small-box .inner {
+    padding: 1rem;
+}
+
+.small-box .icon {
+    color: rgba(0,0,0,.15);
+    z-index: 0;
+}
+
+/* Chart container styling */
+.chart-container {
+    position: relative;
+    height: 300px;
+}
+
+/* Print styles */
+@media print {
+    .no-print {
+        display: none !important;
+    }
+    
+    .main-sidebar,
+    .main-header,
+    .main-footer {
+        display: none !important;
+    }
+    
+    .content-wrapper {
+        margin-left: 0 !important;
+    }
+}
+
 

@@ -25,6 +25,12 @@ namespace Domain.Entities
         [StringLength(100)]
         public string? ChatLieu { get; set; }
         
+        [StringLength(50)]
+        public string? MauSac { get; set; }
+        
+        [StringLength(500)]
+        public string? HinhAnh { get; set; }
+        
         public bool TrangThai { get; set; } = true;
         
         // Foreign keys

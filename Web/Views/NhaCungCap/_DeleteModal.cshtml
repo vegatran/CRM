@@ -1,0 +1,65 @@
+@model Domain.Entities.NhaCungCap
+
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">
+                    <i class="fas fa-trash text-danger"></i> Xác nhận xóa
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="deleteForm" asp-action="Delete" method="post">
+                <input type="hidden" asp-for="Id" />
+                <div class="modal-body">
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <strong>Cảnh báo!</strong> Bạn có chắc chắn muốn xóa nhà cung cấp này?
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-12">
+                            <table class="table table-borderless">
+                                <tr>
+                                    <td><strong>Tên nhà cung cấp:</strong></td>
+                                    <td>@Model.TenNhaCungCap</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Người đại diện:</strong></td>
+                                    <td>@Model.NguoiDaiDien</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Số điện thoại:</strong></td>
+                                    <td>@Model.SoDienThoai</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Email:</strong></td>
+                                    <td>@Model.Email</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Địa chỉ:</strong></td>
+                                    <td>@Model.DiaChi</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i>
+                        <small>Lưu ý: Hành động này không thể hoàn tác. Tất cả dữ liệu liên quan sẽ bị xóa.</small>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary modal-close-btn">
+                        <i class="fas fa-times"></i> Hủy
+                    </button>
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash"></i> Xóa
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div> 

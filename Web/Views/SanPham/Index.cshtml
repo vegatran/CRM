@@ -8,19 +8,22 @@
     <div class="card-header">
         <h3 class="card-title">Danh sách Sản phẩm</h3>
         <div class="card-tools">
-            <a asp-action="Create" class="btn btn-primary btn-sm">
+            <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#createModal">
                 <i class="fas fa-plus"></i> Thêm mới
-            </a>
+            </button>
         </div>
     </div>
     <div class="card-body">
         <table id="sanPhamTable" class="table table-bordered table-striped">
             <thead>
                 <tr>
+                    <th>Hình ảnh</th>
                     <th>Mã SP</th>
                     <th>Tên sản phẩm</th>
+                    <th>Loại SP</th>
                     <th>Giá bán</th>
-                    <th>Giá nhập</th>
+                    <th>Giá vốn</th>
+                    <th>Chi phí sản xuất</th>
                     <th>Số lượng tồn</th>
                     <th>Kích thước</th>
                     <th>Màu sắc</th>
@@ -32,13 +35,113 @@
                 @foreach (var item in Model)
                 {
                     <tr>
+                        <td>
+                            @if (!string.IsNullOrEmpty(item.HinhAnh))
+                            {
+                                <img src="@item.HinhAnh" alt="@item.TenSanPham" class="img-thumbnail" style="width: 60px; height: 60px; object-fit: cover;" />
+                            }
+                            else
+                            {
+                                <div class="bg-light d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                                    <i class="fas fa-image text-muted"></i>
+                                </div>
+                            }
+                        </td>
                         <td>@item.MaSanPham</td>
                         <td>@item.TenSanPham</td>
+                        <td>
+                            @if (item.LoaiSanPham == Domain.Entities.LoaiSanPham.TuSanXuat)
+                            {
+                                <span class="badge badge-info">
+                                    <i class="fas fa-industry"></i> Tự sản xuất
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-warning">
+                                    <i class="fas fa-shopping-cart"></i> Mua ngoài
+                                </span>
+                            }
+                        </td>
                         <td>@item.GiaBan.ToString("N0") VNĐ</td>
-                        <td>@item.GiaNhap.ToString("N0") VNĐ</td>
-                        <td>@item.SoLuongTon</td>
+                        <td>
+                            @if (item.LoaiSanPham == Domain.Entities.LoaiSanPham.TuSanXuat)
+                            {
+                                <span class="text-info font-weight-bold">
+                                    @item.GiaVon.ToString("N0") VNĐ
+                                    <small class="text-muted d-block">(Tự tính)</small>
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="text-warning font-weight-bold">
+                                    @item.GiaVon.ToString("N0") VNĐ
+                                    <small class="text-muted d-block">(Giá nhập)</small>
+                                </span>
+                            }
+                        </td>
+                        <td>
+                            @if (item.LoaiSanPham == Domain.Entities.LoaiSanPham.TuSanXuat)
+                            {
+                                <div>
+                                    <div class="text-success">@item.TongChiPhiSanXuat.ToString("N0") VNĐ</div>
+                                    <small class="text-muted">
+                                        NL: @item.TongChiPhiNguyenLieu.ToString("N0") | 
+                                        NC: @item.TongChiPhiNhanCong.ToString("N0")
+                                    </small>
+                                </div>
+                            }
+                            else
+                            {
+                                <span class="text-muted">-</span>
+                            }
+                        </td>
+                        <td>
+                            @if (item.SoLuongTon <= 10)
+                            {
+                                <span class="badge badge-danger">@item.SoLuongTon</span>
+                            }
+                            else if (item.SoLuongTon <= 50)
+                            {
+                                <span class="badge badge-warning">@item.SoLuongTon</span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-success">@item.SoLuongTon</span>
+                            }
+                        </td>
                         <td>@item.KichThuoc</td>
-                        <td>@item.MauSac</td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(item.MauSac))
+                            {
+                                <div class="d-flex align-items-center">
+                                    @if (item.MauSac.StartsWith("#"))
+                                    {
+                                        <div class="color-preview" style="width: 20px; height: 20px; background-color: @item.MauSac; border: 1px solid #ddd; border-radius: 3px; margin-right: 8px;"></div>
+                                        <span>@item.MauSac</span>
+                                    }
+                                    else if (item.MauSac.Contains("Caro"))
+                                    {
+                                        <div class="color-preview checkered-pattern" style="width: 20px; height: 20px; border: 1px solid #ddd; border-radius: 3px; margin-right: 8px;" data-pattern="@item.MauSac"></div>
+                                        <span>@item.MauSac</span>
+                                    }
+                                    else if (item.MauSac.Contains("Sọc"))
+                                    {
+                                        <div class="color-preview stripe-pattern" style="width: 20px; height: 20px; border: 1px solid #ddd; border-radius: 3px; margin-right: 8px;" data-pattern="@item.MauSac"></div>
+                                        <span>@item.MauSac</span>
+                                    }
+                                    else
+                                    {
+                                        <div class="color-preview" style="width: 20px; height: 20px; background-color: #f0f0f0; border: 1px solid #ddd; border-radius: 3px; margin-right: 8px; display: flex; align-items: center; justify-content-center; font-size: 10px;">🎨</div>
+                                        <span>@item.MauSac</span>
+                                    }
+                                </div>
+                            }
+                            else
+                            {
+                                <span class="text-muted">Chưa có</span>
+                            }
+                        </td>
                         <td>
                             @if (item.TrangThai)
                             {
@@ -50,15 +153,18 @@
                             }
                         </td>
                         <td>
-                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info btn-sm">
-                                <i class="fas fa-eye"></i>
-                            </a>
-                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning btn-sm">
+                            @if (item.LoaiSanPham == Domain.Entities.LoaiSanPham.TuSanXuat)
+                            {
+                                <a href="@Url.Action("ChiTietSanXuat", new { id = item.Id })" class="btn btn-info btn-sm" title="Chi tiết sản xuất">
+                                    <i class="fas fa-industry"></i>
+                                </a>
+                            }
+                            <button type="button" class="btn btn-warning btn-sm edit-btn" data-id="@item.Id">
                                 <i class="fas fa-edit"></i>
-                            </a>
-                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm">
+                            </button>
+                            <button type="button" class="btn btn-danger btn-sm delete-btn" data-id="@item.Id">
                                 <i class="fas fa-trash"></i>
-                            </a>
+                            </button>
                         </td>
                     </tr>
                 }
@@ -67,21 +173,9 @@
     </div>
 </div>
 
+<!-- Modal Containers -->
+<div id="modalContainer"></div>
+
 @section Scripts {
-    <script>
-        $(function () {
-            $('#sanPhamTable').DataTable({
-                "paging": true,
-                "lengthChange": false,
-                "searching": true,
-                "ordering": true,
-                "info": true,
-                "autoWidth": false,
-                "responsive": true,
-                "language": {
-                    "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Vietnamese.json"
-                }
-            });
-        });
-    </script>
+    <script src="~/js/sanpham.js"></script>
 } 

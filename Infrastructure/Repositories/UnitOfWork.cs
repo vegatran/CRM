@@ -1,3 +1,4 @@
+using Domain.Entities;
 using Domain.Interfaces;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -25,6 +26,14 @@ namespace Infrastructure.Repositories
             }
             return (IRepository<T>)_repositories[type];
         }
+
+        public IRepository<SanPham> SanPhamRepository => Repository<SanPham>();
+        public IRepository<NhaCungCap> NhaCungCapRepository => Repository<NhaCungCap>();
+        public IRepository<NguyenLieu> NguyenLieuRepository => Repository<NguyenLieu>();
+        public IRepository<LoaiNguyenLieu> LoaiNguyenLieuRepository => Repository<LoaiNguyenLieu>();
+        public IRepository<QuyTrinhSanXuat> QuyTrinhSanXuatRepository => Repository<QuyTrinhSanXuat>();
+        public IRepository<DinhMucNguyenLieu> DinhMucNguyenLieuRepository => Repository<DinhMucNguyenLieu>();
+        public object Context => _context;
 
         public async Task<int> SaveChangesAsync()
         {

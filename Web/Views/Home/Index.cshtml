@@ -2,6 +2,49 @@
     ViewData["Title"] = "Dashboard";
 }
 
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <i class="fas fa-check"></i> @TempData["Success"]
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <i class="fas fa-exclamation-triangle"></i> @TempData["Error"]
+    </div>
+}
+
+<div class="row mb-3">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-database mr-1"></i>
+                    Dữ liệu mẫu
+                </h3>
+            </div>
+            <div class="card-body">
+                <p><strong>Lưu ý:</strong> Script này sẽ xóa toàn bộ dữ liệu hiện tại và tạo dữ liệu mẫu mới bao gồm:</p>
+                                            <ul>
+                                <li><strong>3 loại nguyên liệu</strong> - Vải, chỉ may, cúc áo</li>
+                                <li><strong>3 nhà cung cấp</strong> - Chuyên cung cấp vải, chỉ may, cúc áo</li>
+                                <li><strong>6 nguyên liệu</strong> - Vải cotton (trắng, xanh, đen), chỉ may trắng, cúc áo trắng</li>
+                                <li><strong>3 sản phẩm</strong> - Áo sơ mi (trắng, xanh, đen)</li>
+                                <li><strong>15 quy trình sản xuất</strong> - 5 công đoạn cho mỗi sản phẩm (cắt, may thân, may tay, gắn cúc, hoàn thiện)</li>
+                                <li><strong>9 định mức nguyên liệu</strong> - 3 định mức cho mỗi sản phẩm (vải, chỉ, cúc)</li>
+                            </ul>
+                <a href="/DataSeeder/SeedData" class="btn btn-primary">
+                    <i class="fas fa-play"></i> Chạy dữ liệu mẫu
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="row">
     <div class="col-lg-3 col-6">
         <!-- small box -->
@@ -100,97 +143,5 @@
 
 @section Scripts {
     <script src="~/plugins/chart.js/Chart.min.js"></script>
-    <script>
-        $(function () {
-            // Sales Chart
-            var salesChartCanvas = document.getElementById('salesChart').getContext('2d')
-            var salesChartData = {
-                labels: ['T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'T8', 'T9', 'T10', 'T11', 'T12'],
-                datasets: [
-                    {
-                        label: 'Doanh số',
-                        backgroundColor: 'rgba(60,141,188,0.9)',
-                        borderColor: 'rgba(60,141,188,0.8)',
-                        pointRadius: 3,
-                        pointColor: '#3b8bba',
-                        pointStrokeColor: 'rgba(60,141,188,1)',
-                        pointHighlightFill: '#fff',
-                        pointHighlightStroke: 'rgba(60,141,188,1)',
-                        data: [28, 48, 40, 19, 86, 27, 90, 45, 67, 89, 34, 56]
-                    }
-                ]
-            }
-
-            var salesChartOptions = {
-                maintainAspectRatio: false,
-                responsive: true,
-                legend: {
-                    display: false
-                },
-                scales: {
-                    xAxes: [{
-                        gridLines: {
-                            display: false,
-                        }
-                    }],
-                    yAxes: [{
-                        gridLines: {
-                            display: true,
-                        }
-                    }]
-                }
-            }
-
-            new Chart(salesChartCanvas, {
-                type: 'line',
-                data: salesChartData,
-                options: salesChartOptions
-            })
-
-            // Revenue Chart
-            var revenueChartCanvas = document.getElementById('revenueChart').getContext('2d')
-            var revenueChartData = {
-                labels: ['T1', 'T2', 'T3', 'T4', 'T5', 'T6'],
-                datasets: [
-                    {
-                        label: 'Doanh thu',
-                        backgroundColor: 'rgba(210, 214, 222, 1)',
-                        borderColor: 'rgba(210, 214, 222, 1)',
-                        pointRadius: 3,
-                        pointColor: 'rgba(210, 214, 222, 1)',
-                        pointStrokeColor: '#c1c7d1',
-                        pointHighlightFill: '#fff',
-                        pointHighlightStroke: 'rgba(220,220,220,1)',
-                        data: [65, 59, 80, 81, 56, 55]
-                    }
-                ]
-            }
-
-            var revenueChartOptions = {
-                maintainAspectRatio: false,
-                responsive: true,
-                legend: {
-                    display: false
-                },
-                scales: {
-                    xAxes: [{
-                        gridLines: {
-                            display: false,
-                        }
-                    }],
-                    yAxes: [{
-                        gridLines: {
-                            display: true,
-                        }
-                    }]
-                }
-            }
-
-            new Chart(revenueChartCanvas, {
-                type: 'bar',
-                data: revenueChartData,
-                options: revenueChartOptions
-            })
-        })
-    </script>
+    <script src="~/js/dashboard.js"></script>
 } 

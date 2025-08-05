@@ -1,0 +1,90 @@
+@model Domain.Entities.SanPham
+
+@{
+    ViewData["Title"] = "Chi tiết sản xuất - " + Model.TenSanPham;
+}
+
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">
+            <i class="fas fa-industry mr-1"></i>
+            Chi tiết sản xuất: @Model.TenSanPham
+        </h3>
+        <div class="card-tools">
+            <a href="@Url.Action("Index")" class="btn btn-secondary btn-sm">
+                <i class="fas fa-arrow-left"></i> Quay lại
+            </a>
+        </div>
+    </div>
+    <div class="card-body">
+        <!-- Thông tin sản phẩm -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <h5><i class="fas fa-info-circle"></i> Thông tin sản phẩm</h5>
+                <table class="table table-bordered">
+                    <tr>
+                        <th width="30%">Mã sản phẩm:</th>
+                        <td>@Model.MaSanPham</td>
+                    </tr>
+                    <tr>
+                        <th>Tên sản phẩm:</th>
+                        <td>@Model.TenSanPham</td>
+                    </tr>
+                    <tr>
+                        <th>Giá bán:</th>
+                        <td>@Model.GiaBan.ToString("N0") VNĐ</td>
+                    </tr>
+                    <tr>
+                        <th>Giá nhập:</th>
+                        <td>@Model.GiaNhap.ToString("N0") VNĐ</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-md-6">
+                <h5><i class="fas fa-calculator"></i> Phân tích chi phí</h5>
+                <table class="table table-bordered">
+                    <tr>
+                        <th width="40%">Chi phí nguyên liệu:</th>
+                        <td>@Model.TongChiPhiNguyenLieu.ToString("N0") VNĐ</td>
+                    </tr>
+                    <tr>
+                        <th>Chi phí nhân công:</th>
+                        <td>@Model.TongChiPhiNhanCong.ToString("N0") VNĐ</td>
+                    </tr>
+                    <tr class="table-info">
+                        <th><strong>Tổng chi phí sản xuất:</strong></th>
+                        <td><strong>@Model.TongChiPhiSanXuat.ToString("N0") VNĐ</strong></td>
+                    </tr>
+                    <tr class="table-success">
+                        <th><strong>Lợi nhuận dự kiến:</strong></th>
+                        <td><strong>@((Model.GiaBan - Model.TongChiPhiSanXuat).ToString("N0")) VNĐ</strong></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- Định mức nguyên liệu -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <h5><i class="fas fa-list"></i> Định mức nguyên liệu</h5>
+                <div id="dinhMucList" data-san-pham-id="@Model.Id">
+                    <!-- Sẽ được load bằng AJAX -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Quy trình sản xuất -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <h5><i class="fas fa-cogs"></i> Quy trình sản xuất</h5>
+                <div id="quyTrinhList" data-san-pham-id="@Model.Id">
+                    <!-- Sẽ được load bằng AJAX -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/chiTietSanXuat.js"></script>
+} 

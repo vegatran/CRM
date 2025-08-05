@@ -19,6 +19,33 @@ namespace Application.Services
             return await _unitOfWork.Repository<SanPham>().GetByIdAsync(id);
         }
 
+        public async Task<SanPham?> GetByIdWithDetailsAsync(int id)
+        {
+            var sanPham = await _unitOfWork.Repository<SanPham>().GetByIdAsync(id);
+            if (sanPham != null)
+            {
+                // Load QuyTrinhSanXuat
+                var quyTrinhs = await _unitOfWork.QuyTrinhSanXuatRepository.GetAllAsync();
+                sanPham.QuyTrinhSanXuats = quyTrinhs.Where(q => q.SanPhamId == id && q.TrangThai).ToList();
+
+                // Load DinhMucNguyenLieu với NguyenLieu
+                var dinhMucs = await _unitOfWork.DinhMucNguyenLieuRepository.GetAllAsync();
+                var dinhMucsForProduct = dinhMucs.Where(d => d.SanPhamId == id && d.TrangThai).ToList();
+                
+                // Load NguyenLieu cho từng DinhMuc
+                foreach (var dinhMuc in dinhMucsForProduct)
+                {
+                    var nguyenLieu = await _unitOfWork.NguyenLieuRepository.GetByIdAsync(dinhMuc.NguyenLieuId);
+                    if (nguyenLieu != null)
+                    {
+                        dinhMuc.NguyenLieu = nguyenLieu;
+                    }
+                }
+                sanPham.DinhMucNguyenLieus = dinhMucsForProduct;
+            }
+            return sanPham;
+        }
+
         public async Task<IEnumerable<SanPham>> GetAllAsync()
         {
             return await _unitOfWork.Repository<SanPham>().GetAllAsync();
