@@ -24,6 +24,7 @@
                     <th>Giá bán</th>
                     <th>Giá vốn</th>
                     <th>Chi phí sản xuất</th>
+                    <th>Lợi nhuận</th>
                     <th>Số lượng tồn</th>
                     <th>Kích thước</th>
                     <th>Màu sắc</th>
@@ -95,6 +96,22 @@
                             {
                                 <span class="text-muted">-</span>
                             }
+                        </td>
+                        <td>
+                            @{
+                                var loiNhuan = item.GiaBan - item.GiaVon;
+                                var phanTramLoiNhuan = item.PhanTramLoiNhuan;
+                                var loiNhuanClass = loiNhuan >= 0 ? "text-success" : "text-danger";
+                                var phanTramClass = phanTramLoiNhuan >= 0 ? "text-success" : "text-danger";
+                            }
+                            <div>
+                                <div class="@loiNhuanClass font-weight-bold">
+                                    @loiNhuan.ToString("N0") VNĐ
+                                </div>
+                                <small class="@phanTramClass">
+                                    @phanTramLoiNhuan.ToString("F1")%
+                                </small>
+                            </div>
                         </td>
                         <td>
                             @if (item.SoLuongTon <= 10)
