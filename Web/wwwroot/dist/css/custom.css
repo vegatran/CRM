@@ -1,0 +1,7 @@
+﻿/* Custom CSS de fix mot so van de voi AdminLTE tu CDN */
+.sidebar-mini .main-sidebar { width: 250px; }
+.sidebar-mini.sidebar-collapse .main-sidebar { width: 4.6rem; }
+.content-wrapper { margin-left: 250px; }
+.sidebar-collapse .content-wrapper { margin-left: 4.6rem; }
+@media (max-width: 767.98px) { .content-wrapper { margin-left: 0; } }
+

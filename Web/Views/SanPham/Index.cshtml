@@ -1,0 +1,87 @@
+@model IEnumerable<Domain.Entities.SanPham>
+
+@{
+    ViewData["Title"] = "Quản lý Sản phẩm";
+}
+
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Danh sách Sản phẩm</h3>
+        <div class="card-tools">
+            <a asp-action="Create" class="btn btn-primary btn-sm">
+                <i class="fas fa-plus"></i> Thêm mới
+            </a>
+        </div>
+    </div>
+    <div class="card-body">
+        <table id="sanPhamTable" class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Mã SP</th>
+                    <th>Tên sản phẩm</th>
+                    <th>Giá bán</th>
+                    <th>Giá nhập</th>
+                    <th>Số lượng tồn</th>
+                    <th>Kích thước</th>
+                    <th>Màu sắc</th>
+                    <th>Trạng thái</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.MaSanPham</td>
+                        <td>@item.TenSanPham</td>
+                        <td>@item.GiaBan.ToString("N0") VNĐ</td>
+                        <td>@item.GiaNhap.ToString("N0") VNĐ</td>
+                        <td>@item.SoLuongTon</td>
+                        <td>@item.KichThuoc</td>
+                        <td>@item.MauSac</td>
+                        <td>
+                            @if (item.TrangThai)
+                            {
+                                <span class="badge badge-success">Hoạt động</span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-danger">Ngừng hoạt động</span>
+                            }
+                        </td>
+                        <td>
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info btn-sm">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning btn-sm">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(function () {
+            $('#sanPhamTable').DataTable({
+                "paging": true,
+                "lengthChange": false,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false,
+                "responsive": true,
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Vietnamese.json"
+                }
+            });
+        });
+    </script>
+} 
