@@ -106,9 +106,15 @@ const ChiTietSanXuat = {
     },
 
     loadEditQuyTrinhModal: function(id) {
+        console.log('Loading edit quy trình modal for id:', id);
         $.get('/QuyTrinhSanXuat/Edit/' + id, function(data) {
+            console.log('Edit modal data loaded, showing modal');
             $('#quyTrinhModalContent').html(data);
             $('#quyTrinhModal').modal('show');
+        }).fail(function(xhr, status, error) {
+            console.error('Error loading edit modal:', error);
+            console.error('Status:', status);
+            console.error('Response:', xhr.responseText);
         });
     },
 
