@@ -12,6 +12,7 @@
                 </button>
             </div>
             <form id="editForm" asp-action="Edit" method="post" enctype="multipart/form-data">
+                @Html.AntiForgeryToken()
                 <input type="hidden" asp-for="Id" />
                 <div class="modal-body">
                     <div class="row">

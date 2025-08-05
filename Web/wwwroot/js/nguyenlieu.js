@@ -47,6 +47,7 @@ const NguyenLieu = {
 
         $(document).on('submit', '#editForm', function(e) {
             e.preventDefault();
+            console.log('Edit form submitted');
             NguyenLieu.handleFormSubmission($(this), 'Cập nhật nguyên liệu thành công!', 'Có lỗi xảy ra khi cập nhật nguyên liệu!');
         });
 
@@ -91,18 +92,29 @@ const NguyenLieu = {
         $(document).on('shown.bs.modal', '.modal', function() {
             NguyenLieu.initializeModal($(this));
         });
+        
+        // Handle modal hidden event
+        $(document).on('hidden.bs.modal', '.modal', function() {
+            $('#modalContainer').empty();
+        });
     },
 
     // Show modal
     showModal: function(url, modalId) {
+        console.log('Loading modal from:', url);
         $.get(url, function (data) {
             $('#modalContainer').html(data);
             $('#' + modalId).modal('show');
+        }).fail(function(xhr, status, error) {
+            console.error('Error loading modal:', error);
+            toastr.error('Có lỗi xảy ra khi tải form!');
         });
     },
 
     // Handle form submission
     handleFormSubmission: function(form, successMessage, errorMessage) {
+        console.log('Form submission started');
+        
         // Convert formatted currency values back to numbers
         form.find('#GiaNhapInput').each(function() {
             var value = $(this).val().replace(/[^\d]/g, '');
@@ -110,11 +122,27 @@ const NguyenLieu = {
         });
 
         // Check if form has file input
-        var hasFileInput = form.find('input[type="file"]').length > 0;
+        var fileInput = form.find('input[type="file"]');
+        var hasFileInput = fileInput.length > 0;
+        var hasFileSelected = hasFileInput && fileInput[0].files.length > 0;
+        console.log('Has file input:', hasFileInput);
+        console.log('Has file selected:', hasFileSelected);
         
         if (hasFileInput) {
-            // Use FormData for file upload
+            // Use FormData for forms with file input (even if no file selected)
             var formData = new FormData(form[0]);
+            
+            // Add antiforgery token to FormData
+            var token = form.find('input[name="__RequestVerificationToken"]').val();
+            console.log('Token found:', !!token);
+            if (token) {
+                formData.append('__RequestVerificationToken', token);
+            }
+            
+            // Log form data for debugging
+            for (var pair of formData.entries()) {
+                console.log(pair[0] + ': ' + pair[1]);
+            }
             
             $.ajax({
                 url: form.attr('action'),
@@ -123,6 +151,7 @@ const NguyenLieu = {
                 processData: false,
                 contentType: false,
                 success: function (result) {
+                    console.log('Success result:', result);
                     if (result.success) {
                         $('.modal').modal('hide');
                         toastr.success(successMessage);
@@ -133,17 +162,27 @@ const NguyenLieu = {
                         $('#modalContainer').html(result);
                     }
                 },
-                error: function () {
-                    toastr.error(errorMessage);
+                error: function (xhr, status, error) {
+                    console.error('Error details:', {
+                        status: xhr.status,
+                        statusText: xhr.statusText,
+                        responseText: xhr.responseText,
+                        error: error
+                    });
+                    toastr.error(errorMessage + ' (Status: ' + xhr.status + ')');
                 }
             });
         } else {
             // Use regular form submission for non-file forms
+            var formData = form.serialize();
+            console.log('Form data:', formData);
+            
             $.ajax({
                 url: form.attr('action'),
                 type: 'POST',
-                data: form.serialize(),
+                data: formData,
                 success: function (result) {
+                    console.log('Success result:', result);
                     if (result.success) {
                         $('.modal').modal('hide');
                         toastr.success(successMessage);
@@ -154,8 +193,14 @@ const NguyenLieu = {
                         $('#modalContainer').html(result);
                     }
                 },
-                error: function () {
-                    toastr.error(errorMessage);
+                error: function (xhr, status, error) {
+                    console.error('Error details:', {
+                        status: xhr.status,
+                        statusText: xhr.statusText,
+                        responseText: xhr.responseText,
+                        error: error
+                    });
+                    toastr.error(errorMessage + ' (Status: ' + xhr.status + ')');
                 }
             });
         }
@@ -199,7 +244,9 @@ const NguyenLieu = {
     // Handle image preview
     handleImagePreview: function(input) {
         var file = input[0].files[0];
-        var previewImg = input.closest('.modal').find('#previewImg');
+        var modal = input.closest('.modal');
+        var previewImg = modal.find('#previewImg');
+        var imagePreview = modal.find('#imagePreview');
         
         if (file) {
             // Update file label
@@ -209,12 +256,12 @@ const NguyenLieu = {
             var reader = new FileReader();
             reader.onload = function(e) {
                 previewImg.attr('src', e.target.result);
-                previewImg.show();
+                imagePreview.show();
             };
             reader.readAsDataURL(file);
         } else {
             // Hide preview if no file selected
-            previewImg.hide();
+            imagePreview.hide();
         }
     },
 
@@ -241,12 +288,12 @@ const NguyenLieu = {
             }
             
             // Handle color picker change
-            colorPicker.on('change', function() {
+            colorPicker.off('change').on('change', function() {
                 mauSacInput.val($(this).val());
             });
             
             // Handle input change (manual entry)
-            mauSacInput.on('input', function() {
+            mauSacInput.off('input').on('input', function() {
                 var value = $(this).val();
                 if (value && value.match(/^#[0-9A-F]{6}$/i)) {
                     colorPicker.val(value);
@@ -261,6 +308,13 @@ const NguyenLieu = {
                 hinhAnhInput.next('.custom-file-label').html(fileName);
             }
         }
+        
+        // Initialize color pattern dropdown
+        modal.find('.color-pattern').off('click').on('click', function(e) {
+            e.preventDefault();
+            var pattern = $(this).data('pattern');
+            mauSacInput.val(pattern);
+        });
     }
 };
 
