@@ -1,17 +1,18 @@
 @model Domain.Entities.DinhMucNguyenLieu
 
-<div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="createModalLabel" aria-hidden="true">
+<div class="modal fade" id="createDinhMucModal" tabindex="-1" role="dialog" aria-labelledby="createDinhMucModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="createModalLabel">
+                <h5 class="modal-title" id="createDinhMucModalLabel">
                     <i class="fas fa-plus"></i> Thêm định mức nguyên liệu
                 </h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form id="createForm" asp-action="Create" method="post">
+            <form id="createDinhMucForm" asp-action="Create" method="post">
+                @Html.AntiForgeryToken()
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-6">

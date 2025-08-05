@@ -51,6 +51,39 @@ namespace Application.Services
             return await _unitOfWork.Repository<SanPham>().GetAllAsync();
         }
 
+        public async Task<IEnumerable<SanPham>> GetAllWithDetailsAsync()
+        {
+            var allSanPhams = await GetAllAsync();
+            var allQuyTrinhs = await _unitOfWork.QuyTrinhSanXuatRepository.GetAllAsync();
+            var allDinhMucs = await _unitOfWork.DinhMucNguyenLieuRepository.GetAllAsync();
+            var allNguyenLieus = await _unitOfWork.NguyenLieuRepository.GetAllAsync();
+
+            foreach (var sanPham in allSanPhams)
+            {
+                // Load QuyTrinhSanXuat cho sản phẩm
+                sanPham.QuyTrinhSanXuats = allQuyTrinhs
+                    .Where(q => q.SanPhamId == sanPham.Id && q.TrangThai)
+                    .ToList();
+
+                // Load DinhMucNguyenLieu với NguyenLieu cho sản phẩm
+                var dinhMucsForProduct = allDinhMucs
+                    .Where(d => d.SanPhamId == sanPham.Id && d.TrangThai)
+                    .ToList();
+
+                foreach (var dinhMuc in dinhMucsForProduct)
+                {
+                    var nguyenLieu = allNguyenLieus.FirstOrDefault(nl => nl.Id == dinhMuc.NguyenLieuId);
+                    if (nguyenLieu != null)
+                    {
+                        dinhMuc.NguyenLieu = nguyenLieu;
+                    }
+                }
+                sanPham.DinhMucNguyenLieus = dinhMucsForProduct;
+            }
+
+            return allSanPhams;
+        }
+
         public async Task<SanPham> CreateAsync(SanPham sanPham)
         {
             var result = await _unitOfWork.Repository<SanPham>().AddAsync(sanPham);

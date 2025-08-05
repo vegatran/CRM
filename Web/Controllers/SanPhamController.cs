@@ -18,7 +18,7 @@ namespace Web.Controllers
         // GET: SanPham
         public async Task<IActionResult> Index()
         {
-            var sanPhams = await _sanPhamService.GetAllAsync();
+            var sanPhams = await _sanPhamService.GetAllWithDetailsAsync();
             return View(sanPhams);
         }
 

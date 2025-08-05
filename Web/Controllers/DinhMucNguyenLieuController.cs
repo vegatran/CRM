@@ -28,11 +28,18 @@ namespace Web.Controllers
         }
 
         // GET: DinhMucNguyenLieu/Create
-        public async Task<IActionResult> Create()
+        public async Task<IActionResult> Create(int? sanPhamId)
         {
             ViewBag.SanPhams = await _sanPhamService.GetAllAsync();
             ViewBag.NguyenLieus = await _nguyenLieuService.GetAllAsync();
-            return PartialView("_CreateModal");
+            
+            var dinhMuc = new DinhMucNguyenLieu();
+            if (sanPhamId.HasValue)
+            {
+                dinhMuc.SanPhamId = sanPhamId.Value;
+            }
+            
+            return PartialView("_CreateModal", dinhMuc);
         }
 
         // POST: DinhMucNguyenLieu/Create

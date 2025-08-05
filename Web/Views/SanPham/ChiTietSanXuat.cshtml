@@ -31,44 +31,153 @@
                         <td>@Model.TenSanPham</td>
                     </tr>
                     <tr>
+                        <th>Loại sản phẩm:</th>
+                        <td>
+                            @if (Model.LoaiSanPham == Domain.Entities.LoaiSanPham.TuSanXuat)
+                            {
+                                <span class="badge badge-info"><i class="fas fa-industry"></i> Tự sản xuất</span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-warning"><i class="fas fa-shopping-cart"></i> Mua ngoài</span>
+                            }
+                        </td>
+                    </tr>
+                    <tr>
                         <th>Giá bán:</th>
                         <td>@Model.GiaBan.ToString("N0") VNĐ</td>
                     </tr>
                     <tr>
-                        <th>Giá nhập:</th>
-                        <td>@Model.GiaNhap.ToString("N0") VNĐ</td>
+                        <th>Giá vốn:</th>
+                        <td>
+                            @if (Model.LoaiSanPham == Domain.Entities.LoaiSanPham.TuSanXuat)
+                            {
+                                <span class="text-info font-weight-bold">@Model.GiaVon.ToString("N0") VNĐ</span>
+                                <small class="text-muted d-block">(Tổng chi phí sản xuất)</small>
+                            }
+                            else
+                            {
+                                <span class="text-warning font-weight-bold">@Model.GiaVon.ToString("N0") VNĐ</span>
+                                <small class="text-muted d-block">(Giá nhập)</small>
+                            }
+                        </td>
                     </tr>
                 </table>
             </div>
             <div class="col-md-6">
                 <h5><i class="fas fa-calculator"></i> Phân tích chi phí</h5>
-                <table class="table table-bordered">
-                    <tr>
-                        <th width="40%">Chi phí nguyên liệu:</th>
-                        <td>@Model.TongChiPhiNguyenLieu.ToString("N0") VNĐ</td>
-                    </tr>
-                    <tr>
-                        <th>Chi phí nhân công:</th>
-                        <td>@Model.TongChiPhiNhanCong.ToString("N0") VNĐ</td>
-                    </tr>
-                    <tr class="table-info">
-                        <th><strong>Tổng chi phí sản xuất:</strong></th>
-                        <td><strong>@Model.TongChiPhiSanXuat.ToString("N0") VNĐ</strong></td>
-                    </tr>
-                    <tr class="table-success">
-                        <th><strong>Lợi nhuận dự kiến:</strong></th>
-                        <td><strong>@((Model.GiaBan - Model.TongChiPhiSanXuat).ToString("N0")) VNĐ</strong></td>
-                    </tr>
-                </table>
+                @if (Model.LoaiSanPham == Domain.Entities.LoaiSanPham.TuSanXuat)
+                {
+                    <table class="table table-bordered">
+                        <tr>
+                            <th width="40%">Chi phí nguyên liệu:</th>
+                            <td>@Model.TongChiPhiNguyenLieu.ToString("N0") VNĐ</td>
+                        </tr>
+                        <tr>
+                            <th>Chi phí nhân công:</th>
+                            <td>@Model.TongChiPhiNhanCong.ToString("N0") VNĐ</td>
+                        </tr>
+                        <tr class="table-info">
+                            <th><strong>Tổng chi phí sản xuất:</strong></th>
+                            <td><strong>@Model.TongChiPhiSanXuat.ToString("N0") VNĐ</strong></td>
+                        </tr>
+                        <tr class="table-success">
+                            <th><strong>Lợi nhuận dự kiến:</strong></th>
+                            <td><strong>@((Model.GiaBan - Model.GiaVon).ToString("N0")) VNĐ</strong></td>
+                        </tr>
+                    </table>
+                }
+                else
+                {
+                    <table class="table table-bordered">
+                        <tr>
+                            <th width="40%">Giá nhập:</th>
+                            <td>@Model.GiaNhap.ToString("N0") VNĐ</td>
+                        </tr>
+                        <tr class="table-success">
+                            <th><strong>Lợi nhuận dự kiến:</strong></th>
+                            <td><strong>@((Model.GiaBan - Model.GiaVon).ToString("N0")) VNĐ</strong></td>
+                        </tr>
+                    </table>
+                }
             </div>
         </div>
 
         <!-- Định mức nguyên liệu -->
         <div class="row mb-4">
             <div class="col-12">
-                <h5><i class="fas fa-list"></i> Định mức nguyên liệu</h5>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5><i class="fas fa-list"></i> Định mức nguyên liệu</h5>
+                    <button type="button" class="btn btn-primary btn-sm" id="addDinhMucBtn">
+                        <i class="fas fa-plus"></i> Thêm định mức
+                    </button>
+                </div>
                 <div id="dinhMucList" data-san-pham-id="@Model.Id">
-                    <!-- Sẽ được load bằng AJAX -->
+                    @if (Model.DinhMucNguyenLieus != null && Model.DinhMucNguyenLieus.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>STT</th>
+                                        <th>Nguyên liệu</th>
+                                        <th>Số lượng cần</th>
+                                        <th>Đơn vị tính</th>
+                                        <th>Đơn giá</th>
+                                        <th>Thành tiền</th>
+                                        <th>Ghi chú</th>
+                                        <th>Thao tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{
+                                        int stt = 1;
+                                        decimal tongTien = 0;
+                                    }
+                                    @foreach (var item in Model.DinhMucNguyenLieus)
+                                    {
+                                        var thanhTien = item.SoLuongCan * (item.NguyenLieu?.GiaNhap ?? 0);
+                                        tongTien += thanhTien;
+                                        <tr>
+                                            <td>@stt</td>
+                                            <td>
+                                                <strong>@item.NguyenLieu?.TenNguyenLieu</strong><br />
+                                                <small class="text-muted">@item.NguyenLieu?.MaNguyenLieu</small>
+                                            </td>
+                                            <td>@item.SoLuongCan.ToString("N2")</td>
+                                            <td>@item.DonViTinh</td>
+                                            <td>@((item.NguyenLieu?.GiaNhap ?? 0).ToString("N0")) VNĐ</td>
+                                            <td><strong>@thanhTien.ToString("N0") VNĐ</strong></td>
+                                            <td>@item.GhiChu</td>
+                                            <td>
+                                                <button type="button" class="btn btn-warning btn-sm edit-dinhmuc-btn" data-id="@item.Id">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button type="button" class="btn btn-danger btn-sm delete-dinhmuc-btn" data-id="@item.Id">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        stt++;
+                                    }
+                                </tbody>
+                                <tfoot>
+                                    <tr class="table-info">
+                                        <th colspan="5" class="text-right"><strong>Tổng chi phí nguyên liệu:</strong></th>
+                                        <th><strong>@tongTien.ToString("N0") VNĐ</strong></th>
+                                        <th colspan="2"></th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle"></i>
+                            Chưa có định mức nguyên liệu cho sản phẩm này.
+                        </div>
+                    }
                 </div>
             </div>
         </div>
@@ -85,6 +194,13 @@
     </div>
 </div>
 
+    </div>
+</div>
+
+<!-- Modal Container -->
+<div id="modalContainer"></div>
+
 @section Scripts {
     <script src="~/js/chiTietSanXuat.js"></script>
+    <script src="~/js/dinhmucnguyenlieu.js"></script>
 } 

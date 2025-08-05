@@ -58,6 +58,22 @@ const DinhMucNguyenLieu = {
             e.preventDefault();
             DinhMucNguyenLieu.submitDeleteForm($(this));
         });
+
+        // New modal form submissions for ChiTietSanXuat
+        $(document).on('submit', '#createDinhMucForm', function(e) {
+            e.preventDefault();
+            DinhMucNguyenLieu.submitCreateDinhMucForm();
+        });
+
+        $(document).on('submit', '#editDinhMucForm', function(e) {
+            e.preventDefault();
+            DinhMucNguyenLieu.submitEditDinhMucForm();
+        });
+
+        $(document).on('submit', '#deleteDinhMucForm', function(e) {
+            e.preventDefault();
+            DinhMucNguyenLieu.submitDeleteDinhMucForm();
+        });
     },
 
     // Load create modal
@@ -157,6 +173,87 @@ const DinhMucNguyenLieu = {
                     setTimeout(function() {
                         location.reload();
                     }, 1000);
+                } else {
+                    toastr.error('Có lỗi xảy ra khi xóa định mức nguyên liệu!');
+                }
+            },
+            error: function() {
+                toastr.error('Có lỗi xảy ra khi xóa định mức nguyên liệu!');
+            }
+        });
+    },
+
+    // Submit create form for ChiTietSanXuat
+    submitCreateDinhMucForm: function() {
+        var form = $('#createDinhMucForm');
+        var formData = new FormData(form[0]);
+
+        $.ajax({
+            url: form.attr('action'),
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                if (response.success) {
+                    $('#createDinhMucModal').modal('hide');
+                    toastr.success(response.message);
+                    // Reload the dinhMucList section instead of full page
+                    ChiTietSanXuat.reloadDinhMucList();
+                } else {
+                    toastr.error('Có lỗi xảy ra khi thêm định mức nguyên liệu!');
+                }
+            },
+            error: function() {
+                toastr.error('Có lỗi xảy ra khi thêm định mức nguyên liệu!');
+            }
+        });
+    },
+
+    // Submit edit form for ChiTietSanXuat
+    submitEditDinhMucForm: function() {
+        var form = $('#editDinhMucForm');
+        var formData = new FormData(form[0]);
+
+        $.ajax({
+            url: form.attr('action'),
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                if (response.success) {
+                    $('#editDinhMucModal').modal('hide');
+                    toastr.success(response.message);
+                    // Reload the dinhMucList section instead of full page
+                    ChiTietSanXuat.reloadDinhMucList();
+                } else {
+                    toastr.error('Có lỗi xảy ra khi cập nhật định mức nguyên liệu!');
+                }
+            },
+            error: function() {
+                toastr.error('Có lỗi xảy ra khi cập nhật định mức nguyên liệu!');
+            }
+        });
+    },
+
+    // Submit delete form for ChiTietSanXuat
+    submitDeleteDinhMucForm: function() {
+        var form = $('#deleteDinhMucForm');
+        var formData = new FormData(form[0]);
+
+        $.ajax({
+            url: form.attr('action'),
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                if (response.success) {
+                    $('#deleteDinhMucModal').modal('hide');
+                    toastr.success(response.message);
+                    // Reload the dinhMucList section instead of full page
+                    ChiTietSanXuat.reloadDinhMucList();
                 } else {
                     toastr.error('Có lỗi xảy ra khi xóa định mức nguyên liệu!');
                 }

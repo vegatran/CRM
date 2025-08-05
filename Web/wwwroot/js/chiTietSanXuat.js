@@ -1,35 +1,12 @@
 // ChiTietSanXuat.js - Quản lý chi tiết sản xuất
 
 const ChiTietSanXuat = {
-    // Khởi tạo
     init: function() {
         console.log('ChiTietSanXuat.init() called');
-        this.loadDinhMucNguyenLieu();
         this.loadQuyTrinhSanXuat();
+        this.bindDinhMucEvents();
     },
 
-    // Load định mức nguyên liệu
-    loadDinhMucNguyenLieu: function() {
-        var sanPhamId = $('#dinhMucList').data('san-pham-id');
-        console.log('Loading DinhMucNguyenLieu for sanPhamId:', sanPhamId);
-        if (sanPhamId) {
-            var url = '/DinhMucNguyenLieu/BySanPham/' + sanPhamId;
-            console.log('Calling URL:', url);
-            $.get(url, function(data) {
-                console.log('DinhMucNguyenLieu loaded successfully');
-                $('#dinhMucList').html(data);
-            }).fail(function(xhr, status, error) {
-                console.error('Error loading DinhMucNguyenLieu:', error);
-                console.error('Status:', status);
-                console.error('Response:', xhr.responseText);
-                $('#dinhMucList').html('<div class="alert alert-danger">Lỗi khi tải định mức nguyên liệu</div>');
-            });
-        } else {
-            console.error('No sanPhamId found for DinhMucNguyenLieu');
-        }
-    },
-
-    // Load quy trình sản xuất
     loadQuyTrinhSanXuat: function() {
         var sanPhamId = $('#quyTrinhList').data('san-pham-id');
         console.log('Loading QuyTrinhSanXuat for sanPhamId:', sanPhamId);
@@ -48,10 +25,60 @@ const ChiTietSanXuat = {
         } else {
             console.error('No sanPhamId found for QuyTrinhSanXuat');
         }
+    },
+
+    bindDinhMucEvents: function() {
+        // Thêm định mức mới
+        $(document).on('click', '#addDinhMucBtn', function() {
+            var sanPhamId = $('#dinhMucList').data('san-pham-id');
+            ChiTietSanXuat.loadCreateDinhMucModal(sanPhamId);
+        });
+
+        // Sửa định mức
+        $(document).on('click', '.edit-dinhmuc-btn', function() {
+            var id = $(this).data('id');
+            ChiTietSanXuat.loadEditDinhMucModal(id);
+        });
+
+        // Xóa định mức
+        $(document).on('click', '.delete-dinhmuc-btn', function() {
+            var id = $(this).data('id');
+            ChiTietSanXuat.loadDeleteDinhMucModal(id);
+        });
+    },
+
+    loadCreateDinhMucModal: function(sanPhamId) {
+        $.get('/DinhMucNguyenLieu/Create', { sanPhamId: sanPhamId }, function(data) {
+            $('#modalContainer').html(data);
+            $('#createDinhMucModal').modal('show');
+        });
+    },
+
+    loadEditDinhMucModal: function(id) {
+        $.get('/DinhMucNguyenLieu/Edit/' + id, function(data) {
+            $('#modalContainer').html(data);
+            $('#editDinhMucModal').modal('show');
+        });
+    },
+
+    loadDeleteDinhMucModal: function(id) {
+        $.get('/DinhMucNguyenLieu/Delete/' + id, function(data) {
+            $('#modalContainer').html(data);
+            $('#deleteDinhMucModal').modal('show');
+        });
+    },
+
+    reloadDinhMucList: function() {
+        var sanPhamId = $('#dinhMucList').data('san-pham-id');
+        if (sanPhamId) {
+            var url = '/DinhMucNguyenLieu/BySanPham/' + sanPhamId;
+            $.get(url, function(data) {
+                $('#dinhMucList').html(data);
+            });
+        }
     }
 };
 
-// Initialize when document is ready
 $(document).ready(function() {
     console.log('Document ready, initializing ChiTietSanXuat');
     ChiTietSanXuat.init();
