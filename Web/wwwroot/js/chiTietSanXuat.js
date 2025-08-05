@@ -45,6 +45,25 @@ const ChiTietSanXuat = {
             var id = $(this).data('id');
             ChiTietSanXuat.loadDeleteDinhMucModal(id);
         });
+
+        // Thêm quy trình mới
+        $(document).on('click', '#addQuyTrinhBtn', function() {
+            var sanPhamId = $(this).data('san-pham-id');
+            ChiTietSanXuat.loadCreateQuyTrinhModal(sanPhamId);
+        });
+
+        // Sửa quy trình
+        $(document).on('click', '.edit-quytrinh-btn', function() {
+            var id = $(this).data('id');
+            ChiTietSanXuat.loadEditQuyTrinhModal(id);
+        });
+
+        // Xóa quy trình
+        $(document).on('click', '.delete-quytrinh-btn', function() {
+            var id = $(this).data('id');
+            var sanPhamId = $(this).data('san-pham-id');
+            ChiTietSanXuat.loadDeleteQuyTrinhModal(id, sanPhamId);
+        });
     },
 
     loadCreateDinhMucModal: function(sanPhamId) {
@@ -74,6 +93,38 @@ const ChiTietSanXuat = {
             var url = '/DinhMucNguyenLieu/BySanPham/' + sanPhamId;
             $.get(url, function(data) {
                 $('#dinhMucList').html(data);
+            });
+        }
+    },
+
+    loadCreateQuyTrinhModal: function(sanPhamId) {
+        $.get('/QuyTrinhSanXuat/Create', { sanPhamId: sanPhamId }, function(data) {
+            $('#modalContainer').html(data);
+            $('#createQuyTrinhModal').modal('show');
+        });
+    },
+
+    loadEditQuyTrinhModal: function(id) {
+        $.get('/QuyTrinhSanXuat/Edit/' + id, function(data) {
+            $('#modalContainer').html(data);
+            $('#editQuyTrinhModal').modal('show');
+        });
+    },
+
+    loadDeleteQuyTrinhModal: function(id, sanPhamId) {
+        if (confirm('Bạn có chắc chắn muốn xóa quy trình này?')) {
+            $.post('/QuyTrinhSanXuat/Delete/' + id, function(response) {
+                if (response.success) {
+                    toastr.success(response.message);
+                    // Reload the entire page to update cost analysis
+                    setTimeout(function() {
+                        location.reload();
+                    }, 1000);
+                } else {
+                    toastr.error(response.message);
+                }
+            }).fail(function() {
+                toastr.error('Có lỗi xảy ra khi xóa quy trình!');
             });
         }
     }

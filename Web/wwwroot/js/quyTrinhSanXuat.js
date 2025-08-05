@@ -8,11 +8,13 @@ const QuyTrinhSanXuat = {
 
     // Bind events
     bindEvents: function() {
-        // Currency formatting
+        // Currency formatting for ChiPhiNhanCong input
         $(document).on('input', '.currency-input', function() {
             var value = $(this).val().replace(/[^\d]/g, '');
             if (value) {
-                $(this).val(parseInt(value).toLocaleString('vi-VN'));
+                // Format as currency with commas
+                var formattedValue = parseInt(value).toLocaleString('vi-VN');
+                $(this).val(formattedValue);
             }
         });
 
@@ -55,7 +57,10 @@ const QuyTrinhSanXuat = {
             $.post('/QuyTrinhSanXuat/Delete/' + id, function(response) {
                 if (response.success) {
                     toastr.success(response.message);
-                    QuyTrinhSanXuat.loadQuyTrinhList(sanPhamId);
+                    // Reload the entire page to update cost analysis
+                    setTimeout(function() {
+                        location.reload();
+                    }, 1000);
                 } else {
                     toastr.error(response.message);
                 }
@@ -77,7 +82,7 @@ const QuyTrinhSanXuat = {
         var formData = form.serialize();
         var chiPhiInput = form.find('.currency-input');
         var chiPhiValue = chiPhiInput.val().replace(/[^\d]/g, '');
-        formData = formData.replace(/ChiPhiNhanCong=\d*/, 'ChiPhiNhanCong=' + chiPhiValue);
+        formData = formData.replace(/ChiPhiNhanCong=[^&]*/, 'ChiPhiNhanCong=' + chiPhiValue);
 
         $.ajax({
             url: form.attr('action'),
@@ -87,9 +92,10 @@ const QuyTrinhSanXuat = {
                 if (response.success) {
                     toastr.success(response.message);
                     $('#quyTrinhModal').modal('hide');
-                    // Reload quy trình list
-                    var sanPhamId = form.find('input[name="SanPhamId"]').val();
-                    QuyTrinhSanXuat.loadQuyTrinhList(sanPhamId);
+                    // Reload the entire page to update cost analysis
+                    setTimeout(function() {
+                        location.reload();
+                    }, 1000);
                 } else {
                     toastr.error(response.message);
                 }
@@ -106,7 +112,7 @@ const QuyTrinhSanXuat = {
         var formData = form.serialize();
         var chiPhiInput = form.find('.currency-input');
         var chiPhiValue = chiPhiInput.val().replace(/[^\d]/g, '');
-        formData = formData.replace(/ChiPhiNhanCong=\d*/, 'ChiPhiNhanCong=' + chiPhiValue);
+        formData = formData.replace(/ChiPhiNhanCong=[^&]*/, 'ChiPhiNhanCong=' + chiPhiValue);
 
         $.ajax({
             url: form.attr('action'),
@@ -116,9 +122,10 @@ const QuyTrinhSanXuat = {
                 if (response.success) {
                     toastr.success(response.message);
                     $('#quyTrinhModal').modal('hide');
-                    // Reload quy trình list
-                    var sanPhamId = form.find('input[name="SanPhamId"]').val();
-                    QuyTrinhSanXuat.loadQuyTrinhList(sanPhamId);
+                    // Reload the entire page to update cost analysis
+                    setTimeout(function() {
+                        location.reload();
+                    }, 1000);
                 } else {
                     toastr.error(response.message);
                 }

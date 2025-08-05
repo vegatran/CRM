@@ -144,7 +144,7 @@
                                                 <strong>@item.NguyenLieu?.TenNguyenLieu</strong><br />
                                                 <small class="text-muted">@item.NguyenLieu?.MaNguyenLieu</small>
                                             </td>
-                                            <td>@item.SoLuongCan.ToString("N2")</td>
+                                            <td>@item.SoLuongCan.ToString("0.00")</td>
                                             <td>@item.DonViTinh</td>
                                             <td>@((item.NguyenLieu?.GiaNhap ?? 0).ToString("N0")) VNĐ</td>
                                             <td><strong>@thanhTien.ToString("N0") VNĐ</strong></td>
@@ -203,4 +203,5 @@
 @section Scripts {
     <script src="~/js/chiTietSanXuat.js"></script>
     <script src="~/js/dinhmucnguyenlieu.js"></script>
+    <script src="~/js/quyTrinhSanXuat.js"></script>
 } 

@@ -30,7 +30,7 @@
 
         <div class="form-group">
             <label asp-for="ChiPhiNhanCong" class="control-label">Chi phí nhân công (VNĐ) <span class="text-danger">*</span></label>
-            <input asp-for="ChiPhiNhanCong" class="form-control currency-input" placeholder="VD: 15000" />
+            <input asp-for="ChiPhiNhanCong" class="form-control currency-input" type="text" placeholder="15,000" />
             <span asp-validation-for="ChiPhiNhanCong" class="text-danger"></span>
         </div>
 
@@ -50,6 +50,4 @@
             <i class="fas fa-save"></i> Cập nhật
         </button>
     </div>
-</form>
-
-<script src="~/js/quyTrinhSanXuat.js"></script> 
+</form> 

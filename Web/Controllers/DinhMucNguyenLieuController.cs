@@ -47,15 +47,30 @@ namespace Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("SanPhamId,NguyenLieuId,SoLuongCan,DonViTinh,GhiChu,TrangThai")] DinhMucNguyenLieu dinhMucNguyenLieu)
         {
+            // Bỏ qua validation cho các trường navigation property
+            ModelState.Remove("SanPham");
+            ModelState.Remove("NguyenLieu");
+
             if (ModelState.IsValid)
             {
-                await _dinhMucNguyenLieuService.CreateAsync(dinhMucNguyenLieu);
-                return Json(new { success = true, message = "Thêm định mức nguyên liệu thành công!" });
+                try
+                {
+                    await _dinhMucNguyenLieuService.CreateAsync(dinhMucNguyenLieu);
+                    return Json(new { success = true, message = "Thêm định mức nguyên liệu thành công!" });
+                }
+                catch (Exception ex)
+                {
+                    return Json(new { success = false, message = "Có lỗi xảy ra khi thêm: " + ex.Message });
+                }
             }
             
-            ViewBag.SanPhams = await _sanPhamService.GetAllAsync();
-            ViewBag.NguyenLieus = await _nguyenLieuService.GetAllAsync();
-            return PartialView("_CreateModal", dinhMucNguyenLieu);
+            // Nếu ModelState không hợp lệ, trả về lỗi Json
+            var errors = ModelState.Values
+                .SelectMany(v => v.Errors)
+                .Select(e => e.ErrorMessage)
+                .ToList();
+            
+            return Json(new { success = false, message = "Dữ liệu không hợp lệ: " + string.Join(", ", errors) });
         }
 
         // GET: DinhMucNguyenLieu/Edit/5
@@ -79,8 +94,12 @@ namespace Web.Controllers
         {
             if (id != dinhMucNguyenLieu.Id)
             {
-                return NotFound();
+                return Json(new { success = false, message = "ID không hợp lệ!" });
             }
+
+            // Bỏ qua validation cho các trường navigation property
+            ModelState.Remove("SanPham");
+            ModelState.Remove("NguyenLieu");
 
             if (ModelState.IsValid)
             {
@@ -89,22 +108,26 @@ namespace Web.Controllers
                     await _dinhMucNguyenLieuService.UpdateAsync(dinhMucNguyenLieu);
                     return Json(new { success = true, message = "Cập nhật định mức nguyên liệu thành công!" });
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     if (!await _dinhMucNguyenLieuService.ExistsAsync(dinhMucNguyenLieu.Id))
                     {
-                        return NotFound();
+                        return Json(new { success = false, message = "Không tìm thấy định mức nguyên liệu!" });
                     }
                     else
                     {
-                        throw;
+                        return Json(new { success = false, message = "Có lỗi xảy ra khi cập nhật: " + ex.Message });
                     }
                 }
             }
             
-            ViewBag.SanPhams = await _sanPhamService.GetAllAsync();
-            ViewBag.NguyenLieus = await _nguyenLieuService.GetAllAsync();
-            return PartialView("_EditModal", dinhMucNguyenLieu);
+            // Nếu ModelState không hợp lệ, trả về lỗi Json
+            var errors = ModelState.Values
+                .SelectMany(v => v.Errors)
+                .Select(e => e.ErrorMessage)
+                .ToList();
+            
+            return Json(new { success = false, message = "Dữ liệu không hợp lệ: " + string.Join(", ", errors) });
         }
 
         // GET: DinhMucNguyenLieu/Delete/5

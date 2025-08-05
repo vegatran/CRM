@@ -3,7 +3,7 @@
 <div class="card">
     <div class="card-header">
         <div class="card-tools">
-            <button type="button" class="btn btn-primary btn-sm" onclick="openCreateQuyTrinhModal(@(Model.FirstOrDefault()?.SanPhamId ?? 0))">
+            <button type="button" class="btn btn-primary btn-sm" id="addQuyTrinhBtn" data-san-pham-id="@(Model.FirstOrDefault()?.SanPhamId ?? 0)">
                 <i class="fas fa-plus"></i> Thêm quy trình
             </button>
         </div>
@@ -37,7 +37,7 @@
                                 <td>@stt</td>
                                 <td><strong>@item.TenCongDoan</strong></td>
                                 <td>@item.MoTa</td>
-                                <td><strong>@item.ChiPhiNhanCong.ToString("N0") VNĐ</strong></td>
+                                <td><strong>@item.ChiPhiNhanCong.ToString("N2") VNĐ</strong></td>
                                 <td>
                                     <span class="badge badge-info">@item.ThuTu</span>
                                 </td>
@@ -53,10 +53,10 @@
                                 </td>
                                 <td>
                                     <div class="btn-group" role="group">
-                                        <button type="button" class="btn btn-sm btn-info" onclick="openEditQuyTrinhModal(@item.Id)">
+                                        <button type="button" class="btn btn-sm btn-info edit-quytrinh-btn" data-id="@item.Id">
                                             <i class="fas fa-edit"></i>
                                         </button>
-                                        <button type="button" class="btn btn-sm btn-danger" onclick="deleteQuyTrinh(@item.Id, @(Model.FirstOrDefault()?.SanPhamId ?? 0))">
+                                        <button type="button" class="btn btn-sm btn-danger delete-quytrinh-btn" data-id="@item.Id" data-san-pham-id="@(Model.FirstOrDefault()?.SanPhamId ?? 0)">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </div>
@@ -92,6 +92,4 @@
             <!-- Content will be loaded here -->
         </div>
     </div>
-</div>
-
-<script src="~/js/quyTrinhSanXuat.js"></script> 
+</div> 

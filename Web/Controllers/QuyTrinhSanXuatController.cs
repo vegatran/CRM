@@ -48,6 +48,9 @@ namespace Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(QuyTrinhSanXuat quyTrinh)
         {
+            // Bỏ qua validation cho các trường navigation property
+            ModelState.Remove("SanPham");
+
             if (ModelState.IsValid)
             {
                 try
@@ -61,8 +64,13 @@ namespace Web.Controllers
                 }
             }
 
-            ViewBag.SanPhamId = quyTrinh.SanPhamId;
-            return PartialView("_Create", quyTrinh);
+            // Nếu ModelState không hợp lệ, trả về lỗi Json
+            var errors = ModelState.Values
+                .SelectMany(v => v.Errors)
+                .Select(e => e.ErrorMessage)
+                .ToList();
+            
+            return Json(new { success = false, message = "Dữ liệu không hợp lệ: " + string.Join(", ", errors) });
         }
 
         // GET: QuyTrinhSanXuat/Edit/5
@@ -84,8 +92,11 @@ namespace Web.Controllers
         {
             if (id != quyTrinh.Id)
             {
-                return NotFound();
+                return Json(new { success = false, message = "ID không hợp lệ!" });
             }
+
+            // Bỏ qua validation cho các trường navigation property
+            ModelState.Remove("SanPham");
 
             if (ModelState.IsValid)
             {
@@ -100,7 +111,13 @@ namespace Web.Controllers
                 }
             }
 
-            return PartialView("_Edit", quyTrinh);
+            // Nếu ModelState không hợp lệ, trả về lỗi Json
+            var errors = ModelState.Values
+                .SelectMany(v => v.Errors)
+                .Select(e => e.ErrorMessage)
+                .ToList();
+            
+            return Json(new { success = false, message = "Dữ liệu không hợp lệ: " + string.Join(", ", errors) });
         }
 
         // POST: QuyTrinhSanXuat/Delete/5

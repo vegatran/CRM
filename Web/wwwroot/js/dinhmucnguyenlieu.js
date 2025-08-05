@@ -24,6 +24,15 @@ const DinhMucNguyenLieu = {
 
     // Bind events
     bindEvents: function() {
+        // Number formatting for SoLuongCan input
+        $(document).on('input', 'input[name="SoLuongCan"]', function() {
+            var value = $(this).val();
+            // Allow decimal numbers with up to 2 decimal places
+            if (value && !/^\d*\.?\d{0,2}$/.test(value)) {
+                $(this).val(value.replace(/[^\d.]/g, '').replace(/(\..*)\./g, '$1'));
+            }
+        });
+
         // Create button click
         $('[data-target="#createModal"]').click(function() {
             DinhMucNguyenLieu.loadCreateModal();
@@ -198,8 +207,10 @@ const DinhMucNguyenLieu = {
                 if (response.success) {
                     $('#createDinhMucModal').modal('hide');
                     toastr.success(response.message);
-                    // Reload the dinhMucList section instead of full page
-                    ChiTietSanXuat.reloadDinhMucList();
+                    // Reload the entire page to update cost analysis
+                    setTimeout(function() {
+                        location.reload();
+                    }, 1000);
                 } else {
                     toastr.error('Có lỗi xảy ra khi thêm định mức nguyên liệu!');
                 }
@@ -225,8 +236,10 @@ const DinhMucNguyenLieu = {
                 if (response.success) {
                     $('#editDinhMucModal').modal('hide');
                     toastr.success(response.message);
-                    // Reload the dinhMucList section instead of full page
-                    ChiTietSanXuat.reloadDinhMucList();
+                    // Reload the entire page to update cost analysis
+                    setTimeout(function() {
+                        location.reload();
+                    }, 1000);
                 } else {
                     toastr.error('Có lỗi xảy ra khi cập nhật định mức nguyên liệu!');
                 }
@@ -252,8 +265,10 @@ const DinhMucNguyenLieu = {
                 if (response.success) {
                     $('#deleteDinhMucModal').modal('hide');
                     toastr.success(response.message);
-                    // Reload the dinhMucList section instead of full page
-                    ChiTietSanXuat.reloadDinhMucList();
+                    // Reload the entire page to update cost analysis
+                    setTimeout(function() {
+                        location.reload();
+                    }, 1000);
                 } else {
                     toastr.error('Có lỗi xảy ra khi xóa định mức nguyên liệu!');
                 }
