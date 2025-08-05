@@ -205,7 +205,7 @@ const DinhMucNguyenLieu = {
             contentType: false,
             success: function(response) {
                 if (response.success) {
-                    $('#createDinhMucModal').modal('hide');
+                    $('#dinhMucModal').modal('hide');
                     toastr.success(response.message);
                     // Reload the entire page to update cost analysis
                     setTimeout(function() {
@@ -234,7 +234,7 @@ const DinhMucNguyenLieu = {
             contentType: false,
             success: function(response) {
                 if (response.success) {
-                    $('#editDinhMucModal').modal('hide');
+                    $('#dinhMucModal').modal('hide');
                     toastr.success(response.message);
                     // Reload the entire page to update cost analysis
                     setTimeout(function() {
@@ -263,7 +263,7 @@ const DinhMucNguyenLieu = {
             contentType: false,
             success: function(response) {
                 if (response.success) {
-                    $('#deleteDinhMucModal').modal('hide');
+                    $('#dinhMucModal').modal('hide');
                     toastr.success(response.message);
                     // Reload the entire page to update cost analysis
                     setTimeout(function() {

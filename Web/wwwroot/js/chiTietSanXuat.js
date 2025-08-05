@@ -55,6 +55,7 @@ const ChiTietSanXuat = {
         // Sửa quy trình
         $(document).on('click', '.edit-quytrinh-btn', function() {
             var id = $(this).data('id');
+            console.log('Edit quy trình clicked, id:', id);
             ChiTietSanXuat.loadEditQuyTrinhModal(id);
         });
 
@@ -68,22 +69,22 @@ const ChiTietSanXuat = {
 
     loadCreateDinhMucModal: function(sanPhamId) {
         $.get('/DinhMucNguyenLieu/Create', { sanPhamId: sanPhamId }, function(data) {
-            $('#modalContainer').html(data);
-            $('#createDinhMucModal').modal('show');
+            $('#dinhMucModalContent').html(data);
+            $('#dinhMucModal').modal('show');
         });
     },
 
     loadEditDinhMucModal: function(id) {
         $.get('/DinhMucNguyenLieu/Edit/' + id, function(data) {
-            $('#modalContainer').html(data);
-            $('#editDinhMucModal').modal('show');
+            $('#dinhMucModalContent').html(data);
+            $('#dinhMucModal').modal('show');
         });
     },
 
     loadDeleteDinhMucModal: function(id) {
         $.get('/DinhMucNguyenLieu/Delete/' + id, function(data) {
-            $('#modalContainer').html(data);
-            $('#deleteDinhMucModal').modal('show');
+            $('#dinhMucModalContent').html(data);
+            $('#dinhMucModal').modal('show');
         });
     },
 
@@ -99,15 +100,15 @@ const ChiTietSanXuat = {
 
     loadCreateQuyTrinhModal: function(sanPhamId) {
         $.get('/QuyTrinhSanXuat/Create', { sanPhamId: sanPhamId }, function(data) {
-            $('#modalContainer').html(data);
-            $('#createQuyTrinhModal').modal('show');
+            $('#quyTrinhModalContent').html(data);
+            $('#quyTrinhModal').modal('show');
         });
     },
 
     loadEditQuyTrinhModal: function(id) {
         $.get('/QuyTrinhSanXuat/Edit/' + id, function(data) {
-            $('#modalContainer').html(data);
-            $('#editQuyTrinhModal').modal('show');
+            $('#quyTrinhModalContent').html(data);
+            $('#quyTrinhModal').modal('show');
         });
     },
 
