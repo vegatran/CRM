@@ -1,0 +1,35 @@
+@{
+    ViewData["Title"] = "Quản lý Xuất kho";
+}
+
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Danh sách Phiếu xuất kho</h3>
+        <div class="card-tools">
+            <a href="@Url.Action("Create")" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Thêm mới
+            </a>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped data-table">
+                <thead>
+                    <tr>
+                        <th>Số phiếu</th>
+                        <th>Ngày xuất</th>
+                        <th>Khách hàng</th>
+                        <th>Tổng tiền</th>
+                        <th>Trạng thái</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="6" class="text-center">Chưa có dữ liệu</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
