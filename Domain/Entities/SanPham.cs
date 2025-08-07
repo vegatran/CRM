@@ -98,13 +98,72 @@ namespace Domain.Entities
             }
         }
         
-        // Computed property - Phần trăm lợi nhuận dự kiến
+        // Computed property - Phần trăm lợi nhuận
         public decimal PhanTramLoiNhuan
         {
             get
             {
                 if (GiaBan <= 0) return 0;
                 return ((GiaBan - GiaVon) / GiaBan) * 100;
+            }
+        }
+        
+        // Computed property - Số lượng sản phẩm có thể sản xuất được
+        public int SoLuongCoTheSanXuat
+        {
+            get
+            {
+                if (LoaiSanPham != LoaiSanPham.TuSanXuat || DinhMucNguyenLieus == null || !DinhMucNguyenLieus.Any())
+                    return 0;
+                
+                var soLuongCoTheSanXuat = int.MaxValue;
+                
+                foreach (var dinhMuc in DinhMucNguyenLieus.Where(d => d.TrangThai && d.NguyenLieu != null))
+                {
+                    if (dinhMuc.SoLuongCan <= 0) continue;
+                    
+                    // Tính số lượng sản phẩm có thể sản xuất từ nguyên liệu này
+                    // Sử dụng SoLuongTonThucTe thay vì SoLuongTon
+                    var soLuongTonThucTe = dinhMuc.NguyenLieu.SoLuongTonThucTe;
+                    var soLuongTuNguyenLieu = (int)(soLuongTonThucTe / dinhMuc.SoLuongCan);
+                    
+                    // Lấy số lượng nhỏ nhất (nguyên liệu nào thiếu nhất sẽ quyết định)
+                    if (soLuongTuNguyenLieu < soLuongCoTheSanXuat)
+                    {
+                        soLuongCoTheSanXuat = soLuongTuNguyenLieu;
+                    }
+                }
+                
+                return soLuongCoTheSanXuat == int.MaxValue ? 0 : soLuongCoTheSanXuat;
+            }
+        }
+        
+        // Computed property - Danh sách nguyên liệu thiếu
+        public List<string> DanhSachNguyenLieuThieu
+        {
+            get
+            {
+                var danhSachThieu = new List<string>();
+                
+                if (LoaiSanPham != LoaiSanPham.TuSanXuat || DinhMucNguyenLieus == null)
+                    return danhSachThieu;
+                
+                foreach (var dinhMuc in DinhMucNguyenLieus.Where(d => d.TrangThai && d.NguyenLieu != null))
+                {
+                    if (dinhMuc.SoLuongCan <= 0) continue;
+                    
+                    var soLuongCan = dinhMuc.SoLuongCan;
+                    // Sử dụng SoLuongTonThucTe thay vì SoLuongTon
+                    var soLuongTonThucTe = dinhMuc.NguyenLieu.SoLuongTonThucTe;
+                    
+                    if (soLuongTonThucTe < soLuongCan)
+                    {
+                        var soLuongThieu = soLuongCan - soLuongTonThucTe;
+                        danhSachThieu.Add($"{dinhMuc.NguyenLieu.TenNguyenLieu}: thiếu {soLuongThieu:N2} {dinhMuc.DonViTinh ?? "đơn vị"}");
+                    }
+                }
+                
+                return danhSachThieu;
             }
         }
     }

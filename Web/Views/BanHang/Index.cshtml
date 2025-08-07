@@ -1,0 +1,140 @@
+@model IEnumerable<Domain.Entities.PhieuBanHang>
+
+@{
+    ViewData["Title"] = "Quản lý Bán hàng";
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-shopping-cart mr-1"></i>
+                    Danh sách phiếu bán hàng
+                </h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-primary btn-sm" onclick="openCreateModal()">
+                        <i class="fas fa-plus"></i> Tạo phiếu bán hàng
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <table id="banHangTable" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Số phiếu</th>
+                            <th>Khách hàng</th>
+                            <th>Ngày bán</th>
+                            <th>Tổng tiền</th>
+                            <th>Giảm giá</th>
+                            <th>Thanh toán</th>
+                            <th>Trạng thái</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.SoPhieu</td>
+                                <td>@item.KhachHang?.TenKhachHang</td>
+                                <td>@item.NgayBan.ToString("dd/MM/yyyy")</td>
+                                <td>@item.TongTien.ToString("N0") VNĐ</td>
+                                <td>@item.GiamGia.ToString("N0") VNĐ</td>
+                                <td>@item.ThanhToan.ToString("N0") VNĐ</td>
+                                <td>
+                                    @if (item.TrangThai == "Chờ xử lý")
+                                    {
+                                        <span class="badge badge-warning">@item.TrangThai</span>
+                                    }
+                                    else if (item.TrangThai == "Đã xử lý")
+                                    {
+                                        <span class="badge badge-success">@item.TrangThai</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge badge-danger">@item.TrangThai</span>
+                                    }
+                                </td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-info btn-sm" onclick="openDetailsModal(@item.Id)">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        @if (item.TrangThai == "Chờ xử lý")
+                                        {
+                                            <button type="button" class="btn btn-warning btn-sm" onclick="openEditModal(@item.Id)">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-success btn-sm" onclick="xacNhanBanHang(@item.Id)">
+                                                <i class="fas fa-check"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-danger btn-sm" onclick="openDeleteModal(@item.Id)">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Container -->
+<div class="modal fade" id="banHangModal" tabindex="-1" role="dialog" aria-labelledby="banHangModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="banHangModalLabel">Tạo phiếu bán hàng</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="banHangModalContent">
+                <!-- Content will be loaded here -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Details Modal -->
+<div class="modal fade" id="detailsModal" tabindex="-1" role="dialog" aria-labelledby="detailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="detailsModalLabel">Chi tiết phiếu bán hàng</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="detailsModalContent">
+                <!-- Content will be loaded here -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Xác nhận xóa</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="deleteModalContent">
+                <!-- Content will be loaded here -->
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/banhang.js"></script>
+}

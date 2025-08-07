@@ -1,0 +1,103 @@
+@model Domain.Entities.PhieuBanHang
+
+<div class="row">
+    <div class="col-md-6">
+        <table class="table table-borderless">
+            <tr>
+                <th>Số phiếu:</th>
+                <td>@Model.SoPhieu</td>
+            </tr>
+            <tr>
+                <th>Khách hàng:</th>
+                <td>@Model.KhachHang?.TenKhachHang</td>
+            </tr>
+            <tr>
+                <th>Ngày bán:</th>
+                <td>@Model.NgayBan.ToString("dd/MM/yyyy")</td>
+            </tr>
+            <tr>
+                <th>Trạng thái:</th>
+                <td>
+                    @if (Model.TrangThai == "Chờ xử lý")
+                    {
+                        <span class="badge badge-warning">@Model.TrangThai</span>
+                    }
+                    else if (Model.TrangThai == "Đã xử lý")
+                    {
+                        <span class="badge badge-success">@Model.TrangThai</span>
+                    }
+                    else
+                    {
+                        <span class="badge badge-danger">@Model.TrangThai</span>
+                    }
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="col-md-6">
+        <table class="table table-borderless">
+            <tr>
+                <th>Tổng tiền:</th>
+                <td>@Model.TongTien.ToString("N0") VNĐ</td>
+            </tr>
+            <tr>
+                <th>Giảm giá:</th>
+                <td>@Model.GiamGia.ToString("N0") VNĐ</td>
+            </tr>
+            <tr>
+                <th>Thanh toán:</th>
+                <td><strong>@Model.ThanhToan.ToString("N0") VNĐ</strong></td>
+            </tr>
+            <tr>
+                <th>Ghi chú:</th>
+                <td>@(string.IsNullOrEmpty(Model.GhiChu) ? "Không có" : Model.GhiChu)</td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<hr />
+
+<div class="row">
+    <div class="col-12">
+        <h5>Chi tiết bán hàng</h5>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>STT</th>
+                    <th>Sản phẩm</th>
+                    <th>Số lượng</th>
+                    <th>Đơn giá</th>
+                    <th>Thành tiền</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.ChiTietBanHangs != null && Model.ChiTietBanHangs.Any())
+                {
+                    int stt = 1;
+                    foreach (var chiTiet in Model.ChiTietBanHangs)
+                    {
+                        <tr>
+                            <td>@stt</td>
+                            <td>@chiTiet.SanPham?.TenSanPham</td>
+                            <td>@chiTiet.SoLuong</td>
+                            <td>@chiTiet.DonGia.ToString("N0") VNĐ</td>
+                            <td>@chiTiet.ThanhTien.ToString("N0") VNĐ</td>
+                        </tr>
+                        stt++;
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="5" class="text-center">Không có chi tiết bán hàng</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+</div>

@@ -18,6 +18,27 @@ namespace Application.Services
             return await _unitOfWork.Repository<DinhMucNguyenLieu>().GetByIdAsync(id);
         }
 
+        public async Task<DinhMucNguyenLieu?> GetByIdWithDetailsAsync(int id)
+        {
+            var dinhMuc = await _unitOfWork.Repository<DinhMucNguyenLieu>().GetByIdAsync(id);
+            if (dinhMuc == null)
+                return null;
+
+            var allSanPhams = await _unitOfWork.SanPhamRepository.GetAllAsync();
+            var allNguyenLieus = await _unitOfWork.NguyenLieuRepository.GetAllAsync();
+
+            // Manually populate navigation properties
+            var sanPham = allSanPhams.FirstOrDefault(sp => sp.Id == dinhMuc.SanPhamId);
+            if (sanPham != null)
+                dinhMuc.SanPham = sanPham;
+
+            var nguyenLieu = allNguyenLieus.FirstOrDefault(nl => nl.Id == dinhMuc.NguyenLieuId);
+            if (nguyenLieu != null)
+                dinhMuc.NguyenLieu = nguyenLieu;
+
+            return dinhMuc;
+        }
+
         public async Task<IEnumerable<DinhMucNguyenLieu>> GetAllAsync()
         {
             return await _unitOfWork.Repository<DinhMucNguyenLieu>().GetAllAsync();
@@ -65,6 +86,12 @@ namespace Application.Services
             }
 
             return result;
+        }
+
+        public async Task<DinhMucNguyenLieu?> GetBySanPhamAndNguyenLieuAsync(int sanPhamId, int nguyenLieuId)
+        {
+            var allDinhMucs = await GetAllAsync();
+            return allDinhMucs.FirstOrDefault(d => d.SanPhamId == sanPhamId && d.NguyenLieuId == nguyenLieuId && d.TrangThai);
         }
 
         public async Task<DinhMucNguyenLieu> CreateAsync(DinhMucNguyenLieu dinhMucNguyenLieu)

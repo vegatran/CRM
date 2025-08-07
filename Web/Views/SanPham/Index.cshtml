@@ -134,21 +134,103 @@
                                 <div class="d-flex align-items-center">
                                     @if (item.MauSac.StartsWith("#"))
                                     {
+                                        <!-- Màu hex -->
                                         <div class="color-preview" style="width: 20px; height: 20px; background-color: @item.MauSac; border: 1px solid #ddd; border-radius: 3px; margin-right: 8px;"></div>
                                         <span>@item.MauSac</span>
                                     }
-                                    else if (item.MauSac.Contains("Caro"))
+                                    else if (item.MauSac.Contains("Caro đỏ trắng"))
                                     {
-                                        <div class="color-preview checkered-pattern" style="width: 20px; height: 20px; border: 1px solid #ddd; border-radius: 3px; margin-right: 8px;" data-pattern="@item.MauSac"></div>
+                                        <!-- Pattern caro đỏ trắng -->
+                                        <div class="color-preview checkered-pattern" style="width: 20px; height: 20px; border: 1px solid #ddd; border-radius: 3px; margin-right: 8px; background-image: linear-gradient(45deg, #ff0000 25%, transparent 25%), linear-gradient(-45deg, #ff0000 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #ff0000 75%), linear-gradient(-45deg, transparent 75%, #ff0000 75%); background-size: 8px 8px; background-position: 0 0, 0 4px, 4px -4px, -4px 0px;"></div>
                                         <span>@item.MauSac</span>
                                     }
-                                    else if (item.MauSac.Contains("Sọc"))
+                                    else if (item.MauSac.Contains("Caro xanh trắng"))
                                     {
-                                        <div class="color-preview stripe-pattern" style="width: 20px; height: 20px; border: 1px solid #ddd; border-radius: 3px; margin-right: 8px;" data-pattern="@item.MauSac"></div>
+                                        <!-- Pattern caro xanh trắng -->
+                                        <div class="color-preview checkered-pattern" style="width: 20px; height: 20px; border: 1px solid #ddd; border-radius: 3px; margin-right: 8px; background-image: linear-gradient(45deg, #0000ff 25%, transparent 25%), linear-gradient(-45deg, #0000ff 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #0000ff 75%), linear-gradient(-45deg, transparent 75%, #0000ff 75%); background-size: 8px 8px; background-position: 0 0, 0 4px, 4px -4px, -4px 0px;"></div>
+                                        <span>@item.MauSac</span>
+                                    }
+                                    else if (item.MauSac.Contains("Caro đen trắng"))
+                                    {
+                                        <!-- Pattern caro đen trắng -->
+                                        <div class="color-preview checkered-pattern" style="width: 20px; height: 20px; border: 1px solid #ddd; border-radius: 3px; margin-right: 8px; background-image: linear-gradient(45deg, #000000 25%, transparent 25%), linear-gradient(-45deg, #000000 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #000000 75%), linear-gradient(-45deg, transparent 75%, #000000 75%); background-size: 8px 8px; background-position: 0 0, 0 4px, 4px -4px, -4px 0px;"></div>
+                                        <span>@item.MauSac</span>
+                                    }
+                                    else if (item.MauSac.Contains("Caro xanh đỏ"))
+                                    {
+                                        <!-- Pattern caro xanh đỏ -->
+                                        <div class="color-preview checkered-pattern" style="width: 20px; height: 20px; border: 1px solid #ddd; border-radius: 3px; margin-right: 8px; background-image: linear-gradient(45deg, #0000ff 25%, transparent 25%), linear-gradient(-45deg, #0000ff 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #ff0000 75%), linear-gradient(-45deg, transparent 75%, #ff0000 75%); background-size: 8px 8px; background-position: 0 0, 0 4px, 4px -4px, -4px 0px;"></div>
+                                        <span>@item.MauSac</span>
+                                    }
+                                    else if (item.MauSac.Contains("Sọc đỏ trắng"))
+                                    {
+                                        <!-- Pattern sọc đỏ trắng -->
+                                        <div class="color-preview stripe-pattern" style="width: 20px; height: 20px; border: 1px solid #ddd; border-radius: 3px; margin-right: 8px; background-image: repeating-linear-gradient(45deg, #ff0000, #ff0000 2px, #ffffff 2px, #ffffff 4px);"></div>
+                                        <span>@item.MauSac</span>
+                                    }
+                                    else if (item.MauSac.Contains("Sọc xanh trắng"))
+                                    {
+                                        <!-- Pattern sọc xanh trắng -->
+                                        <div class="color-preview stripe-pattern" style="width: 20px; height: 20px; border: 1px solid #ddd; border-radius: 3px; margin-right: 8px; background-image: repeating-linear-gradient(45deg, #0000ff, #0000ff 2px, #ffffff 2px, #ffffff 4px);"></div>
+                                        <span>@item.MauSac</span>
+                                    }
+                                    else if (item.MauSac.Contains("Sọc đen trắng"))
+                                    {
+                                        <!-- Pattern sọc đen trắng -->
+                                        <div class="color-preview stripe-pattern" style="width: 20px; height: 20px; border: 1px solid #ddd; border-radius: 3px; margin-right: 8px; background-image: repeating-linear-gradient(45deg, #000000, #000000 2px, #ffffff 2px, #ffffff 4px);"></div>
+                                        <span>@item.MauSac</span>
+                                    }
+                                    else if (item.MauSac.Contains("Đỏ"))
+                                    {
+                                        <!-- Màu đỏ -->
+                                        <div class="color-preview" style="width: 20px; height: 20px; background-color: #FF0000; border: 1px solid #ddd; border-radius: 3px; margin-right: 8px;"></div>
+                                        <span>@item.MauSac</span>
+                                    }
+                                    else if (item.MauSac.Contains("Xanh dương"))
+                                    {
+                                        <!-- Màu xanh dương -->
+                                        <div class="color-preview" style="width: 20px; height: 20px; background-color: #0000FF; border: 1px solid #ddd; border-radius: 3px; margin-right: 8px;"></div>
+                                        <span>@item.MauSac</span>
+                                    }
+                                    else if (item.MauSac.Contains("Xanh lá"))
+                                    {
+                                        <!-- Màu xanh lá -->
+                                        <div class="color-preview" style="width: 20px; height: 20px; background-color: #00FF00; border: 1px solid #ddd; border-radius: 3px; margin-right: 8px;"></div>
+                                        <span>@item.MauSac</span>
+                                    }
+                                    else if (item.MauSac.Contains("Vàng"))
+                                    {
+                                        <!-- Màu vàng -->
+                                        <div class="color-preview" style="width: 20px; height: 20px; background-color: #FFFF00; border: 1px solid #ddd; border-radius: 3px; margin-right: 8px;"></div>
+                                        <span>@item.MauSac</span>
+                                    }
+                                    else if (item.MauSac.Contains("Hồng"))
+                                    {
+                                        <!-- Màu hồng -->
+                                        <div class="color-preview" style="width: 20px; height: 20px; background-color: #FF00FF; border: 1px solid #ddd; border-radius: 3px; margin-right: 8px;"></div>
+                                        <span>@item.MauSac</span>
+                                    }
+                                    else if (item.MauSac.Contains("Đen"))
+                                    {
+                                        <!-- Màu đen -->
+                                        <div class="color-preview" style="width: 20px; height: 20px; background-color: #000000; border: 1px solid #ddd; border-radius: 3px; margin-right: 8px;"></div>
+                                        <span>@item.MauSac</span>
+                                    }
+                                    else if (item.MauSac.Contains("Trắng"))
+                                    {
+                                        <!-- Màu trắng -->
+                                        <div class="color-preview" style="width: 20px; height: 20px; background-color: #FFFFFF; border: 1px solid #ddd; border-radius: 3px; margin-right: 8px;"></div>
+                                        <span>@item.MauSac</span>
+                                    }
+                                    else if (item.MauSac.Contains("Nhiều màu") || item.MauSac.Contains("Hoa văn"))
+                                    {
+                                        <!-- Pattern nhiều màu hoặc hoa văn -->
+                                        <div class="color-preview" style="width: 20px; height: 20px; background: linear-gradient(45deg, #ff0000, #00ff00, #0000ff, #ffff00, #ff00ff); border: 1px solid #ddd; border-radius: 3px; margin-right: 8px;"></div>
                                         <span>@item.MauSac</span>
                                     }
                                     else
                                     {
+                                        <!-- Pattern khác -->
                                         <div class="color-preview" style="width: 20px; height: 20px; background-color: #f0f0f0; border: 1px solid #ddd; border-radius: 3px; margin-right: 8px; display: flex; align-items: center; justify-content-center; font-size: 10px;">🎨</div>
                                         <span>@item.MauSac</span>
                                     }

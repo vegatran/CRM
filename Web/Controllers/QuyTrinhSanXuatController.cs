@@ -55,8 +55,36 @@ namespace Web.Controllers
             {
                 try
                 {
-                    await _quyTrinhSanXuatService.CreateAsync(quyTrinh);
-                    return Json(new { success = true, message = "Thêm quy trình thành công!" });
+                    // Kiểm tra xem đã tồn tại quy trình cho sản phẩm và tên công đoạn này chưa
+                    var existingQuyTrinh = await _quyTrinhSanXuatService.GetBySanPhamAndTenQuyTrinhAsync(quyTrinh.SanPhamId, quyTrinh.TenCongDoan);
+                    
+                    if (existingQuyTrinh != null)
+                    {
+                        // Nếu đã tồn tại, cộng dồn chi phí nhân công
+                        existingQuyTrinh.ChiPhiNhanCong += quyTrinh.ChiPhiNhanCong;
+                        
+                        // Cập nhật mô tả nếu có
+                        if (!string.IsNullOrEmpty(quyTrinh.MoTa))
+                        {
+                            if (!string.IsNullOrEmpty(existingQuyTrinh.MoTa))
+                            {
+                                existingQuyTrinh.MoTa += " | " + quyTrinh.MoTa;
+                            }
+                            else
+                            {
+                                existingQuyTrinh.MoTa = quyTrinh.MoTa;
+                            }
+                        }
+                        
+                        await _quyTrinhSanXuatService.UpdateAsync(existingQuyTrinh);
+                        return Json(new { success = true, message = "Quy trình đã tồn tại, đã cộng dồn chi phí nhân công!" });
+                    }
+                    else
+                    {
+                        // Nếu chưa tồn tại, tạo mới
+                        await _quyTrinhSanXuatService.CreateAsync(quyTrinh);
+                        return Json(new { success = true, message = "Thêm quy trình thành công!" });
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -120,10 +148,29 @@ namespace Web.Controllers
             return Json(new { success = false, message = "Dữ liệu không hợp lệ: " + string.Join(", ", errors) });
         }
 
-        // POST: QuyTrinhSanXuat/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        // GET: QuyTrinhSanXuat/Delete/5
         public async Task<IActionResult> Delete(int id)
+        {
+            var quyTrinh = await _quyTrinhSanXuatService.GetByIdAsync(id);
+            if (quyTrinh == null)
+            {
+                return NotFound();
+            }
+
+            // Load SanPham navigation property
+            var sanPham = await _sanPhamService.GetByIdAsync(quyTrinh.SanPhamId);
+            if (sanPham != null)
+            {
+                quyTrinh.SanPham = sanPham;
+            }
+
+            return PartialView("_DeleteContent", quyTrinh);
+        }
+
+        // POST: QuyTrinhSanXuat/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
             try
             {

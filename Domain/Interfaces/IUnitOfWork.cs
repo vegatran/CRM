@@ -11,6 +11,7 @@ namespace Domain.Interfaces
         IRepository<LoaiNguyenLieu> LoaiNguyenLieuRepository { get; }
         IRepository<QuyTrinhSanXuat> QuyTrinhSanXuatRepository { get; }
         IRepository<DinhMucNguyenLieu> DinhMucNguyenLieuRepository { get; }
+        IRepository<KhachHang> KhachHangRepository { get; }
         object Context { get; }
         Task<int> SaveChangesAsync();
         Task BeginTransactionAsync();

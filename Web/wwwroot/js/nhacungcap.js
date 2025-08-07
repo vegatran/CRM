@@ -9,15 +9,7 @@ const NhaCungCap = {
 
     // Khởi tạo DataTable
     initDataTable: function() {
-        $('#nhaCungCapTable').DataTable({
-            "language": {
-                "url": "/js/dataTables.vietnamese.json"
-            },
-            "responsive": true,
-            "autoWidth": false,
-            "pageLength": 25,
-            "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "Tất cả"]]
-        });
+        Common.initDataTable('#nhaCungCapTable');
     },
 
     // Bind events

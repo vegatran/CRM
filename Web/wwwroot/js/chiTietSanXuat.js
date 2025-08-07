@@ -37,6 +37,7 @@ const ChiTietSanXuat = {
         // Sửa định mức
         $(document).on('click', '.edit-dinhmuc-btn', function() {
             var id = $(this).data('id');
+            console.log('Edit định mức clicked, id:', id);
             ChiTietSanXuat.loadEditDinhMucModal(id);
         });
 
@@ -75,9 +76,15 @@ const ChiTietSanXuat = {
     },
 
     loadEditDinhMucModal: function(id) {
+        console.log('Loading edit định mức modal for id:', id);
         $.get('/DinhMucNguyenLieu/Edit/' + id, function(data) {
+            console.log('Edit định mức modal data loaded, showing modal');
             $('#dinhMucModalContent').html(data);
             $('#dinhMucModal').modal('show');
+        }).fail(function(xhr, status, error) {
+            console.error('Error loading edit định mức modal:', error);
+            console.error('Status:', status);
+            console.error('Response:', xhr.responseText);
         });
     },
 
@@ -99,41 +106,19 @@ const ChiTietSanXuat = {
     },
 
     loadCreateQuyTrinhModal: function(sanPhamId) {
-        $.get('/QuyTrinhSanXuat/Create', { sanPhamId: sanPhamId }, function(data) {
-            $('#quyTrinhModalContent').html(data);
-            $('#quyTrinhModal').modal('show');
-        });
+        QuyTrinhSanXuat.openCreateModal(sanPhamId);
     },
 
     loadEditQuyTrinhModal: function(id) {
         console.log('Loading edit quy trình modal for id:', id);
-        $.get('/QuyTrinhSanXuat/Edit/' + id, function(data) {
-            console.log('Edit modal data loaded, showing modal');
-            $('#quyTrinhModalContent').html(data);
-            $('#quyTrinhModal').modal('show');
-        }).fail(function(xhr, status, error) {
-            console.error('Error loading edit modal:', error);
-            console.error('Status:', status);
-            console.error('Response:', xhr.responseText);
-        });
+        QuyTrinhSanXuat.openEditModal(id);
     },
 
     loadDeleteQuyTrinhModal: function(id, sanPhamId) {
-        if (confirm('Bạn có chắc chắn muốn xóa quy trình này?')) {
-            $.post('/QuyTrinhSanXuat/Delete/' + id, function(response) {
-                if (response.success) {
-                    toastr.success(response.message);
-                    // Reload the entire page to update cost analysis
-                    setTimeout(function() {
-                        location.reload();
-                    }, 1000);
-                } else {
-                    toastr.error(response.message);
-                }
-            }).fail(function() {
-                toastr.error('Có lỗi xảy ra khi xóa quy trình!');
-            });
-        }
+        $.get('/QuyTrinhSanXuat/Delete/' + id, function(data) {
+            $('#quyTrinhModalContent').html(data);
+            $('#quyTrinhModal').modal('show');
+        });
     }
 };
 

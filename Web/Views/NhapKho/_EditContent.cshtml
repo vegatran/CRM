@@ -1,0 +1,140 @@
+@model Domain.Entities.PhieuNhapKho
+
+<form id="nhapKhoEditForm" asp-action="Edit" method="post">
+    <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="SoPhieu" />
+    <input type="hidden" asp-for="TrangThai" />
+    
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label asp-for="NhaCungCapId" class="control-label">Nhà cung cấp <span class="text-danger">*</span></label>
+                <select asp-for="NhaCungCapId" class="form-control" required>
+                    <option value="">-- Chọn nhà cung cấp --</option>
+                    @foreach (var ncc in ViewBag.NhaCungCaps)
+                    {
+                        <option value="@ncc.Id">@ncc.TenNhaCungCap</option>
+                    }
+                </select>
+                <span asp-validation-for="NhaCungCapId" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label asp-for="NgayNhap" class="control-label">Ngày nhập <span class="text-danger">*</span></label>
+                <input asp-for="NgayNhap" class="form-control" type="date" required />
+                <span asp-validation-for="NgayNhap" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="GhiChu" class="control-label">Ghi chú</label>
+        <textarea asp-for="GhiChu" class="form-control" rows="3"></textarea>
+        <span asp-validation-for="GhiChu" class="text-danger"></span>
+    </div>
+
+    <hr />
+
+    <h5><i class="fas fa-list"></i> Chi tiết nhập kho</h5>
+    <div id="chiTietContainer">
+        @if (Model.ChiTietNhapKhos != null && Model.ChiTietNhapKhos.Any())
+        {
+            foreach (var chiTiet in Model.ChiTietNhapKhos)
+            {
+                var isNguyenLieu = chiTiet.NguyenLieuId.HasValue;
+                var isSanPham = chiTiet.SanPhamId.HasValue;
+                
+                <div class="chi-tiet-item border p-3 mb-3">
+                    <input type="hidden" class="chi-tiet-id" value="@chiTiet.Id" />
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="control-label">Loại hàng</label>
+                                <select class="form-control loai-hang">
+                                    <option value="">-- Chọn loại hàng --</option>
+                                    @if (isNguyenLieu)
+                                    {
+                                        <option value="nguyenlieu" selected>Nguyên liệu</option>
+                                        <option value="sanpham">Sản phẩm</option>
+                                    }
+                                    else if (isSanPham)
+                                    {
+                                        <option value="nguyenlieu">Nguyên liệu</option>
+                                        <option value="sanpham" selected>Sản phẩm</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="nguyenlieu">Nguyên liệu</option>
+                                        <option value="sanpham">Sản phẩm</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="control-label">Hàng hóa</label>
+                                <select class="form-control hang-hoa">
+                                    <option value="">-- Chọn hàng hóa --</option>
+                                    @if (isNguyenLieu && chiTiet.NguyenLieu != null)
+                                    {
+                                        <option value="@chiTiet.NguyenLieuId" selected>@chiTiet.NguyenLieu.TenNguyenLieu</option>
+                                    }
+                                    @if (isSanPham && chiTiet.SanPham != null)
+                                    {
+                                        <option value="@chiTiet.SanPhamId" selected>@chiTiet.SanPham.TenSanPham</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label class="control-label">Số lượng</label>
+                                <input type="number" class="form-control so-luong" min="1" value="@chiTiet.SoLuong" />
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label class="control-label">Đơn giá</label>
+                                <input type="text" class="form-control don-gia" value="@chiTiet.DonGia.ToString("N0")" />
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label class="control-label">Thành tiền</label>
+                                <input type="text" class="form-control thanh-tien" value="@chiTiet.ThanhTien.ToString("N0")" readonly />
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-danger btn-sm mt-2" data-action="remove-chi-tiet">
+                        <i class="fas fa-trash"></i> Xóa
+                    </button>
+                </div>
+            }
+        }
+    </div>
+
+    <button type="button" class="btn btn-info btn-sm" data-action="add-chi-tiet">
+        <i class="fas fa-plus"></i> Thêm chi tiết
+    </button>
+
+    <hr />
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="control-label"><strong>Tổng tiền:</strong></label>
+                <input type="text" id="tongTien" class="form-control" value="@Model.TongTien.ToString("N0")" readonly />
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group mt-3">
+        <button type="submit" class="btn btn-primary">
+            <i class="fas fa-save"></i> Cập nhật phiếu nhập kho
+        </button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+            <i class="fas fa-times"></i> Hủy
+        </button>
+    </div>
+</form>

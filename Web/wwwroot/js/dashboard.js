@@ -32,20 +32,22 @@ const Dashboard = {
             var salesChartOptions = {
                 maintainAspectRatio: false,
                 responsive: true,
-                legend: {
-                    display: false
+                plugins: {
+                    legend: {
+                        display: false
+                    }
                 },
                 scales: {
-                    xAxes: [{
-                        gridLines: {
-                            display: false,
+                    x: {
+                        grid: {
+                            display: false
                         }
-                    }],
-                    yAxes: [{
-                        gridLines: {
-                            display: true,
+                    },
+                    y: {
+                        grid: {
+                            display: true
                         }
-                    }]
+                    }
                 }
             };
 
@@ -82,20 +84,22 @@ const Dashboard = {
             var revenueChartOptions = {
                 maintainAspectRatio: false,
                 responsive: true,
-                legend: {
-                    display: false
+                plugins: {
+                    legend: {
+                        display: false
+                    }
                 },
                 scales: {
-                    xAxes: [{
-                        gridLines: {
-                            display: false,
+                    x: {
+                        grid: {
+                            display: false
                         }
-                    }],
-                    yAxes: [{
-                        gridLines: {
-                            display: true,
+                    },
+                    y: {
+                        grid: {
+                            display: true
                         }
-                    }]
+                    }
                 }
             };
 

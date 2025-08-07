@@ -29,13 +29,31 @@ const QuyTrinhSanXuat = {
             e.preventDefault();
             QuyTrinhSanXuat.handleEditForm($(this));
         });
+
+        // Delete form submission
+        $(document).on('submit', '#deleteQuyTrinhForm', function(e) {
+            e.preventDefault();
+            QuyTrinhSanXuat.handleDeleteForm($(this));
+        });
     },
 
     // Mở modal tạo mới
     openCreateModal: function(sanPhamId) {
         $.get('/QuyTrinhSanXuat/Create', { sanPhamId: sanPhamId }, function(data) {
-            $('#quyTrinhModal .modal-content').html(data);
+            $('#quyTrinhModalContent').html(data);
             $('#quyTrinhModal').modal('show');
+            
+            // Format currency input sau khi modal được load (nếu có giá trị mặc định)
+            setTimeout(function() {
+                var currencyInput = $('#quyTrinhModal .currency-input');
+                if (currencyInput.length > 0) {
+                    var value = currencyInput.val();
+                    if (value && !isNaN(value) && value !== '0') {
+                        var formattedValue = parseInt(value).toLocaleString('vi-VN');
+                        currencyInput.val(formattedValue);
+                    }
+                }
+            }, 100);
         }).fail(function() {
             toastr.error('Không thể tải form tạo mới!');
         });
@@ -44,8 +62,20 @@ const QuyTrinhSanXuat = {
     // Mở modal chỉnh sửa
     openEditModal: function(id) {
         $.get('/QuyTrinhSanXuat/Edit/' + id, function(data) {
-            $('#quyTrinhModal .modal-content').html(data);
+            $('#quyTrinhModalContent').html(data);
             $('#quyTrinhModal').modal('show');
+            
+            // Format currency input sau khi modal được load
+            setTimeout(function() {
+                var currencyInput = $('#quyTrinhModal .currency-input');
+                if (currencyInput.length > 0) {
+                    var value = currencyInput.val();
+                    if (value && !isNaN(value)) {
+                        var formattedValue = parseInt(value).toLocaleString('vi-VN');
+                        currencyInput.val(formattedValue);
+                    }
+                }
+            }, 100);
         }).fail(function() {
             toastr.error('Không thể tải form chỉnh sửa!');
         });
@@ -79,10 +109,18 @@ const QuyTrinhSanXuat = {
 
     // Xử lý form tạo mới
     handleCreateForm: function(form) {
-        var formData = form.serialize();
         var chiPhiInput = form.find('.currency-input');
         var chiPhiValue = chiPhiInput.val().replace(/[^\d]/g, '');
-        formData = formData.replace(/ChiPhiNhanCong=[^&]*/, 'ChiPhiNhanCong=' + chiPhiValue);
+        
+        // Tạo object data từ form
+        var formData = {};
+        form.serializeArray().forEach(function(item) {
+            if (item.name === 'ChiPhiNhanCong') {
+                formData[item.name] = chiPhiValue;
+            } else {
+                formData[item.name] = item.value;
+            }
+        });
 
         $.ajax({
             url: form.attr('action'),
@@ -109,10 +147,18 @@ const QuyTrinhSanXuat = {
 
     // Xử lý form chỉnh sửa
     handleEditForm: function(form) {
-        var formData = form.serialize();
         var chiPhiInput = form.find('.currency-input');
         var chiPhiValue = chiPhiInput.val().replace(/[^\d]/g, '');
-        formData = formData.replace(/ChiPhiNhanCong=[^&]*/, 'ChiPhiNhanCong=' + chiPhiValue);
+        
+        // Tạo object data từ form
+        var formData = {};
+        form.serializeArray().forEach(function(item) {
+            if (item.name === 'ChiPhiNhanCong') {
+                formData[item.name] = chiPhiValue;
+            } else {
+                formData[item.name] = item.value;
+            }
+        });
 
         $.ajax({
             url: form.attr('action'),
@@ -133,6 +179,31 @@ const QuyTrinhSanXuat = {
             error: function(xhr, status, error) {
                 console.error('Error:', xhr.responseText);
                 toastr.error('Có lỗi xảy ra khi cập nhật quy trình!');
+            }
+        });
+    },
+
+    // Xử lý form xóa
+    handleDeleteForm: function(form) {
+        $.ajax({
+            url: form.attr('action'),
+            type: 'POST',
+            data: form.serialize(),
+            success: function(response) {
+                if (response.success) {
+                    toastr.success(response.message);
+                    $('#quyTrinhModal').modal('hide');
+                    // Reload the entire page to update cost analysis
+                    setTimeout(function() {
+                        location.reload();
+                    }, 1000);
+                } else {
+                    toastr.error(response.message);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', xhr.responseText);
+                toastr.error('Có lỗi xảy ra khi xóa quy trình!');
             }
         });
     }

@@ -9,15 +9,7 @@ const NguyenLieu = {
 
     // Khởi tạo DataTable
     initDataTable: function() {
-        $('#nguyenLieuTable').DataTable({
-            "language": {
-                "url": "/js/dataTables.vietnamese.json"
-            },
-            "responsive": true,
-            "autoWidth": false,
-            "pageLength": 25,
-            "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "Tất cả"]]
-        });
+        Common.initDataTable('#nguyenLieuTable');
     },
 
     // Bind events
@@ -96,6 +88,8 @@ const NguyenLieu = {
         // Handle modal hidden event
         $(document).on('hidden.bs.modal', '.modal', function() {
             $('#modalContainer').empty();
+            // Close dropdowns when modal is hidden
+            $(this).find('.dropdown-menu').removeClass('show');
         });
     },
 
@@ -113,36 +107,17 @@ const NguyenLieu = {
 
     // Handle form submission
     handleFormSubmission: function(form, successMessage, errorMessage) {
-        console.log('Form submission started');
-        
-        // Convert formatted currency values back to numbers
-        form.find('#GiaNhapInput').each(function() {
-            var value = $(this).val().replace(/[^\d]/g, '');
-            $(this).val(value);
-        });
-
-        // Check if form has file input
-        var fileInput = form.find('input[type="file"]');
-        var hasFileInput = fileInput.length > 0;
-        var hasFileSelected = hasFileInput && fileInput[0].files.length > 0;
-        console.log('Has file input:', hasFileInput);
-        console.log('Has file selected:', hasFileSelected);
+        var hasFileInput = form.find('input[type="file"]').length > 0;
+        var hasFileSelected = false;
         
         if (hasFileInput) {
-            // Use FormData for forms with file input (even if no file selected)
+            var fileInput = form.find('input[type="file"]')[0];
+            hasFileSelected = fileInput.files.length > 0;
+        }
+        
+        if (hasFileInput && hasFileSelected) {
+            // Use FormData for file uploads
             var formData = new FormData(form[0]);
-            
-            // Add antiforgery token to FormData
-            var token = form.find('input[name="__RequestVerificationToken"]').val();
-            console.log('Token found:', !!token);
-            if (token) {
-                formData.append('__RequestVerificationToken', token);
-            }
-            
-            // Log form data for debugging
-            for (var pair of formData.entries()) {
-                console.log(pair[0] + ': ' + pair[1]);
-            }
             
             $.ajax({
                 url: form.attr('action'),
@@ -154,12 +129,13 @@ const NguyenLieu = {
                     console.log('Success result:', result);
                     if (result.success) {
                         $('.modal').modal('hide');
-                        toastr.success(successMessage);
+                        toastr.success(result.message || successMessage);
                         setTimeout(function () {
                             location.reload();
                         }, 1000);
                     } else {
-                        $('#modalContainer').html(result);
+                        // Hiển thị lỗi từ JSON response
+                        toastr.error(result.message || 'Có lỗi xảy ra!');
                     }
                 },
                 error: function (xhr, status, error) {
@@ -169,12 +145,40 @@ const NguyenLieu = {
                         responseText: xhr.responseText,
                         error: error
                     });
-                    toastr.error(errorMessage + ' (Status: ' + xhr.status + ')');
+                    
+                    // Thử parse JSON response nếu có
+                    try {
+                        var response = JSON.parse(xhr.responseText);
+                        if (response.message) {
+                            toastr.error(response.message);
+                        } else {
+                            toastr.error(errorMessage + ' (Status: ' + xhr.status + ')');
+                        }
+                    } catch (e) {
+                        toastr.error(errorMessage + ' (Status: ' + xhr.status + ')');
+                    }
                 }
             });
         } else {
             // Use regular form submission for non-file forms
             var formData = form.serialize();
+            
+            // Xử lý hình ảnh cho form edit
+            if (form.attr('id') === 'editForm') {
+                var hinhAnhInput = form.find('#HinhAnhInput');
+                var currentHinhAnh = form.find('#currentHinhAnh');
+                
+                // Nếu không có file được chọn và có hình ảnh hiện tại, thêm hình ảnh hiện tại vào formData
+                if (hinhAnhInput.length > 0 && hinhAnhInput[0].files.length === 0 && currentHinhAnh.val()) {
+                    // Tạo một blob từ URL hình ảnh hiện tại
+                    var currentImageUrl = currentHinhAnh.val();
+                    if (currentImageUrl) {
+                        // Thêm thông tin hình ảnh hiện tại vào formData
+                        formData += '&CurrentHinhAnh=' + encodeURIComponent(currentImageUrl);
+                    }
+                }
+            }
+            
             console.log('Form data:', formData);
             
             $.ajax({
@@ -185,12 +189,13 @@ const NguyenLieu = {
                     console.log('Success result:', result);
                     if (result.success) {
                         $('.modal').modal('hide');
-                        toastr.success(successMessage);
+                        toastr.success(result.message || successMessage);
                         setTimeout(function () {
                             location.reload();
                         }, 1000);
                     } else {
-                        $('#modalContainer').html(result);
+                        // Hiển thị lỗi từ JSON response
+                        toastr.error(result.message || 'Có lỗi xảy ra!');
                     }
                 },
                 error: function (xhr, status, error) {
@@ -200,7 +205,18 @@ const NguyenLieu = {
                         responseText: xhr.responseText,
                         error: error
                     });
-                    toastr.error(errorMessage + ' (Status: ' + xhr.status + ')');
+                    
+                    // Thử parse JSON response nếu có
+                    try {
+                        var response = JSON.parse(xhr.responseText);
+                        if (response.message) {
+                            toastr.error(response.message);
+                        } else {
+                            toastr.error(errorMessage + ' (Status: ' + xhr.status + ')');
+                        }
+                    } catch (e) {
+                        toastr.error(errorMessage + ' (Status: ' + xhr.status + ')');
+                    }
                 }
             });
         }
@@ -307,13 +323,67 @@ const NguyenLieu = {
             if (fileName) {
                 hinhAnhInput.next('.custom-file-label').html(fileName);
             }
+            
+            // Hiển thị hình ảnh hiện tại nếu có (cho form edit)
+            var currentHinhAnh = modal.find('#currentHinhAnh');
+            var previewImg = modal.find('#previewImg');
+            var imagePreview = modal.find('#imagePreview');
+            
+            if (currentHinhAnh.length && currentHinhAnh.val()) {
+                previewImg.attr('src', currentHinhAnh.val());
+                imagePreview.show();
+                
+                // Hiển thị tên file hiện tại trong file label
+                var currentImagePath = currentHinhAnh.val();
+                if (currentImagePath) {
+                    var fileName = currentImagePath.split('/').pop(); // Lấy tên file từ đường dẫn
+                    hinhAnhInput.next('.custom-file-label').html(fileName || 'Hình ảnh hiện tại');
+                }
+            }
         }
         
-        // Initialize color pattern dropdown
-        modal.find('.color-pattern').off('click').on('click', function(e) {
+        // Initialize Bootstrap dropdown for color patterns
+        modal.find('.dropdown-toggle').off('click.colorPattern').on('click.colorPattern', function(e) {
             e.preventDefault();
+            e.stopPropagation();
+            var dropdown = $(this).siblings('.dropdown-menu');
+            var isOpen = dropdown.hasClass('show');
+            
+            // Close all other dropdowns first
+            modal.find('.dropdown-menu').removeClass('show');
+            
+            // Toggle current dropdown
+            if (!isOpen) {
+                dropdown.addClass('show');
+            }
+        });
+
+        // Close dropdown when clicking outside
+        $(document).off('click.colorPatternDropdown').on('click.colorPatternDropdown', function(e) {
+            if (!$(e.target).closest('.dropdown').length) {
+                modal.find('.dropdown-menu').removeClass('show');
+            }
+        });
+        
+        // Initialize color pattern dropdown items
+        modal.find('.color-pattern').off('click.colorPattern').on('click.colorPattern', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var color = $(this).data('color');
             var pattern = $(this).data('pattern');
-            mauSacInput.val(pattern);
+            
+            // Update color picker if color is provided
+            if (color && colorPicker.length) {
+                colorPicker.val(color);
+            }
+            
+            // Update color input with pattern
+            if (pattern && mauSacInput.length) {
+                mauSacInput.val(pattern);
+            }
+
+            // Close dropdown
+            modal.find('.dropdown-menu').removeClass('show');
         });
     }
 };

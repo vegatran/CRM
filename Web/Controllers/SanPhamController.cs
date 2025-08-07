@@ -22,6 +22,15 @@ namespace Web.Controllers
             return View(sanPhams);
         }
 
+        // GET: SanPham/GetAllForSelect
+        [HttpGet]
+        public async Task<IActionResult> GetAllForSelect()
+        {
+            var sanPhams = await _sanPhamService.GetAllAsync();
+            var result = sanPhams.Select(sp => new { id = sp.Id, tenSanPham = sp.TenSanPham, giaNhap = sp.GiaNhap });
+            return Json(result);
+        }
+
         // GET: SanPham/Details/5
         public async Task<IActionResult> Details(int id)
         {
@@ -176,6 +185,15 @@ namespace Web.Controllers
                 }
 
                 sanPham.HinhAnh = "/uploads/products/" + fileName;
+            }
+            else
+            {
+                // Nếu không có hình ảnh mới được upload, giữ lại hình ảnh hiện tại
+                var currentHinhAnh = Request.Form["CurrentHinhAnh"].ToString();
+                if (!string.IsNullOrEmpty(currentHinhAnh))
+                {
+                    sanPham.HinhAnh = currentHinhAnh;
+                }
             }
 
             if (ModelState.IsValid)

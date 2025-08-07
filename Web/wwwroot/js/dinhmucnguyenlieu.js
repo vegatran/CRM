@@ -9,12 +9,7 @@ const DinhMucNguyenLieu = {
 
     // Khởi tạo DataTable
     initDataTable: function() {
-        $('#dinhMucTable').DataTable({
-            "language": {
-                "url": "/js/dataTables.vietnamese.json"
-            },
-            "responsive": true,
-            "autoWidth": false,
+        Common.initDataTable('#dinhMucTable', {
             "order": [[0, "asc"]],
             "columnDefs": [
                 { "orderable": false, "targets": [9] } // Disable sorting for action column

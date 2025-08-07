@@ -1,149 +1,136 @@
-# JavaScript Files Structure
+# JavaScript Files Documentation
 
-## Tổng quan
-Tất cả JavaScript functions đã được tách ra khỏi các view và tổ chức thành các file riêng biệt để dễ quản lý và bảo trì.
+## DataTable Configuration
 
-## Cấu trúc file
+### Hàm khởi tạo DataTable dùng chung
 
-### 1. `common.js`
-**Mục đích:** Chứa các functions chung được sử dụng trong toàn bộ ứng dụng
+Để thống nhất cấu hình DataTable và dễ dàng thay đổi ngôn ngữ cho toàn bộ hệ thống, chúng ta sử dụng hàm `Common.initDataTable()`.
 
-**Các tính năng:**
-- Currency formatting (định dạng tiền tệ)
-- DataTables initialization
-- Color picker handling
-- Image preview handling
-- Toastr configuration
-- Modal utilities
-- AJAX helpers
-- Form helpers
+#### Cách sử dụng:
 
-**Các functions chính:**
-- `Common.init()` - Khởi tạo tất cả tính năng chung
-- `Common.formatCurrency()` - Định dạng tiền tệ
-- `Common.parseCurrency()` - Parse tiền tệ
-- `Common.showSuccess()`, `Common.showError()` - Hiển thị thông báo
-- `Common.ajax()` - Helper cho AJAX requests
-- `Common.serializeForm()` - Serialize form với xử lý currency
+```javascript
+// 1. Cơ bản - sử dụng cấu hình mặc định
+Common.initDataTable('#myTable');
 
-### 2. `dashboard.js`
-**Mục đích:** Quản lý dashboard và biểu đồ
+// 2. Với tùy chọn bổ sung
+Common.initDataTable('#myTable', {
+    "order": [[0, "asc"]],
+    "pageLength": 10
+});
 
-**Các tính năng:**
-- Sales chart initialization
-- Revenue chart initialization
-- Chart configuration
-
-**Các functions chính:**
-- `Dashboard.init()` - Khởi tạo dashboard
-- `Dashboard.initSalesChart()` - Khởi tạo biểu đồ doanh số
-- `Dashboard.initRevenueChart()` - Khởi tạo biểu đồ doanh thu
-
-### 3. `quyTrinhSanXuat.js`
-**Mục đích:** Quản lý quy trình sản xuất
-
-**Các tính năng:**
-- Modal management cho Create/Edit
-- Form handling với currency formatting
-- AJAX operations
-- List reloading
-
-**Các functions chính:**
-- `QuyTrinhSanXuat.openCreateModal()` - Mở modal tạo mới
-- `QuyTrinhSanXuat.openEditModal()` - Mở modal chỉnh sửa
-- `QuyTrinhSanXuat.deleteQuyTrinh()` - Xóa quy trình
-- `QuyTrinhSanXuat.loadQuyTrinhList()` - Load danh sách
-- `QuyTrinhSanXuat.handleCreateForm()` - Xử lý form tạo mới
-- `QuyTrinhSanXuat.handleEditForm()` - Xử lý form chỉnh sửa
-
-### 4. `chiTietSanXuat.js`
-**Mục đích:** Quản lý chi tiết sản xuất
-
-**Các tính năng:**
-- Load định mức nguyên liệu
-- Load quy trình sản xuất
-
-**Các functions chính:**
-- `ChiTietSanXuat.init()` - Khởi tạo
-- `ChiTietSanXuat.loadDinhMucNguyenLieu()` - Load định mức
-- `ChiTietSanXuat.loadQuyTrinhSanXuat()` - Load quy trình
-
-### 5. `testModal.js`
-**Mục đích:** Test modal functionality
-
-**Các tính năng:**
-- Test create modal
-- Test edit modal
-- Test delete modal
-- Modal event handling
-
-**Các functions chính:**
-- `TestModal.testCreateModal()` - Test modal tạo mới
-- `TestModal.testEditModal()` - Test modal chỉnh sửa
-- `TestModal.testDeleteModal()` - Test modal xóa
-
-## Cách sử dụng
-
-### 1. Include trong Layout
-File `common.js` đã được include trong `_Layout.cshtml`:
-```html
-<script src="~/js/common.js"></script>
+// 3. Với columnDefs (vô hiệu hóa sắp xếp cho cột cụ thể)
+Common.initDataTable('#myTable', {
+    "columnDefs": [
+        { "orderable": false, "targets": [5] } // Vô hiệu hóa sắp xếp cho cột thứ 6
+    ]
+});
 ```
 
-### 2. Include trong View cụ thể
-```html
-@section Scripts {
-    <script src="~/js/quyTrinhSanXuat.js"></script>
+#### Thay đổi ngôn ngữ:
+
+Để thay đổi ngôn ngữ cho toàn bộ hệ thống, chỉ cần cập nhật hàm `getDataTableLanguage()` trong file `common.js`:
+
+```javascript
+// Trong file: Web/wwwroot/js/common.js
+getDataTableLanguage: function() {
+    return {
+        "sProcessing": "Đang xử lý...",
+        "sLengthMenu": "Xem _MENU_ mục",
+        "sZeroRecords": "Không tìm thấy dữ liệu",
+        "sInfo": "Đang xem _START_ đến _END_ trong tổng số _TOTAL_ mục",
+        "sInfoEmpty": "Đang xem 0 đến 0 trong tổng số 0 mục",
+        "sInfoFiltered": "(được lọc từ _MAX_ mục)",
+        "sSearch": "Tìm kiếm:",
+        "sEmptyTable": "Không có dữ liệu trong bảng",
+        "sLoadingRecords": "Đang tải...",
+        "oPaginate": {
+            "sFirst": "Đầu",
+            "sPrevious": "Trước",
+            "sNext": "Tiếp",
+            "sLast": "Cuối"
+        }
+    };
 }
 ```
 
-### 3. Sử dụng trong HTML
-```html
-<button onclick="openCreateQuyTrinhModal(1)">Thêm quy trình</button>
+#### Cấu hình mặc định:
+
+- **Responsive**: true
+- **AutoWidth**: false
+- **PageLength**: 25
+- **LengthMenu**: [10, 25, 50, 100, -1] (Tất cả)
+- **Language**: Tiếng Việt
+
+## Files Structure
+
+- `common.js` - Các functions JavaScript chung, bao gồm hàm DataTable dùng chung
+- `sanpham.js` - Quản lý sản phẩm
+- `nguyenlieu.js` - Quản lý nguyên liệu
+- `nhacungcap.js` - Quản lý nhà cung cấp
+- `dinhmucnguyenlieu.js` - Quản lý định mức nguyên liệu
+- `quyTrinhSanXuat.js` - Quản lý quy trình sản xuất
+- `chiTietSanXuat.js` - Quản lý chi tiết sản xuất
+
+## Usage Examples
+
+### 1. Khởi tạo DataTable cơ bản
+
+```javascript
+// Trong file JavaScript của bạn
+const MyModule = {
+    init: function() {
+        this.initDataTable();
+    },
+    
+    initDataTable: function() {
+        Common.initDataTable('#myTable');
+    }
+};
 ```
 
-## Global Functions
-Để đảm bảo backward compatibility, các global functions vẫn được giữ lại:
-- `openCreateQuyTrinhModal()`
-- `openEditQuyTrinhModal()`
-- `deleteQuyTrinh()`
-- `loadQuyTrinhList()`
-- `testCreateModal()`
-- `testEditModal()`
-- `testDeleteModal()`
+### 2. Khởi tạo DataTable với tùy chọn
 
-## Best Practices
+```javascript
+initDataTable: function() {
+    Common.initDataTable('#myTable', {
+        "order": [[0, "asc"]],
+        "columnDefs": [
+            { "orderable": false, "targets": [5] }
+        ],
+        "pageLength": 10
+    });
+}
+```
 
-### 1. Module Pattern
-Sử dụng module pattern với `const ModuleName = {}` để tổ chức code.
+### 3. Thay đổi ngôn ngữ toàn hệ thống
 
-### 2. Event Delegation
-Sử dụng `$(document).on()` để handle events cho dynamic content.
+```javascript
+// Trong common.js, thay đổi hàm getDataTableLanguage()
+getDataTableLanguage: function() {
+    return {
+        "sProcessing": "Processing...",
+        "sLengthMenu": "Show _MENU_ entries",
+        "sZeroRecords": "No data found",
+        "sInfo": "Showing _START_ to _END_ of _TOTAL_ entries",
+        "sInfoEmpty": "Showing 0 to 0 of 0 entries",
+        "sInfoFiltered": "(filtered from _MAX_ total entries)",
+        "sSearch": "Search:",
+        "sEmptyTable": "No data available in table",
+        "sLoadingRecords": "Loading...",
+        "oPaginate": {
+            "sFirst": "First",
+            "sPrevious": "Previous",
+            "sNext": "Next",
+            "sLast": "Last"
+        }
+    };
+}
+```
 
-### 3. Error Handling
-Tất cả AJAX calls đều có error handling với toastr notifications.
+## Benefits
 
-### 4. Currency Formatting
-Tự động format currency inputs với Vietnamese locale.
-
-### 5. Modal Management
-Centralized modal management với proper cleanup.
-
-## Maintenance
-
-### Thêm function mới:
-1. Tạo function trong module tương ứng
-2. Thêm global function nếu cần backward compatibility
-3. Update documentation
-
-### Sửa lỗi:
-1. Kiểm tra console errors
-2. Verify AJAX responses
-3. Check event bindings
-4. Test modal functionality
-
-### Performance:
-- Sử dụng event delegation
-- Minimize DOM queries
-- Cache jQuery objects
-- Use proper selectors 
+1. **Thống nhất**: Tất cả DataTable sử dụng cùng cấu hình cơ bản
+2. **Dễ bảo trì**: Chỉ cần thay đổi ở một nơi để áp dụng cho toàn bộ hệ thống
+3. **Linh hoạt**: Vẫn có thể tùy chỉnh cho từng table cụ thể
+4. **Hiệu suất**: Giảm code trùng lặp
+5. **Dễ mở rộng**: Dễ dàng thêm tính năng mới cho tất cả DataTable 

@@ -25,6 +25,15 @@ namespace Web.Controllers
             return View(nguyenLieus);
         }
 
+        // GET: NguyenLieu/GetAllForSelect
+        [HttpGet]
+        public async Task<IActionResult> GetAllForSelect()
+        {
+            var nguyenLieus = await _nguyenLieuService.GetAllAsync();
+            var result = nguyenLieus.Select(nl => new { id = nl.Id, tenNguyenLieu = nl.TenNguyenLieu, giaNhap = nl.GiaNhap });
+            return Json(result);
+        }
+
         // GET: NguyenLieu/Create
         public async Task<IActionResult> Create()
         {
@@ -38,6 +47,10 @@ namespace Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("TenNguyenLieu,MoTa,MaNguyenLieu,GiaNhap,SoLuongTon,DonViTinh,ChatLieu,MauSac,HinhAnh,NhaCungCapId,LoaiNguyenLieuId,TrangThai")] NguyenLieu nguyenLieu)
         {
+            // Loại bỏ validation cho navigation properties
+            ModelState.Remove("NhaCungCap");
+            ModelState.Remove("LoaiNguyenLieu");
+
             // Parse currency values from form
             var giaNhapStr = Request.Form["GiaNhap"].ToString();
             var giaNhapClean = giaNhapStr.Replace(",", "").Replace(".", "");
@@ -100,8 +113,12 @@ namespace Web.Controllers
         {
             if (id != nguyenLieu.Id)
             {
-                return NotFound();
+                return Json(new { success = false, message = "ID không hợp lệ!" });
             }
+
+            // Loại bỏ validation cho navigation properties
+            ModelState.Remove("NhaCungCap");
+            ModelState.Remove("LoaiNguyenLieu");
 
             // Parse currency values from form
             var giaNhapStr = Request.Form["GiaNhap"].ToString();
@@ -132,6 +149,15 @@ namespace Web.Controllers
 
                 nguyenLieu.HinhAnh = "/uploads/materials/" + fileName;
             }
+            else
+            {
+                // Nếu không có hình ảnh mới được upload, giữ lại hình ảnh hiện tại
+                var currentHinhAnh = Request.Form["CurrentHinhAnh"].ToString();
+                if (!string.IsNullOrEmpty(currentHinhAnh))
+                {
+                    nguyenLieu.HinhAnh = currentHinhAnh;
+                }
+            }
 
             if (ModelState.IsValid)
             {
@@ -140,22 +166,32 @@ namespace Web.Controllers
                     await _nguyenLieuService.UpdateAsync(nguyenLieu);
                     return Json(new { success = true, message = "Cập nhật nguyên liệu thành công!" });
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     if (!await _nguyenLieuService.ExistsAsync(nguyenLieu.Id))
                     {
-                        return NotFound();
+                        return Json(new { success = false, message = "Nguyên liệu không tồn tại!" });
                     }
                     else
                     {
-                        throw;
+                        return Json(new { success = false, message = "Có lỗi xảy ra khi cập nhật nguyên liệu: " + ex.Message });
                     }
                 }
             }
-            
-            ViewBag.NhaCungCaps = await _nhaCungCapService.GetAllAsync();
-            ViewBag.LoaiNguyenLieus = await _loaiNguyenLieuService.GetAllAsync();
-            return PartialView("_EditModal", nguyenLieu);
+            else
+            {
+                // Load ViewBag data for validation errors
+                ViewBag.NhaCungCaps = await _nhaCungCapService.GetAllAsync();
+                ViewBag.LoaiNguyenLieus = await _loaiNguyenLieuService.GetAllAsync();
+                
+                // Return validation errors as JSON
+                var errors = ModelState.Values
+                    .SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage)
+                    .ToList();
+                
+                return Json(new { success = false, message = "Dữ liệu không hợp lệ: " + string.Join(", ", errors) });
+            }
         }
 
         // GET: NguyenLieu/Delete/5

@@ -52,14 +52,12 @@
                                     }
                                 </td>
                                 <td>
-                                    <div class="btn-group" role="group">
-                                        <button type="button" class="btn btn-sm btn-info edit-quytrinh-btn" data-id="@item.Id">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <button type="button" class="btn btn-sm btn-danger delete-quytrinh-btn" data-id="@item.Id" data-san-pham-id="@(Model.FirstOrDefault()?.SanPhamId ?? 0)">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </div>
+                                    <button type="button" class="btn btn-warning btn-sm edit-quytrinh-btn" data-id="@item.Id">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-danger btn-sm delete-quytrinh-btn ml-1" data-id="@item.Id" data-san-pham-id="@(Model.FirstOrDefault()?.SanPhamId ?? 0)">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
                                 </td>
                             </tr>
                             stt++;
@@ -82,14 +80,5 @@
                 Chưa có quy trình sản xuất cho sản phẩm này.
             </div>
         }
-    </div>
-</div>
-
-<!-- Modal for Create/Edit -->
-<div class="modal fade" id="quyTrinhModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <!-- Content will be loaded here -->
-        </div>
     </div>
 </div> 

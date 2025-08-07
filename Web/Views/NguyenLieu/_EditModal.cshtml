@@ -35,8 +35,8 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label asp-for="LoaiNguyenLieuId" class="control-label">Loại nguyên liệu</label>
-                                <select asp-for="LoaiNguyenLieuId" class="form-control" id="LoaiNguyenLieuId">
+                                <label asp-for="LoaiNguyenLieuId" class="control-label">Loại nguyên liệu <span class="text-danger">*</span></label>
+                                <select asp-for="LoaiNguyenLieuId" class="form-control" id="LoaiNguyenLieuId" required>
                                     <option value="">-- Chọn loại nguyên liệu --</option>
                                     @foreach (var loai in ViewBag.LoaiNguyenLieus)
                                     {
@@ -48,8 +48,8 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label asp-for="NhaCungCapId" class="control-label">Nhà cung cấp</label>
-                                <select asp-for="NhaCungCapId" class="form-control" id="NhaCungCapId">
+                                <label asp-for="NhaCungCapId" class="control-label">Nhà cung cấp <span class="text-danger">*</span></label>
+                                <select asp-for="NhaCungCapId" class="form-control" id="NhaCungCapId" required>
                                     <option value="">-- Chọn nhà cung cấp --</option>
                                     @foreach (var ncc in ViewBag.NhaCungCaps)
                                     {
@@ -108,18 +108,35 @@
                                     </div>
                                 </div>
                                 <div class="dropdown mt-2">
-                                    <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
-                                        Chọn Pattern
+                                    <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fas fa-palette"></i> Chọn Pattern
                                     </button>
-                                    <div class="dropdown-menu">
-                                        <a class="dropdown-item color-pattern" href="#" data-pattern="checkered-black-white">Caro đen trắng</a>
-                                        <a class="dropdown-item color-pattern" href="#" data-pattern="checkered-red-white">Caro đỏ trắng</a>
-                                        <a class="dropdown-item color-pattern" href="#" data-pattern="checkered-blue-white">Caro xanh trắng</a>
-                                        <a class="dropdown-item color-pattern" href="#" data-pattern="stripe-black-white">Sọc đen trắng</a>
-                                        <a class="dropdown-item color-pattern" href="#" data-pattern="stripe-red-white">Sọc đỏ trắng</a>
-                                        <a class="dropdown-item color-pattern" href="#" data-pattern="stripe-blue-white">Sọc xanh trắng</a>
+                                    <div class="dropdown-menu dropdown-menu-right" id="ColorPatternDropdown">
+                                        <h6 class="dropdown-header">Màu đơn</h6>
+                                        <a class="dropdown-item color-pattern" href="#" data-color="#FF0000" data-pattern="Đỏ">🔴 Đỏ</a>
+                                        <a class="dropdown-item color-pattern" href="#" data-color="#0000FF" data-pattern="Xanh dương">🔵 Xanh dương</a>
+                                        <a class="dropdown-item color-pattern" href="#" data-color="#00FF00" data-pattern="Xanh lá">🟢 Xanh lá</a>
+                                        <a class="dropdown-item color-pattern" href="#" data-color="#FFFF00" data-pattern="Vàng">🟡 Vàng</a>
+                                        <a class="dropdown-item color-pattern" href="#" data-color="#FF00FF" data-pattern="Hồng">🟣 Hồng</a>
+                                        <a class="dropdown-item color-pattern" href="#" data-color="#000000" data-pattern="Đen">⚫ Đen</a>
+                                        <a class="dropdown-item color-pattern" href="#" data-color="#FFFFFF" data-pattern="Trắng">⚪ Trắng</a>
+                                        <div class="dropdown-divider"></div>
+                                        <h6 class="dropdown-header">Màu caro (Pattern)</h6>
+                                        <a class="dropdown-item color-pattern" href="#" data-pattern="checkered-red-white" data-pattern-type="checkered">🔴⚪ Caro đỏ trắng</a>
+                                        <a class="dropdown-item color-pattern" href="#" data-pattern="checkered-blue-white" data-pattern-type="checkered">🔵⚪ Caro xanh trắng</a>
+                                        <a class="dropdown-item color-pattern" href="#" data-pattern="checkered-black-white" data-pattern-type="checkered">⚫⚪ Caro đen trắng</a>
+                                        <div class="dropdown-divider"></div>
+                                        <h6 class="dropdown-header">Màu sọc (Stripe)</h6>
+                                        <a class="dropdown-item color-pattern" href="#" data-pattern="stripe-red-white" data-pattern-type="stripe">🔴⚪ Sọc đỏ trắng</a>
+                                        <a class="dropdown-item color-pattern" href="#" data-pattern="stripe-blue-white" data-pattern-type="stripe">🔵⚪ Sọc xanh trắng</a>
+                                        <a class="dropdown-item color-pattern" href="#" data-pattern="stripe-black-white" data-pattern-type="stripe">⚫⚪ Sọc đen trắng</a>
+                                        <div class="dropdown-divider"></div>
+                                        <h6 class="dropdown-header">Màu khác</h6>
+                                        <a class="dropdown-item color-pattern" href="#" data-pattern="Nhiều màu" data-pattern-type="multicolor">🌈 Nhiều màu</a>
+                                        <a class="dropdown-item color-pattern" href="#" data-pattern="Hoa văn" data-pattern-type="pattern">🎨 Hoa văn</a>
                                     </div>
                                 </div>
+                                <small class="form-text text-muted">Click vào ô màu để chọn, hoặc chọn pattern từ dropdown</small>
                                 <span asp-validation-for="MauSac" class="text-danger"></span>
                             </div>
                         </div>
@@ -136,6 +153,11 @@
                                         <p><strong>Hình ảnh hiện tại:</strong></p>
                                         <img src="@Model.HinhAnh" alt="@Model.TenNguyenLieu" class="img-thumbnail" style="max-width: 200px; max-height: 200px;" />
                                     </div>
+                                    <input type="hidden" id="currentHinhAnh" value="@Model.HinhAnh" />
+                                }
+                                else
+                                {
+                                    <input type="hidden" id="currentHinhAnh" value="" />
                                 }
                                 <div id="imagePreview" class="mt-2" style="display: none;">
                                     <p><strong>Hình ảnh mới:</strong></p>

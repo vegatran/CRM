@@ -8,6 +8,7 @@ const Common = {
         this.initCurrencyFormatting();
         this.initColorPickers();
         this.initImagePreviews();
+        this.highlightActiveMenu();
     },
 
     // Bind events
@@ -43,16 +44,118 @@ const Common = {
         };
     },
 
-    // Khởi tạo DataTables
-    initDataTables: function() {
-        $('.data-table').DataTable({
-            "language": {
-                "url": "/js/dataTables.vietnamese.json"
-            },
+    // Highlight active menu based on current URL
+    highlightActiveMenu: function() {
+        var currentPath = window.location.pathname;
+        var currentUrl = window.location.href;
+        
+        // Remove all active classes first
+        $('.nav-sidebar .nav-link').removeClass('active current').removeAttr('aria-current');
+        
+        // Find and highlight the active menu item
+        $('.nav-sidebar .nav-link').each(function() {
+            var $link = $(this);
+            var href = $link.attr('href');
+            
+            if (href) {
+                // Handle relative and absolute URLs
+                if (href.startsWith('/')) {
+                    // Absolute path
+                    if (currentPath === href || currentPath.startsWith(href + '/')) {
+                        $link.addClass('active current').attr('aria-current', 'page');
+                        return false; // Break the loop
+                    }
+                } else if (href.startsWith('http')) {
+                    // Full URL
+                    if (currentUrl === href) {
+                        $link.addClass('active current').attr('aria-current', 'page');
+                        return false; // Break the loop
+                    }
+                } else {
+                    // Relative path
+                    if (currentPath.endsWith(href) || currentPath.includes(href)) {
+                        $link.addClass('active current').attr('aria-current', 'page');
+                        return false; // Break the loop
+                    }
+                }
+            }
+        });
+        
+        // If no exact match found, try partial matching
+        if (!$('.nav-sidebar .nav-link.active').length) {
+            $('.nav-sidebar .nav-link').each(function() {
+                var $link = $(this);
+                var href = $link.attr('href');
+                var text = $link.text().toLowerCase();
+                
+                if (href && currentPath.includes(href.replace('/', ''))) {
+                    $link.addClass('active current').attr('aria-current', 'page');
+                    return false;
+                }
+                
+                // Check if current path contains menu text
+                if (text && currentPath.toLowerCase().includes(text.replace(/\s+/g, ''))) {
+                    $link.addClass('active current').attr('aria-current', 'page');
+                    return false;
+                }
+            });
+        }
+        
+        // Add click event to menu items
+        $('.nav-sidebar .nav-link').off('click.menuHighlight').on('click.menuHighlight', function() {
+            $('.nav-sidebar .nav-link').removeClass('active current').removeAttr('aria-current');
+            $(this).addClass('active current').attr('aria-current', 'page');
+        });
+    },
+
+    // Cấu hình ngôn ngữ DataTable (có thể thay đổi ở đây để áp dụng cho toàn bộ hệ thống)
+    getDataTableLanguage: function() {
+        return {
+            "sProcessing": "Đang xử lý...",
+            "sLengthMenu": "Xem _MENU_ mục",
+            "sZeroRecords": "Không tìm thấy dữ liệu",
+            "sInfo": "Đang xem _START_ đến _END_ trong tổng số _TOTAL_ mục",
+            "sInfoEmpty": "Đang xem 0 đến 0 trong tổng số 0 mục",
+            "sInfoFiltered": "(được lọc từ _MAX_ mục)",
+            "sSearch": "Tìm kiếm:",
+            "sEmptyTable": "Không có dữ liệu trong bảng",
+            "sLoadingRecords": "Đang tải...",
+            "oPaginate": {
+                "sFirst": "Đầu",
+                "sPrevious": "Trước",
+                "sNext": "Tiếp",
+                "sLast": "Cuối"
+            }
+        };
+    },
+
+    // Hàm khởi tạo DataTable dùng chung
+    // @param {string} selector - CSS selector của table (ví dụ: '#myTable', '.data-table')
+    // @param {object} options - Tùy chọn bổ sung cho DataTable (tùy chọn)
+    // 
+    // Ví dụ sử dụng:
+    // - Cơ bản: Common.initDataTable('#myTable');
+    // - Với tùy chọn: Common.initDataTable('#myTable', { "order": [[0, "asc"]], "pageLength": 10 });
+    // - Với columnDefs: Common.initDataTable('#myTable', { "columnDefs": [{ "orderable": false, "targets": [5] }] });
+    initDataTable: function(selector, options) {
+        var defaultOptions = {
+            "language": this.getDataTableLanguage(),
             "responsive": true,
             "autoWidth": false,
             "pageLength": 25,
             "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "Tất cả"]]
+        };
+
+        // Merge options
+        var finalOptions = $.extend(true, {}, defaultOptions, options);
+        
+        return $(selector).DataTable(finalOptions);
+    },
+
+    // Khởi tạo DataTables
+    initDataTables: function() {
+        $('.data-table').each(function() {
+            Common.initDataTable($(this));
         });
     },
 

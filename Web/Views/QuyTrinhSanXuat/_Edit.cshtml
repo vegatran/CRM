@@ -30,7 +30,7 @@
 
         <div class="form-group">
             <label asp-for="ChiPhiNhanCong" class="control-label">Chi phí nhân công (VNĐ) <span class="text-danger">*</span></label>
-            <input asp-for="ChiPhiNhanCong" class="form-control currency-input" type="text" placeholder="15,000" />
+            <input asp-for="ChiPhiNhanCong" class="form-control currency-input" type="text" placeholder="15,000" value="@Model.ChiPhiNhanCong.ToString("N0")" />
             <span asp-validation-for="ChiPhiNhanCong" class="text-danger"></span>
         </div>
 

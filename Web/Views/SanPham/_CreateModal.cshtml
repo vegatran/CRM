@@ -42,7 +42,7 @@
                                 </select>
                                 <small class="form-text text-muted">
                                     <span id="loaiSanPhamDescription">
-                                        <strong>Tự sản xuất:</strong> Sản phẩm do công ty tự sản xuất, giá vốn = chi phí sản xuất
+                                        <strong>Tự sản xuất:</strong> Sản phẩm do công ty tự sản xuất, giá vốn được tính tự động từ định mức nguyên liệu và quy trình sản xuất
                                     </span>
                                 </small>
                                 <span asp-validation-for="LoaiSanPham" class="text-danger"></span>
@@ -67,12 +67,12 @@
                         </div>
                     </div>
 
-                    <div class="row" id="giaNhapRow">
+                    <div class="row" id="giaNhapRow" style="display: none;">
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label asp-for="GiaNhap" class="control-label">Giá nhập <span class="text-danger">*</span></label>
                                 <div class="input-group">
-                                    <input asp-for="GiaNhap" class="form-control" type="text" id="GiaNhapInput" required />
+                                    <input asp-for="GiaNhap" class="form-control" type="text" id="GiaNhapInput" value="0" />
                                     <div class="input-group-append">
                                         <span class="input-group-text">VNĐ</span>
                                     </div>

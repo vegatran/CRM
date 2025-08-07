@@ -1,0 +1,143 @@
+@model Domain.Entities.PhieuNhapKho
+
+<div class="card">
+    <div class="card-header">
+        <h5 class="card-title mb-0">
+            <i class="fas fa-info-circle"></i> Chi tiết phiếu nhập kho
+        </h5>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <table class="table table-borderless">
+                    <tr>
+                        <th width="150">Số phiếu:</th>
+                        <td><strong>@Model.SoPhieu</strong></td>
+                    </tr>
+                    <tr>
+                        <th>Ngày nhập:</th>
+                        <td>@Model.NgayNhap.ToString("dd/MM/yyyy")</td>
+                    </tr>
+                    <tr>
+                        <th>Nhà cung cấp:</th>
+                        <td>@Model.NhaCungCap?.TenNhaCungCap</td>
+                    </tr>
+                    <tr>
+                        <th>Trạng thái:</th>
+                        <td>
+                            @if (Model.TrangThai == "Đã xử lý")
+                            {
+                                <span class="badge badge-success">@Model.TrangThai</span>
+                            }
+                            else if (Model.TrangThai == "Chờ xử lý")
+                            {
+                                <span class="badge badge-warning">@Model.TrangThai</span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-danger">@Model.TrangThai</span>
+                            }
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-md-6">
+                <table class="table table-borderless">
+                    <tr>
+                        <th width="150">Tổng tiền:</th>
+                        <td><strong class="text-primary">@Model.TongTien.ToString("N0") VNĐ</strong></td>
+                    </tr>
+                    <tr>
+                        <th>Ghi chú:</th>
+                        <td>@(string.IsNullOrEmpty(Model.GhiChu) ? "Không có" : Model.GhiChu)</td>
+                    </tr>
+                    <tr>
+                        <th>Ngày tạo:</th>
+                        <td>@Model.CreatedDate.ToString("dd/MM/yyyy HH:mm")</td>
+                    </tr>
+                    <tr>
+                        <th>Cập nhật lần cuối:</th>
+                        <td>@(Model.UpdatedDate?.ToString("dd/MM/yyyy HH:mm") ?? "Chưa cập nhật")</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        
+        @if (Model.ChiTietNhapKhos != null && Model.ChiTietNhapKhos.Any())
+        {
+            <hr />
+            <h6><i class="fas fa-list"></i> Chi tiết nhập kho</h6>
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>STT</th>
+                            <th>Loại hàng</th>
+                            <th>Hàng hóa</th>
+                            <th>Số lượng</th>
+                            <th>Đơn giá</th>
+                            <th>Thành tiền</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int stt = 1;
+                            decimal tongTien = 0;
+                        }
+                        @foreach (var chiTiet in Model.ChiTietNhapKhos)
+                        {
+                            tongTien += chiTiet.ThanhTien;
+                            <tr>
+                                <td>@stt</td>
+                                <td>
+                                    @if (chiTiet.NguyenLieuId.HasValue)
+                                    {
+                                        <span class="badge badge-info">Nguyên liệu</span>
+                                    }
+                                    else if (chiTiet.SanPhamId.HasValue)
+                                    {
+                                        <span class="badge badge-primary">Sản phẩm</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (chiTiet.NguyenLieuId.HasValue && chiTiet.NguyenLieu != null)
+                                    {
+                                        <strong>@chiTiet.NguyenLieu.TenNguyenLieu</strong><br />
+                                        <small class="text-muted">@chiTiet.NguyenLieu.MaNguyenLieu</small>
+                                    }
+                                    else if (chiTiet.SanPhamId.HasValue && chiTiet.SanPham != null)
+                                    {
+                                        <strong>@chiTiet.SanPham.TenSanPham</strong><br />
+                                        <small class="text-muted">@chiTiet.SanPham.MaSanPham</small>
+                                    }
+                                </td>
+                                <td>@chiTiet.SoLuong.ToString("N0")</td>
+                                <td>@chiTiet.DonGia.ToString("N0") VNĐ</td>
+                                <td><strong>@chiTiet.ThanhTien.ToString("N0") VNĐ</strong></td>
+                            </tr>
+                            stt++;
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr class="table-info">
+                            <th colspan="5" class="text-right"><strong>Tổng tiền:</strong></th>
+                            <th><strong>@tongTien.ToString("N0") VNĐ</strong></th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle"></i> Chưa có chi tiết nhập kho nào.
+            </div>
+        }
+    </div>
+</div>
+
+<div class="text-center mt-3">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+        <i class="fas fa-times"></i> Đóng
+    </button>
+</div>

@@ -10,13 +10,7 @@ const SanPham = {
 
     // Khởi tạo DataTable
     initDataTable: function() {
-        $('#sanPhamTable').DataTable({
-            "language": { "url": "/js/dataTables.vietnamese.json" },
-            "responsive": true,
-            "autoWidth": false,
-            "pageLength": 25,
-            "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "Tất cả"]]
-        });
+        Common.initDataTable('#sanPhamTable');
     },
 
     // Bind events
@@ -59,18 +53,18 @@ const SanPham = {
             SanPham.initializeModal($(this));
         });
 
-        // Color picker
-        $(document).on('change', '#ColorPicker', function() {
-            $('#MauSacInput').val($(this).val());
+        // Close dropdowns when modal is hidden
+        $(document).on('hidden.bs.modal', '.modal', function() {
+            $(this).find('.dropdown-menu').removeClass('show');
         });
 
-        // Color pattern dropdown
-        $(document).on('click', '.color-pattern', function(e) {
-            e.preventDefault();
-            var color = $(this).data('color');
-            var pattern = $(this).data('pattern');
-            $('#ColorPicker').val(color);
-            $('#MauSacInput').val(pattern);
+        // Color picker
+        $(document).on('change', '#ColorPicker', function() {
+            var modal = $(this).closest('.modal');
+            var colorInput = modal.find('#MauSacInput');
+            if (colorInput.length) {
+                colorInput.val($(this).val());
+            }
         });
 
         // Currency formatting
@@ -105,13 +99,13 @@ const SanPham = {
 
         if (loaiSanPham === 1) { // Tự sản xuất
             giaNhapRow.hide();
-            giaNhapInput.prop('required', false);
-            chiPhiNhanCongInput.prop('required', true);
-            description.html('<span><strong>Tự sản xuất:</strong> Sản phẩm do công ty tự sản xuất, giá vốn = chi phí sản xuất</span>');
+            giaNhapInput.prop('required', false).val('0');
+            chiPhiNhanCongInput.prop('required', false).val('0');
+            description.html('<span><strong>Tự sản xuất:</strong> Sản phẩm do công ty tự sản xuất, giá vốn được tính tự động từ định mức nguyên liệu và quy trình sản xuất</span>');
         } else { // Mua ngoài
             giaNhapRow.show();
             giaNhapInput.prop('required', true);
-            chiPhiNhanCongInput.prop('required', false);
+            chiPhiNhanCongInput.prop('required', false).val('0');
             description.html('<span><strong>Mua ngoài:</strong> Sản phẩm mua từ nhà cung cấp, giá vốn = giá nhập</span>');
         }
         
@@ -126,9 +120,14 @@ const SanPham = {
         const heSoLoiNhuan = 1.3; // 30% lợi nhuận
 
         if (loaiSanPham === 1) { // Tự sản xuất
-            var chiPhiNhanCong = parseFloat($('#ChiPhiNhanCongInput').val().replace(/[^\d]/g, '') || 0);
-            // Giá vốn = chi phí nhân công (tạm thời, sẽ cập nhật khi có định mức nguyên liệu)
-            giaVon = chiPhiNhanCong;
+            // Đối với sản phẩm tự sản xuất, giá vốn sẽ được tính tự động từ định mức nguyên liệu và quy trình sản xuất
+            // Tạm thời sử dụng giá mặc định hoặc giá đã có
+            var giaBanHienTai = parseFloat($('#GiaBanInput').val().replace(/[^\d]/g, '') || 0);
+            if (giaBanHienTai > 0) {
+                giaVon = giaBanHienTai / heSoLoiNhuan; // Ước tính ngược từ giá bán
+            } else {
+                giaVon = 0; // Sẽ được tính khi có đủ thông tin
+            }
         } else { // Mua ngoài
             var giaNhap = parseFloat($('#GiaNhapInput').val().replace(/[^\d]/g, '') || 0);
             giaVon = giaNhap;
@@ -171,6 +170,22 @@ const SanPham = {
     // Handle form submission
     handleFormSubmission: function(form, successMessage, errorMessage) {
         var formData = new FormData(form[0]);
+        
+        // Xử lý hình ảnh cho form edit
+        if (form.attr('id') === 'editForm') {
+            var hinhAnhInput = form.find('#HinhAnhInput');
+            var currentHinhAnh = form.find('#currentHinhAnh');
+            
+            // Nếu không có file được chọn và có hình ảnh hiện tại, thêm hình ảnh hiện tại vào formData
+            if (hinhAnhInput[0].files.length === 0 && currentHinhAnh.val()) {
+                // Tạo một blob từ URL hình ảnh hiện tại
+                var currentImageUrl = currentHinhAnh.val();
+                if (currentImageUrl) {
+                    // Thêm thông tin hình ảnh hiện tại vào formData
+                    formData.append('CurrentHinhAnh', currentImageUrl);
+                }
+            }
+        }
         
         $.ajax({
             url: form.attr('action'),
@@ -219,16 +234,125 @@ const SanPham = {
             SanPham.formatCurrency($(this));
         });
 
-        // Initialize color picker
+        // Initialize color picker and pattern dropdown
         var colorInput = modal.find('#MauSacInput');
         var colorPicker = modal.find('#ColorPicker');
+        
         if (colorInput.length && colorPicker.length) {
-            colorPicker.val('#000000');
+            // Set default color if no value
+            if (!colorInput.val()) {
+                colorPicker.val('#000000');
+            } else {
+                // If color input has a value, try to set it to color picker
+                var colorValue = colorInput.val();
+                if (colorValue && colorValue.match(/^#[0-9A-F]{6}$/i)) {
+                    colorPicker.val(colorValue);
+                } else {
+                    colorPicker.val('#000000');
+                }
+            }
+        }
+
+        // Initialize Bootstrap dropdown for color patterns
+        modal.find('.dropdown-toggle').off('click.colorPattern').on('click.colorPattern', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var dropdown = $(this).siblings('.dropdown-menu');
+            var isOpen = dropdown.hasClass('show');
+            
+            // Close all other dropdowns first
+            modal.find('.dropdown-menu').removeClass('show');
+            
+            // Toggle current dropdown
+            if (!isOpen) {
+                dropdown.addClass('show');
+            }
+        });
+
+        // Close dropdown when clicking outside
+        $(document).off('click.colorPatternDropdown').on('click.colorPatternDropdown', function(e) {
+            if (!$(e.target).closest('.dropdown').length) {
+                modal.find('.dropdown-menu').removeClass('show');
+            }
+        });
+
+        // Initialize color pattern dropdown items
+        modal.find('.color-pattern').off('click.colorPattern').on('click.colorPattern', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var color = $(this).data('color');
+            var pattern = $(this).data('pattern');
+            
+            // Update color picker if color is provided
+            if (color && colorPicker.length) {
+                colorPicker.val(color);
+            }
+            
+            // Update color input with pattern
+            if (pattern && colorInput.length) {
+                colorInput.val(pattern);
+            }
+
+            // Close dropdown
+            modal.find('.dropdown-menu').removeClass('show');
+        });
+
+        // Initialize image preview
+        var hinhAnhInput = modal.find('#HinhAnhInput');
+        var previewImg = modal.find('#previewImg');
+        var currentHinhAnh = modal.find('#currentHinhAnh');
+        
+        if (hinhAnhInput.length) {
+            // Hiển thị hình ảnh hiện tại nếu có (cho form edit)
+            if (currentHinhAnh.length && currentHinhAnh.val()) {
+                previewImg.attr('src', currentHinhAnh.val());
+                previewImg.show();
+                
+                // Hiển thị tên file hiện tại trong file label
+                var currentImagePath = currentHinhAnh.val();
+                if (currentImagePath) {
+                    var fileName = currentImagePath.split('/').pop(); // Lấy tên file từ đường dẫn
+                    hinhAnhInput.next('.custom-file-label').html(fileName || 'Hình ảnh hiện tại');
+                }
+            }
+            
+            hinhAnhInput.off('change').on('change', function() {
+                var file = this.files[0];
+                if (file) {
+                    // Update file label
+                    $(this).next('.custom-file-label').html(file.name);
+                    
+                    // Show preview
+                    var reader = new FileReader();
+                    reader.onload = function(e) {
+                        previewImg.attr('src', e.target.result);
+                        previewImg.show();
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    // Nếu không có file được chọn, hiển thị lại hình ảnh hiện tại (nếu có)
+                    if (currentHinhAnh.length && currentHinhAnh.val()) {
+                        previewImg.attr('src', currentHinhAnh.val());
+                        previewImg.show();
+                        
+                        // Hiển thị lại tên file hiện tại
+                        var currentImagePath = currentHinhAnh.val();
+                        if (currentImagePath) {
+                            var fileName = currentImagePath.split('/').pop();
+                            hinhAnhInput.next('.custom-file-label').html(fileName || 'Hình ảnh hiện tại');
+                        }
+                    } else {
+                        previewImg.hide();
+                        hinhAnhInput.next('.custom-file-label').html('Chọn file...');
+                    }
+                }
+            });
         }
 
         // Initialize loại sản phẩm handler
         var loaiSanPhamSelect = modal.find('#LoaiSanPhamSelect');
         if (loaiSanPhamSelect.length) {
+            // Xử lý hiển thị/ẩn trường dựa trên loại sản phẩm hiện tại
             SanPham.handleLoaiSanPhamChange(loaiSanPhamSelect);
         }
     }

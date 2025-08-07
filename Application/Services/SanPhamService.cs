@@ -117,9 +117,27 @@ namespace Application.Services
             var allSanPhams = await GetAllAsync();
             return allSanPhams.Where(sp => 
                 sp.TenSanPham.Contains(keyword, StringComparison.OrdinalIgnoreCase) ||
-                sp.MaSanPham.Contains(keyword, StringComparison.OrdinalIgnoreCase) ||
-                (sp.MoTa != null && sp.MoTa.Contains(keyword, StringComparison.OrdinalIgnoreCase))
-            );
+                sp.MaSanPham.Contains(keyword, StringComparison.OrdinalIgnoreCase));
+        }
+        
+        // Tính số lượng sản phẩm có thể sản xuất được
+        public async Task<int> TinhSoLuongCoTheSanXuatAsync(int sanPhamId)
+        {
+            var sanPham = await GetByIdWithDetailsAsync(sanPhamId);
+            if (sanPham == null || sanPham.LoaiSanPham != LoaiSanPham.TuSanXuat)
+                return 0;
+            
+            return sanPham.SoLuongCoTheSanXuat;
+        }
+        
+        // Tính danh sách nguyên liệu thiếu
+        public async Task<List<string>> TinhNguyenLieuThieuAsync(int sanPhamId)
+        {
+            var sanPham = await GetByIdWithDetailsAsync(sanPhamId);
+            if (sanPham == null || sanPham.LoaiSanPham != LoaiSanPham.TuSanXuat)
+                return new List<string>();
+            
+            return sanPham.DanhSachNguyenLieuThieu;
         }
     }
 } 

@@ -39,7 +39,7 @@ namespace Web.Controllers
                 dinhMuc.SanPhamId = sanPhamId.Value;
             }
             
-            return PartialView("_CreateModal", dinhMuc);
+            return PartialView("_CreateContent", dinhMuc);
         }
 
         // POST: DinhMucNguyenLieu/Create
@@ -55,8 +55,36 @@ namespace Web.Controllers
             {
                 try
                 {
-                    await _dinhMucNguyenLieuService.CreateAsync(dinhMucNguyenLieu);
-                    return Json(new { success = true, message = "Thêm định mức nguyên liệu thành công!" });
+                    // Kiểm tra xem đã tồn tại định mức cho sản phẩm và nguyên liệu này chưa
+                    var existingDinhMuc = await _dinhMucNguyenLieuService.GetBySanPhamAndNguyenLieuAsync(dinhMucNguyenLieu.SanPhamId, dinhMucNguyenLieu.NguyenLieuId);
+                    
+                    if (existingDinhMuc != null)
+                    {
+                        // Nếu đã tồn tại, cộng dồn số lượng
+                        existingDinhMuc.SoLuongCan += dinhMucNguyenLieu.SoLuongCan;
+                        
+                        // Cập nhật ghi chú nếu có
+                        if (!string.IsNullOrEmpty(dinhMucNguyenLieu.GhiChu))
+                        {
+                            if (!string.IsNullOrEmpty(existingDinhMuc.GhiChu))
+                            {
+                                existingDinhMuc.GhiChu += " | " + dinhMucNguyenLieu.GhiChu;
+                            }
+                            else
+                            {
+                                existingDinhMuc.GhiChu = dinhMucNguyenLieu.GhiChu;
+                            }
+                        }
+                        
+                        await _dinhMucNguyenLieuService.UpdateAsync(existingDinhMuc);
+                        return Json(new { success = true, message = "Định mức nguyên liệu đã tồn tại, đã cộng dồn số lượng!" });
+                    }
+                    else
+                    {
+                        // Nếu chưa tồn tại, tạo mới
+                        await _dinhMucNguyenLieuService.CreateAsync(dinhMucNguyenLieu);
+                        return Json(new { success = true, message = "Thêm định mức nguyên liệu thành công!" });
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -84,7 +112,7 @@ namespace Web.Controllers
             
             ViewBag.SanPhams = await _sanPhamService.GetAllAsync();
             ViewBag.NguyenLieus = await _nguyenLieuService.GetAllAsync();
-            return PartialView("_EditModal", dinhMuc);
+            return PartialView("_EditContent", dinhMuc);
         }
 
         // POST: DinhMucNguyenLieu/Edit/5
@@ -133,13 +161,13 @@ namespace Web.Controllers
         // GET: DinhMucNguyenLieu/Delete/5
         public async Task<IActionResult> Delete(int id)
         {
-            var dinhMuc = await _dinhMucNguyenLieuService.GetByIdAsync(id);
+            var dinhMuc = await _dinhMucNguyenLieuService.GetByIdWithDetailsAsync(id);
             if (dinhMuc == null)
             {
                 return NotFound();
             }
 
-            return PartialView("_DeleteModal", dinhMuc);
+            return PartialView("_DeleteContent", dinhMuc);
         }
 
         // POST: DinhMucNguyenLieu/Delete/5

@@ -33,6 +33,7 @@ namespace Infrastructure.Repositories
         public IRepository<LoaiNguyenLieu> LoaiNguyenLieuRepository => Repository<LoaiNguyenLieu>();
         public IRepository<QuyTrinhSanXuat> QuyTrinhSanXuatRepository => Repository<QuyTrinhSanXuat>();
         public IRepository<DinhMucNguyenLieu> DinhMucNguyenLieuRepository => Repository<DinhMucNguyenLieu>();
+        public IRepository<KhachHang> KhachHangRepository => Repository<KhachHang>();
         public object Context => _context;
 
         public async Task<int> SaveChangesAsync()

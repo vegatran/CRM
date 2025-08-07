@@ -83,24 +83,17 @@
                         </div>
                     </div>
 
-                    <div class="row" id="giaNhapRow">
+                    <div class="row" id="giaNhapRow" style="display: @(Model.LoaiSanPham == Domain.Entities.LoaiSanPham.MuaNgoai ? "block" : "none");">
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label asp-for="GiaNhap" class="control-label">Giá nhập <span class="text-danger">*</span></label>
                                 <div class="input-group">
-                                    @if (Model.LoaiSanPham == Domain.Entities.LoaiSanPham.TuSanXuat)
-                                    {
-                                        <input asp-for="GiaNhap" class="form-control" type="text" id="GiaNhapInput" value="@Model.GiaNhap.ToString("F0")" />
-                                    }
-                                    else
-                                    {
-                                        <input asp-for="GiaNhap" class="form-control" type="text" id="GiaNhapInput" value="@Model.GiaNhap.ToString("F0")" required />
-                                    }
+                                    <input asp-for="GiaNhap" class="form-control" type="text" id="GiaNhapInput" value="@Model.GiaNhap.ToString("F0")" />
                                     <div class="input-group-append">
                                         <span class="input-group-text">VNĐ</span>
                                     </div>
                                 </div>
-                                <small class="form-text text-muted"><span>Áp dụng cho sản phẩm mua ngoài</span></small>
+                                <small class="form-text text-muted">Áp dụng cho sản phẩm mua ngoài</small>
                                 <span asp-validation-for="GiaNhap" class="text-danger"></span>
                             </div>
                         </div>
@@ -108,19 +101,12 @@
                             <div class="form-group">
                                 <label asp-for="ChiPhiNhanCong" class="control-label">Chi phí nhân công</label>
                                 <div class="input-group">
-                                    @if (Model.LoaiSanPham == Domain.Entities.LoaiSanPham.MuaNgoai)
-                                    {
-                                        <input asp-for="ChiPhiNhanCong" class="form-control" type="text" id="ChiPhiNhanCongInput" value="@Model.ChiPhiNhanCong.ToString("F0")" />
-                                    }
-                                    else
-                                    {
-                                        <input asp-for="ChiPhiNhanCong" class="form-control" type="text" id="ChiPhiNhanCongInput" value="@Model.ChiPhiNhanCong.ToString("F0")" required />
-                                    }
+                                    <input asp-for="ChiPhiNhanCong" class="form-control" type="text" id="ChiPhiNhanCongInput" value="@Model.ChiPhiNhanCong.ToString("F0")" />
                                     <div class="input-group-append">
                                         <span class="input-group-text">VNĐ</span>
                                     </div>
                                 </div>
-                                <small class="form-text text-muted"><span>Áp dụng cho sản phẩm tự sản xuất</span></small>
+                                <small class="form-text text-muted">Áp dụng cho sản phẩm tự sản xuất</small>
                                 <span asp-validation-for="ChiPhiNhanCong" class="text-danger"></span>
                             </div>
                         </div>
@@ -200,12 +186,14 @@
                                     <div class="mt-2">
                                         <img id="previewImg" src="@Model.HinhAnh" alt="Preview" class="img-thumbnail" style="max-width: 200px; max-height: 200px;" />
                                     </div>
+                                    <input type="hidden" id="currentHinhAnh" value="@Model.HinhAnh" />
                                 }
                                 else
                                 {
                                     <div class="mt-2">
                                         <img id="previewImg" src="" alt="Preview" class="img-thumbnail" style="max-width: 200px; max-height: 200px; display: none;" />
                                     </div>
+                                    <input type="hidden" id="currentHinhAnh" value="" />
                                 }
                                 <span asp-validation-for="HinhAnh" class="text-danger"></span>
                             </div>

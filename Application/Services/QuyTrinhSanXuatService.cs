@@ -43,6 +43,14 @@ namespace Application.Services
             return result;
         }
 
+        public async Task<QuyTrinhSanXuat?> GetBySanPhamAndTenQuyTrinhAsync(int sanPhamId, string tenCongDoan)
+        {
+            var allQuyTrinhs = await _unitOfWork.QuyTrinhSanXuatRepository.GetAllAsync();
+            return allQuyTrinhs.FirstOrDefault(q => q.SanPhamId == sanPhamId && 
+                                                   q.TenCongDoan.Equals(tenCongDoan, StringComparison.OrdinalIgnoreCase) && 
+                                                   q.TrangThai);
+        }
+
         public async Task<QuyTrinhSanXuat> CreateAsync(QuyTrinhSanXuat quyTrinhSanXuat)
         {
             await _unitOfWork.QuyTrinhSanXuatRepository.AddAsync(quyTrinhSanXuat);
