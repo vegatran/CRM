@@ -151,11 +151,11 @@
     margin-right: 8px;
     backdrop-filter: blur(5px);
     border-right: none !important;
-    text-align: center !important;
+    text-align: left !important;
     width: calc(100% - 16px) !important;
     display: flex !important;
     align-items: center !important;
-    justify-content: center !important;
+    justify-content: flex-start !important;
     min-height: 40px !important;
     box-sizing: border-box !important;
 }
@@ -219,6 +219,34 @@
     left: 100%;
 }
 
+/* Icon styling for nav-header */
+.main-sidebar .nav-header .nav-icon {
+    color: rgba(255,255,255,0.9) !important;
+    font-size: 1rem !important;
+    margin-right: 10px !important;
+    width: 20px !important;
+    text-align: center !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    transition: all 0.3s ease;
+}
+
+.main-sidebar .nav-header:hover .nav-icon {
+    color: white !important;
+    transform: scale(1.1);
+    text-shadow: 0 2px 4px rgba(0,0,0,0.4);
+}
+
+.main-sidebar .nav-header span {
+    color: rgba(255,255,255,0.8) !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3) !important;
+}
+
 /* Sidebar scrollbar */
 .main-sidebar .sidebar::-webkit-scrollbar {
     width: 8px;
@@ -257,6 +285,22 @@
 .nav-sidebar .nav-link.active {
     background-color: #007bff !important;
     color: white !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,.12), 0 1px 2px rgba(0,0,0,.24) !important;
+}
+
+/* Force active state for sidebar */
+.main-sidebar .nav-sidebar .nav-link.active,
+.main-sidebar .nav-sidebar .nav-link.active:hover,
+.main-sidebar .nav-sidebar .nav-link.active:focus {
+    background-color: #007bff !important;
+    color: #fff !important;
+    border-color: #007bff !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,.12), 0 1px 2px rgba(0,0,0,.24) !important;
+}
+
+/* Active menu icon */
+.main-sidebar .nav-sidebar .nav-link.active .nav-icon {
+    color: #fff !important;
 }
 
 /* Hover effect for menu items */
@@ -388,20 +432,319 @@ input[type="color"] {
 
 /* Responsive design */
 @media (max-width: 768px) {
-    .sidebar {
-        transform: translateX(-100%);
-    }
-    
+    /* Mobile sidebar behavior */
     .main-sidebar {
-        position: fixed;
-        top: 0;
-        left: 0;
-        height: 100vh;
-        z-index: 1038;
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        height: 100vh !important;
+        z-index: 1038 !important;
+        transform: translateX(-100%) !important;
+        transition: transform 0.3s ease-in-out !important;
+        width: 250px !important;
     }
     
     .sidebar-open .main-sidebar {
-        transform: translateX(0);
+        transform: translateX(0) !important;
+    }
+    
+    /* Content wrapper adjustment */
+    .content-wrapper {
+        margin-left: 0 !important;
+        width: 100% !important;
+    }
+    
+    /* Sidebar overlay for mobile */
+    .sidebar-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1037;
+        display: none;
+    }
+    
+    .sidebar-open .sidebar-overlay {
+        display: block;
+    }
+    
+    /* Mobile menu adjustments */
+    .main-sidebar .nav-sidebar .nav-link {
+        margin: 2px 5px !important;
+        border-radius: 8px !important;
+        padding: 10px 12px !important;
+    }
+    
+    .main-sidebar .nav-header {
+        margin-left: 5px !important;
+        margin-right: 5px !important;
+        padding: 1rem 0.5rem 0.5rem 0.5rem !important;
+    }
+    
+    /* Ensure brand link is visible on mobile */
+    .main-sidebar .brand-link {
+        height: 50px !important;
+        min-height: 50px !important;
+        max-height: 50px !important;
+    }
+    
+    /* ===== RESPONSIVE TABLES ===== */
+    /* Table responsive wrapper */
+    .table-responsive {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        border: 0;
+    }
+    
+    /* Table adjustments for mobile */
+    .table {
+        min-width: 600px; /* Ensure minimum width for readability */
+        font-size: 14px;
+    }
+    
+    .table th,
+    .table td {
+        padding: 8px 6px;
+        vertical-align: middle;
+        white-space: nowrap;
+    }
+    
+    /* Hide less important columns on mobile for different tables */
+    
+    /* SanPham table - hide less important columns */
+    #sanPhamTable th:nth-child(4), /* Loại SP */
+    #sanPhamTable th:nth-child(6), /* Giá vốn */
+    #sanPhamTable th:nth-child(7), /* Chi phí sản xuất */
+    #sanPhamTable th:nth-child(9), /* Kích thước */
+    #sanPhamTable th:nth-child(10), /* Màu sắc */
+    #sanPhamTable td:nth-child(4),
+    #sanPhamTable td:nth-child(6),
+    #sanPhamTable td:nth-child(7),
+    #sanPhamTable td:nth-child(9),
+    #sanPhamTable td:nth-child(10) {
+        display: none;
+    }
+    
+    /* NguyenLieu table - hide less important columns */
+    #nguyenLieuTable th:nth-child(4), /* Loại nguyên liệu */
+    #nguyenLieuTable th:nth-child(5), /* Nhà cung cấp */
+    #nguyenLieuTable th:nth-child(8), /* Đơn vị tính */
+    #nguyenLieuTable th:nth-child(9), /* Chất liệu */
+    #nguyenLieuTable th:nth-child(10), /* Màu sắc */
+    #nguyenLieuTable td:nth-child(4),
+    #nguyenLieuTable td:nth-child(5),
+    #nguyenLieuTable td:nth-child(8),
+    #nguyenLieuTable td:nth-child(9),
+    #nguyenLieuTable td:nth-child(10) {
+        display: none;
+    }
+    
+    /* NhaCungCap table - hide less important columns */
+    #nhaCungCapTable th:nth-child(2), /* Địa chỉ */
+    #nhaCungCapTable th:nth-child(4), /* Email */
+    #nhaCungCapTable th:nth-child(5), /* Mã số thuế */
+    #nhaCungCapTable th:nth-child(6), /* Người đại diện */
+    #nhaCungCapTable td:nth-child(2),
+    #nhaCungCapTable td:nth-child(4),
+    #nhaCungCapTable td:nth-child(5),
+    #nhaCungCapTable td:nth-child(6) {
+        display: none;
+    }
+    
+    /* BanHang table - hide less important columns */
+    #banHangTable th:nth-child(5), /* Giảm giá */
+    #banHangTable th:nth-child(6), /* Thanh toán */
+    #banHangTable td:nth-child(5),
+    #banHangTable td:nth-child(6) {
+        display: none;
+    }
+    
+    /* DataTables responsive adjustments */
+    .dataTables_wrapper .dataTables_length,
+    .dataTables_wrapper .dataTables_filter {
+        margin-bottom: 10px;
+    }
+    
+    .dataTables_wrapper .dataTables_length select,
+    .dataTables_wrapper .dataTables_filter input {
+        font-size: 14px;
+        padding: 4px 8px;
+    }
+    
+    .dataTables_wrapper .dataTables_info,
+    .dataTables_wrapper .dataTables_paginate {
+        margin-top: 10px;
+        font-size: 14px;
+    }
+    
+    .dataTables_wrapper .dataTables_paginate .paginate_button {
+        padding: 4px 8px;
+        margin: 0 2px;
+        font-size: 14px;
+    }
+    
+    /* Card adjustments for mobile */
+    .card {
+        margin-bottom: 15px;
+    }
+    
+    .card-header {
+        padding: 10px 15px;
+    }
+    
+    .card-body {
+        padding: 10px;
+    }
+    
+    /* Button adjustments for mobile */
+    .btn-sm {
+        padding: 4px 8px;
+        font-size: 12px;
+    }
+    
+    .btn-group-sm > .btn {
+        padding: 4px 8px;
+        font-size: 12px;
+    }
+    
+    /* Modal adjustments for mobile */
+    .modal-dialog {
+        margin: 10px;
+        max-width: calc(100% - 20px);
+    }
+    
+    .modal-header,
+    .modal-body,
+    .modal-footer {
+        padding: 10px 15px;
+    }
+    
+    /* Form adjustments for mobile */
+    .form-group {
+        margin-bottom: 10px;
+    }
+    
+    .form-control {
+        font-size: 14px;
+        padding: 6px 10px;
+    }
+    
+    /* Badge adjustments for mobile */
+    .badge {
+        font-size: 11px;
+        padding: 3px 6px;
+    }
+    
+    /* Image adjustments for mobile */
+    .img-thumbnail {
+        max-width: 40px;
+        max-height: 40px;
+    }
+    
+    /* Color preview adjustments for mobile */
+    .color-preview {
+        width: 16px !important;
+        height: 16px !important;
+        margin-right: 6px !important;
+    }
+    
+    /* Additional mobile improvements */
+    /* Breadcrumb adjustments */
+    .breadcrumb {
+        font-size: 12px;
+        padding: 8px 12px;
+    }
+    
+    .breadcrumb-item {
+        font-size: 12px;
+    }
+    
+    /* Content header adjustments */
+    .content-header {
+        padding: 10px 15px;
+    }
+    
+    .content-header h1 {
+        font-size: 1.5rem;
+        margin-bottom: 5px;
+    }
+    
+    /* Card tools adjustments */
+    .card-tools {
+        margin-top: 5px;
+    }
+    
+    .card-tools .btn {
+        font-size: 12px;
+        padding: 4px 8px;
+    }
+    
+    /* Table cell text wrapping for better readability */
+    .table td {
+        word-wrap: break-word;
+        max-width: 150px;
+    }
+    
+    /* Button group adjustments */
+    .btn-group .btn {
+        margin-right: 2px;
+    }
+    
+    /* Modal improvements for mobile */
+    .modal-dialog {
+        margin: 10px;
+        max-width: calc(100% - 20px);
+    }
+    
+    .modal-xl {
+        max-width: calc(100% - 20px);
+    }
+    
+    .modal-lg {
+        max-width: calc(100% - 20px);
+    }
+    
+    /* Form improvements for mobile */
+    .form-row {
+        margin-left: -5px;
+        margin-right: -5px;
+    }
+    
+    .form-row > .col,
+    .form-row > [class*="col-"] {
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+    
+    /* Alert adjustments */
+    .alert {
+        font-size: 14px;
+        padding: 10px 15px;
+        margin-bottom: 10px;
+    }
+    
+    /* Badge improvements */
+    .badge {
+        font-size: 10px;
+        padding: 2px 5px;
+    }
+    
+    /* Image improvements */
+    .img-thumbnail {
+        max-width: 35px;
+        max-height: 35px;
+        object-fit: cover;
+    }
+    
+    /* Text improvements */
+    .text-muted {
+        font-size: 12px;
+    }
+    
+    .small {
+        font-size: 11px;
     }
 }
 
@@ -773,23 +1116,7 @@ input[type="color"] {
     border-right: none !important;
 }
 
-/* Responsive enhancements */
-@media (max-width: 768px) {
-    .main-sidebar .nav-sidebar .nav-link {
-        margin: 2px 5px;
-        border-radius: 8px;
-    }
-    
-    .main-sidebar .nav-header {
-        margin-left: 5px;
-        margin-right: 5px;
-        padding: 1rem 0.5rem 0.5rem 0.5rem;
-    }
-    
-    .content-wrapper {
-        margin-left: 0 !important;
-    }
-}
+
 
 /* ===== FINAL SIDEBAR POLISHING ===== */
 /* Ensure no borders anywhere in sidebar */
@@ -833,18 +1160,7 @@ input[type="color"] {
     margin-left: 4.6rem;
 }
 
-/* Ensure no border on mobile */
-@media (max-width: 768px) {
-    .content-wrapper {
-        margin-left: 0 !important;
-        border-left: none !important;
-    }
-    
-    .main-sidebar {
-        border: none !important;
-        border-right: none !important;
-    }
-}
+
 
 /* ===== PERFECT ALIGNMENT ===== */
 /* Ensure perfect vertical and horizontal alignment */

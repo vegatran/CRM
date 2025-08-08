@@ -42,6 +42,9 @@
         </nav>
         <!-- /.navbar -->
 
+        <!-- Sidebar Overlay for Mobile -->
+        <div class="sidebar-overlay"></div>
+        
         <!-- Main Sidebar Container -->
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
@@ -56,76 +59,91 @@
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                         <!-- Dashboard -->
                         <li class="nav-item">
-                            <a href="/" class="nav-link">
+                            <a href="/" class="nav-link" data-menu="dashboard">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
                                 <p>Dashboard</p>
                             </a>
                         </li>
 
                         <!-- Quản lý Sản xuất -->
-                        <li class="nav-header">SẢN XUẤT</li>
+                        <li class="nav-header">
+                            <i class="nav-icon fas fa-industry"></i>
+                            <span>SẢN XUẤT</span>
+                        </li>
                         <li class="nav-item">
-                            <a href="/SanPham" class="nav-link">
+                            <a href="/SanPham" class="nav-link" data-menu="sanpham">
                                 <i class="nav-icon fas fa-tshirt"></i>
                                 <p>Quản lý Sản phẩm</p>
                             </a>
                         </li>
 
                         <!-- Quản lý Nguyên liệu -->
-                        <li class="nav-header">NGUYÊN LIỆU</li>
+                        <li class="nav-header">
+                            <i class="nav-icon fas fa-boxes"></i>
+                            <span>NGUYÊN LIỆU</span>
+                        </li>
                         <li class="nav-item">
-                            <a href="/NguyenLieu" class="nav-link">
+                            <a href="/NguyenLieu" class="nav-link" data-menu="nguyenlieu">
                                 <i class="nav-icon fas fa-boxes"></i>
                                 <p>Quản lý Nguyên liệu</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="/NhaCungCap" class="nav-link">
+                            <a href="/NhaCungCap" class="nav-link" data-menu="nhacungcap">
                                 <i class="nav-icon fas fa-truck"></i>
                                 <p>Quản lý Nhà cung cấp</p>
                             </a>
                         </li>
 
                         <!-- Quản lý Kho -->
-                        <li class="nav-header">KHO HÀNG</li>
+                        <li class="nav-header">
+                            <i class="nav-icon fas fa-warehouse"></i>
+                            <span>KHO HÀNG</span>
+                        </li>
                         <li class="nav-item">
-                            <a href="/NhapKho" class="nav-link">
+                            <a href="/NhapKho" class="nav-link" data-menu="nhapkho">
                                 <i class="nav-icon fas fa-warehouse"></i>
                                 <p>Quản lý Nhập kho</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="/XuatKho" class="nav-link">
+                            <a href="/XuatKho" class="nav-link" data-menu="xuatkho">
                                 <i class="nav-icon fas fa-shipping-fast"></i>
                                 <p>Quản lý Xuất kho</p>
                             </a>
                         </li>
 
                         <!-- Quản lý Bán hàng -->
-                        <li class="nav-header">BÁN HÀNG</li>
+                        <li class="nav-header">
+                            <i class="nav-icon fas fa-shopping-cart"></i>
+                            <span>BÁN HÀNG</span>
+                        </li>
                         <li class="nav-item">
-                            <a href="/KhachHang" class="nav-link">
+                            <a href="/KhachHang" class="nav-link" data-menu="khachhang">
                                 <i class="nav-icon fas fa-users"></i>
                                 <p>Quản lý Khách hàng</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="/BanHang" class="nav-link">
+                            <a href="/BanHang" class="nav-link" data-menu="banhang">
                                 <i class="nav-icon fas fa-shopping-cart"></i>
                                 <p>Quản lý Bán hàng</p>
                             </a>
                         </li>
 
                         <!-- Báo cáo & Cài đặt -->
-                        <li class="nav-header">HỆ THỐNG</li>
+                        <li class="nav-header">
+                            <i class="nav-icon fas fa-cogs"></i>
+                            <span>HỆ THỐNG</span>
+                        </li>
                         <li class="nav-item">
-                            <a href="/BaoCao" class="nav-link">
+                            <a href="/BaoCao" class="nav-link" data-menu="baocao">
                                 <i class="nav-icon fas fa-chart-bar"></i>
                                 <p>Báo cáo & Thống kê</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="/CaiDat" class="nav-link">
+                            <a href="/CaiDat" class="nav-link" data-menu="caidat">
                                 <i class="nav-icon fas fa-cog"></i>
                                 <p>Cài đặt hệ thống</p>
                             </a>

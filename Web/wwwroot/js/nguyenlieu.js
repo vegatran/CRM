@@ -9,7 +9,27 @@ const NguyenLieu = {
 
     // Khởi tạo DataTable
     initDataTable: function() {
-        Common.initDataTable('#nguyenLieuTable');
+        var $table = $('#nguyenLieuTable');
+        if ($table.length) {
+            var $tbody = $table.find('tbody');
+            var $rows = $tbody.find('tr');
+            
+            // Kiểm tra xem bảng có dữ liệu thực tế không
+            var hasRealData = false;
+            $rows.each(function() {
+                var $row = $(this);
+                // Bỏ qua các dòng có colspan (thường là "Chưa có dữ liệu")
+                if ($row.find('td[colspan]').length === 0) {
+                    hasRealData = true;
+                    return false; // break the loop
+                }
+            });
+            
+            // Chỉ khởi tạo DataTables nếu có dữ liệu thực tế
+            if (hasRealData) {
+                Common.initDataTable($table);
+            }
+        }
     },
 
     // Bind events

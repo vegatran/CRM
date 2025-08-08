@@ -24,6 +24,18 @@ const Common = {
             $('#modalContainer').empty();
         });
 
+        // Mobile sidebar overlay click to close
+        $(document).on('click', '.sidebar-overlay', function() {
+            $('body').removeClass('sidebar-open');
+        });
+
+        // Close sidebar when clicking menu items on mobile
+        $(document).on('click', '.nav-sidebar .nav-link', function() {
+            if ($(window).width() <= 768) {
+                $('body').removeClass('sidebar-open');
+            }
+        });
+
         // Toastr configuration
         toastr.options = {
             "closeButton": true,
@@ -49,6 +61,8 @@ const Common = {
         var currentPath = window.location.pathname;
         var currentUrl = window.location.href;
         
+        console.log('Current path:', currentPath); // Debug log
+        
         // Remove all active classes first
         $('.nav-sidebar .nav-link').removeClass('active current').removeAttr('aria-current');
         
@@ -56,47 +70,78 @@ const Common = {
         $('.nav-sidebar .nav-link').each(function() {
             var $link = $(this);
             var href = $link.attr('href');
+            var dataMenu = $link.attr('data-menu');
+            var text = $link.text().trim();
+            
+            console.log('Checking link:', href, 'Data-menu:', dataMenu, 'Text:', text); // Debug log
             
             if (href) {
                 // Handle relative and absolute URLs
                 if (href.startsWith('/')) {
-                    // Absolute path
-                    if (currentPath === href || currentPath.startsWith(href + '/')) {
+                    // Absolute path - exact match
+                    if (currentPath === href) {
+                        console.log('Exact match found:', href); // Debug log
+                        $link.addClass('active current').attr('aria-current', 'page');
+                        return false; // Break the loop
+                    }
+                    // Absolute path - starts with
+                    if (currentPath.startsWith(href + '/')) {
+                        console.log('Starts with match found:', href); // Debug log
                         $link.addClass('active current').attr('aria-current', 'page');
                         return false; // Break the loop
                     }
                 } else if (href.startsWith('http')) {
                     // Full URL
                     if (currentUrl === href) {
+                        console.log('Full URL match found:', href); // Debug log
                         $link.addClass('active current').attr('aria-current', 'page');
                         return false; // Break the loop
                     }
                 } else {
                     // Relative path
                     if (currentPath.endsWith(href) || currentPath.includes(href)) {
+                        console.log('Relative path match found:', href); // Debug log
                         $link.addClass('active current').attr('aria-current', 'page');
                         return false; // Break the loop
                     }
                 }
             }
+            
+            // Check by data-menu attribute
+            if (dataMenu && currentPath.toLowerCase().includes(dataMenu.toLowerCase())) {
+                console.log('Data-menu match found:', dataMenu); // Debug log
+                $link.addClass('active current').attr('aria-current', 'page');
+                return false; // Break the loop
+            }
         });
         
         // If no exact match found, try partial matching
         if (!$('.nav-sidebar .nav-link.active').length) {
+            console.log('No exact match found, trying partial matching...'); // Debug log
             $('.nav-sidebar .nav-link').each(function() {
                 var $link = $(this);
                 var href = $link.attr('href');
-                var text = $link.text().toLowerCase();
+                var text = $link.text().trim().toLowerCase();
                 
-                if (href && currentPath.includes(href.replace('/', ''))) {
-                    $link.addClass('active current').attr('aria-current', 'page');
-                    return false;
+                // Check if current path contains the href path
+                if (href && href.startsWith('/')) {
+                    var hrefPath = href.replace('/', '');
+                    if (currentPath.includes(hrefPath)) {
+                        console.log('Partial href match found:', href); // Debug log
+                        $link.addClass('active current').attr('aria-current', 'page');
+                        return false;
+                    }
                 }
                 
-                // Check if current path contains menu text
-                if (text && currentPath.toLowerCase().includes(text.replace(/\s+/g, ''))) {
-                    $link.addClass('active current').attr('aria-current', 'page');
-                    return false;
+                // Check if current path contains menu text (remove spaces and special chars)
+                if (text) {
+                    var cleanText = text.replace(/[^\w]/g, '').toLowerCase();
+                    var cleanPath = currentPath.replace(/[^\w]/g, '').toLowerCase();
+                    if (cleanPath.includes(cleanText)) {
+                        console.log('Text match found:', text); // Debug log
+                        $link.addClass('active current').attr('aria-current', 'page');
+                        return false;
+                    }
                 }
             });
         }
@@ -106,6 +151,60 @@ const Common = {
             $('.nav-sidebar .nav-link').removeClass('active current').removeAttr('aria-current');
             $(this).addClass('active current').attr('aria-current', 'page');
         });
+        
+        // Force active state periodically to prevent AdminLTE override
+        setInterval(function() {
+            var currentPath = window.location.pathname;
+            $('.nav-sidebar .nav-link').each(function() {
+                var $link = $(this);
+                var href = $link.attr('href');
+                var dataMenu = $link.attr('data-menu');
+                
+                // Check by href
+                if (href === currentPath) {
+                    $link.addClass('active current').attr('aria-current', 'page');
+                    return;
+                }
+                
+                // Check by data-menu attribute
+                if (dataMenu && currentPath.toLowerCase().includes(dataMenu)) {
+                    $link.addClass('active current').attr('aria-current', 'page');
+                    return;
+                }
+            });
+        }, 1000);
+        
+        // Log final result
+        var activeLink = $('.nav-sidebar .nav-link.active');
+        if (activeLink.length) {
+            console.log('Active menu found:', activeLink.attr('href'), activeLink.text().trim());
+            console.log('Active menu classes:', activeLink.attr('class'));
+        } else {
+            console.log('No active menu found');
+        }
+        
+        // Force refresh active state for debugging
+        setTimeout(function() {
+            var currentPath = window.location.pathname;
+            console.log('Final check - Current path:', currentPath);
+            $('.nav-sidebar .nav-link').each(function() {
+                var $link = $(this);
+                var href = $link.attr('href');
+                if (href === currentPath) {
+                    console.log('Found matching link:', href);
+                    $link.addClass('active current').attr('aria-current', 'page');
+                }
+            });
+        }, 100);
+        
+        // Log final result
+        var activeLink = $('.nav-sidebar .nav-link.active');
+        if (activeLink.length) {
+            console.log('Active menu found:', activeLink.attr('href'), activeLink.text().trim());
+            console.log('Active menu classes:', activeLink.attr('class'));
+        } else {
+            console.log('No active menu found');
+        }
     },
 
     // Cấu hình ngôn ngữ DataTable (có thể thay đổi ở đây để áp dụng cho toàn bộ hệ thống)
@@ -154,9 +253,32 @@ const Common = {
 
     // Khởi tạo DataTables
     initDataTables: function() {
+        // Khởi tạo cho các bảng có class data-table (backward compatibility)
         $('.data-table').each(function() {
-            Common.initDataTable($(this));
+            var $table = $(this);
+            var $tbody = $table.find('tbody');
+            var $rows = $tbody.find('tr');
+            
+            // Kiểm tra xem bảng có dữ liệu thực tế không
+            var hasRealData = false;
+            $rows.each(function() {
+                var $row = $(this);
+                // Bỏ qua các dòng có colspan (thường là "Chưa có dữ liệu")
+                if ($row.find('td[colspan]').length === 0) {
+                    hasRealData = true;
+                    return false; // break the loop
+                }
+            });
+            
+            // Chỉ khởi tạo DataTables nếu có dữ liệu thực tế
+            if (hasRealData) {
+                Common.initDataTable($table);
+            }
         });
+        
+        // Không khởi tạo DataTables cho các bảng có ID cụ thể ở đây
+        // Các bảng có file JS riêng sẽ được khởi tạo trong file JS đó
+        // Các bảng không có file JS riêng sẽ được khởi tạo trong file JS của trang tương ứng
     },
 
     // Khởi tạo currency formatting

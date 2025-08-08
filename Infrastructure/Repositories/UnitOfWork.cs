@@ -34,6 +34,7 @@ namespace Infrastructure.Repositories
         public IRepository<QuyTrinhSanXuat> QuyTrinhSanXuatRepository => Repository<QuyTrinhSanXuat>();
         public IRepository<DinhMucNguyenLieu> DinhMucNguyenLieuRepository => Repository<DinhMucNguyenLieu>();
         public IRepository<KhachHang> KhachHangRepository => Repository<KhachHang>();
+        public IRepository<PhieuXuatKho> PhieuXuatKhoRepository => Repository<PhieuXuatKho>();
         public object Context => _context;
 
         public async Task<int> SaveChangesAsync()

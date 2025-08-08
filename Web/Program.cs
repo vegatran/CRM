@@ -19,7 +19,8 @@ builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 
 // Add DbContext
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), 
+        b => b.MigrationsAssembly("Infrastructure")));
 
 // Add Application Services (Auto-registered using Scrutor)
 builder.Services.AddServicesFromNamespace<ISanPhamService>("Application.Services");

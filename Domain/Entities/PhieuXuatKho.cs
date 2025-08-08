@@ -7,22 +7,21 @@ namespace Domain.Entities
         [Required]
         [StringLength(50)]
         public string SoPhieu { get; set; } = string.Empty;
-
-        [Required]
-        public DateTime NgayXuat { get; set; }
-
-        public int? KhachHangId { get; set; }
-        public virtual KhachHang? KhachHang { get; set; }
-
+        
+        public DateTime NgayXuat { get; set; } = DateTime.Now;
+        
         [StringLength(500)]
         public string? GhiChu { get; set; }
-
-        [Required]
-        [StringLength(20)]
-        public string TrangThai { get; set; } = "Chờ xử lý";
-
+        
         public decimal TongTien { get; set; }
-
+        
+        public string TrangThai { get; set; } = "Chờ xử lý"; // Chờ xử lý, Đã xử lý, Đã hủy
+        
+        // Foreign keys
+        public int KhachHangId { get; set; }
+        
+        // Navigation properties
+        public virtual KhachHang KhachHang { get; set; } = null!;
         public virtual ICollection<ChiTietXuatKho> ChiTietXuatKhos { get; set; } = new List<ChiTietXuatKho>();
     }
 }

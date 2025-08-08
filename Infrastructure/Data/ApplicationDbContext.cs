@@ -24,6 +24,8 @@ namespace Infrastructure.Data
         public DbSet<ThanhPhanCauHinh> ThanhPhanCauHinhs { get; set; }
         public DbSet<PhieuBanHang> PhieuBanHangs { get; set; }
         public DbSet<ChiTietBanHang> ChiTietBanHangs { get; set; }
+        public DbSet<PhieuXuatKho> PhieuXuatKhos { get; set; }
+        public DbSet<ChiTietXuatKho> ChiTietXuatKhos { get; set; }
         public DbSet<QuyTrinhSanXuat> QuyTrinhSanXuats { get; set; }
         public DbSet<DinhMucNguyenLieu> DinhMucNguyenLieus { get; set; }
 
@@ -152,6 +154,30 @@ namespace Infrastructure.Data
                 .HasForeignKey(dmnl => dmnl.NguyenLieuId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<PhieuXuatKho>()
+                .HasOne(pxk => pxk.KhachHang)
+                .WithMany()
+                .HasForeignKey(pxk => pxk.KhachHangId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<ChiTietXuatKho>()
+                .HasOne(ctxk => ctxk.PhieuXuatKho)
+                .WithMany(pxk => pxk.ChiTietXuatKhos)
+                .HasForeignKey(ctxk => ctxk.PhieuXuatKhoId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<ChiTietXuatKho>()
+                .HasOne(ctxk => ctxk.SanPham)
+                .WithMany()
+                .HasForeignKey(ctxk => ctxk.SanPhamId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<ChiTietXuatKho>()
+                .HasOne(ctxk => ctxk.NguyenLieu)
+                .WithMany()
+                .HasForeignKey(ctxk => ctxk.NguyenLieuId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             // Configure indexes
             modelBuilder.Entity<SanPham>()
                 .HasIndex(sp => sp.MaSanPham)
@@ -173,6 +199,10 @@ namespace Infrastructure.Data
                 .HasIndex(pbh => pbh.SoPhieu)
                 .IsUnique();
 
+            modelBuilder.Entity<PhieuXuatKho>()
+                .HasIndex(pxk => pxk.SoPhieu)
+                .IsUnique();
+
             // Global query filter for soft delete
             modelBuilder.Entity<SanPham>().HasQueryFilter(e => !e.IsDeleted);
             modelBuilder.Entity<NhaCungCap>().HasQueryFilter(e => !e.IsDeleted);
@@ -187,6 +217,8 @@ namespace Infrastructure.Data
             modelBuilder.Entity<ChiTietBanHang>().HasQueryFilter(e => !e.IsDeleted);
             modelBuilder.Entity<QuyTrinhSanXuat>().HasQueryFilter(e => !e.IsDeleted);
             modelBuilder.Entity<DinhMucNguyenLieu>().HasQueryFilter(e => !e.IsDeleted);
+            modelBuilder.Entity<PhieuXuatKho>().HasQueryFilter(e => !e.IsDeleted);
+            modelBuilder.Entity<ChiTietXuatKho>().HasQueryFilter(e => !e.IsDeleted);
         }
     }
 } 
