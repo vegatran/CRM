@@ -1,0 +1,79 @@
+@model Domain.Entities.PhieuBanHang
+
+<div class="alert alert-danger">
+    <h5><i class="icon fas fa-exclamation-triangle"></i> Cảnh báo!</h5>
+    <p>Bạn có chắc chắn muốn xóa phiếu bán hàng <strong>@Model.SoPhieu</strong>?</p>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <table class="table table-borderless">
+            <tr>
+                <th>Số phiếu:</th>
+                <td>@Model.SoPhieu</td>
+            </tr>
+            <tr>
+                <th>Khách hàng:</th>
+                <td>@Model.KhachHang?.TenKhachHang</td>
+            </tr>
+            <tr>
+                <th>Ngày bán:</th>
+                <td>@Model.NgayBan.ToString("dd/MM/yyyy")</td>
+            </tr>
+            <tr>
+                <th>Trạng thái:</th>
+                <td>
+                    @if (Model.TrangThai == "Chờ xử lý")
+                    {
+                        <span class="badge badge-warning">@Model.TrangThai</span>
+                    }
+                    else if (Model.TrangThai == "Đã xử lý")
+                    {
+                        <span class="badge badge-success">@Model.TrangThai</span>
+                    }
+                    else
+                    {
+                        <span class="badge badge-danger">@Model.TrangThai</span>
+                    }
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="col-md-6">
+        <table class="table table-borderless">
+            <tr>
+                <th>Tổng tiền:</th>
+                <td>@Model.TongTien.ToString("N0") VNĐ</td>
+            </tr>
+            <tr>
+                <th>Giảm giá:</th>
+                <td>@Model.GiamGia.ToString("N0") VNĐ</td>
+            </tr>
+            <tr>
+                <th>Thanh toán:</th>
+                <td><strong>@Model.ThanhToan.ToString("N0") VNĐ</strong></td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+@if (Model.ChiTietBanHangs != null && Model.ChiTietBanHangs.Any())
+{
+    <hr />
+    <div class="row">
+        <div class="col-12">
+            <h6>Chi tiết bán hàng sẽ bị xóa:</h6>
+            <ul>
+                @foreach (var chiTiet in Model.ChiTietBanHangs)
+                {
+                    <li>@chiTiet.SanPham?.TenSanPham - @chiTiet.SoLuong x @chiTiet.DonGia.ToString("N0") VNĐ</li>
+                }
+            </ul>
+        </div>
+    </div>
+}
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+    <button type="button" class="btn btn-danger" onclick="deleteBanHang(@Model.Id)">Xóa</button>
+</div>

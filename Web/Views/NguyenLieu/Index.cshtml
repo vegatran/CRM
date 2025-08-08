@@ -1,0 +1,153 @@
+@model IEnumerable<Domain.Entities.NguyenLieu>
+
+@{
+    ViewData["Title"] = "Quản lý Nguyên liệu";
+}
+
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Danh sách Nguyên liệu</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#createModal">
+                <i class="fas fa-plus"></i> Thêm mới
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table id="nguyenLieuTable" class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Hình ảnh</th>
+                    <th>Mã NL</th>
+                    <th>Tên nguyên liệu</th>
+                    <th>Loại nguyên liệu</th>
+                    <th>Nhà cung cấp</th>
+                    <th>Giá nhập</th>
+                    <th>Số lượng tồn</th>
+                    <th>Đơn vị tính</th>
+                    <th>Chất liệu</th>
+                    <th>Màu sắc</th>
+                    <th>Trạng thái</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @if (!string.IsNullOrEmpty(item.HinhAnh))
+                            {
+                                <img src="@item.HinhAnh" alt="@item.TenNguyenLieu" class="img-thumbnail" style="width: 50px; height: 50px; object-fit: cover;" />
+                            }
+                            else
+                            {
+                                <div class="bg-light d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                                    <i class="fas fa-image text-muted"></i>
+                                </div>
+                            }
+                        </td>
+                        <td>@item.MaNguyenLieu</td>
+                        <td>@item.TenNguyenLieu</td>
+                        <td>@item.LoaiNguyenLieu?.TenLoai</td>
+                        <td>@item.NhaCungCap?.TenNhaCungCap</td>
+                        <td>@item.GiaNhap.ToString("N0") VNĐ</td>
+                        <td>
+                            <span class="badge @(item.SoLuongTon > 10 ? "badge-success" : item.SoLuongTon > 0 ? "badge-warning" : "badge-danger")">
+                                @item.SoLuongTon
+                            </span>
+                        </td>
+                        <td>@item.DonViTinh</td>
+                        <td>@item.ChatLieu</td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(item.MauSac))
+                            {
+                                <div class="d-flex align-items-center">
+                                    @if (item.MauSac.StartsWith("#"))
+                                    {
+                                        <!-- Màu hex -->
+                                        <div class="color-preview" style="width: 20px; height: 20px; background-color: @item.MauSac; border: 1px solid #ddd; border-radius: 3px; margin-right: 8px;"></div>
+                                        <span>@item.MauSac</span>
+                                    }
+                                    else if (item.MauSac.Contains("checkered-black-white"))
+                                    {
+                                        <!-- Pattern caro đen trắng -->
+                                        <div class="color-preview checkered-pattern" style="width: 20px; height: 20px; border: 1px solid #ddd; border-radius: 3px; margin-right: 8px; background-image: linear-gradient(45deg, #000000 25%, transparent 25%), linear-gradient(-45deg, #000000 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #000000 75%), linear-gradient(-45deg, transparent 75%, #000000 75%); background-size: 8px 8px; background-position: 0 0, 0 4px, 4px -4px, -4px 0px;"></div>
+                                        <span>@item.MauSac</span>
+                                    }
+                                    else if (item.MauSac.Contains("checkered-red-white"))
+                                    {
+                                        <!-- Pattern caro đỏ trắng -->
+                                        <div class="color-preview checkered-pattern" style="width: 20px; height: 20px; border: 1px solid #ddd; border-radius: 3px; margin-right: 8px; background-image: linear-gradient(45deg, #ff0000 25%, transparent 25%), linear-gradient(-45deg, #ff0000 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #ff0000 75%), linear-gradient(-45deg, transparent 75%, #ff0000 75%); background-size: 8px 8px; background-position: 0 0, 0 4px, 4px -4px, -4px 0px;"></div>
+                                        <span>@item.MauSac</span>
+                                    }
+                                    else if (item.MauSac.Contains("checkered-blue-white"))
+                                    {
+                                        <!-- Pattern caro xanh trắng -->
+                                        <div class="color-preview checkered-pattern" style="width: 20px; height: 20px; border: 1px solid #ddd; border-radius: 3px; margin-right: 8px; background-image: linear-gradient(45deg, #0000ff 25%, transparent 25%), linear-gradient(-45deg, #0000ff 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #0000ff 75%), linear-gradient(-45deg, transparent 75%, #0000ff 75%); background-size: 8px 8px; background-position: 0 0, 0 4px, 4px -4px, -4px 0px;"></div>
+                                        <span>@item.MauSac</span>
+                                    }
+                                    else if (item.MauSac.Contains("stripe-black-white"))
+                                    {
+                                        <!-- Pattern sọc đen trắng -->
+                                        <div class="color-preview stripe-pattern" style="width: 20px; height: 20px; border: 1px solid #ddd; border-radius: 3px; margin-right: 8px; background-image: repeating-linear-gradient(45deg, #000000, #000000 2px, #ffffff 2px, #ffffff 4px);"></div>
+                                        <span>@item.MauSac</span>
+                                    }
+                                    else if (item.MauSac.Contains("stripe-red-white"))
+                                    {
+                                        <!-- Pattern sọc đỏ trắng -->
+                                        <div class="color-preview stripe-pattern" style="width: 20px; height: 20px; border: 1px solid #ddd; border-radius: 3px; margin-right: 8px; background-image: repeating-linear-gradient(45deg, #ff0000, #ff0000 2px, #ffffff 2px, #ffffff 4px);"></div>
+                                        <span>@item.MauSac</span>
+                                    }
+                                    else if (item.MauSac.Contains("stripe-blue-white"))
+                                    {
+                                        <!-- Pattern sọc xanh trắng -->
+                                        <div class="color-preview stripe-pattern" style="width: 20px; height: 20px; border: 1px solid #ddd; border-radius: 3px; margin-right: 8px; background-image: repeating-linear-gradient(45deg, #0000ff, #0000ff 2px, #ffffff 2px, #ffffff 4px);"></div>
+                                        <span>@item.MauSac</span>
+                                    }
+                                    else
+                                    {
+                                        <!-- Pattern khác -->
+                                        <div class="color-preview" style="width: 20px; height: 20px; background-color: #f0f0f0; border: 1px solid #ddd; border-radius: 3px; margin-right: 8px; display: flex; align-items: center; justify-content-center; font-size: 10px;">🎨</div>
+                                        <span>@item.MauSac</span>
+                                    }
+                                </div>
+                            }
+                            else
+                            {
+                                <span class="text-muted">-</span>
+                            }
+                        </td>
+                        <td>
+                            @if (item.TrangThai)
+                            {
+                                <span class="badge badge-success">Hoạt động</span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-danger">Ngừng hoạt động</span>
+                            }
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-warning btn-sm edit-btn" data-id="@item.Id">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button type="button" class="btn btn-danger btn-sm delete-btn" data-id="@item.Id">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Containers -->
+<div id="modalContainer"></div>
+
+@section Scripts {
+    <script src="~/js/nguyenlieu.js"></script>
+} 

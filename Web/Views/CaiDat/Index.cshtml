@@ -1,0 +1,51 @@
+@{
+    ViewData["Title"] = "Cài đặt hệ thống";
+}
+
+<div class="row">
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-cog"></i> Cài đặt hệ thống
+                </h3>
+            </div>
+            <div class="card-body">
+                <p>Quản lý các cài đặt chung của hệ thống.</p>
+                <a href="@Url.Action("HeThong")" class="btn btn-primary">
+                    <i class="fas fa-cog"></i> Cài đặt hệ thống
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-users"></i> Quản lý người dùng
+                </h3>
+            </div>
+            <div class="card-body">
+                <p>Quản lý tài khoản và phân quyền người dùng.</p>
+                <a href="@Url.Action("NguoiDung")" class="btn btn-info">
+                    <i class="fas fa-users"></i> Quản lý người dùng
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-database"></i> Sao lưu dữ liệu
+                </h3>
+            </div>
+            <div class="card-body">
+                <p>Sao lưu và khôi phục dữ liệu hệ thống.</p>
+                <a href="@Url.Action("Backup")" class="btn btn-warning">
+                    <i class="fas fa-database"></i> Sao lưu dữ liệu
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

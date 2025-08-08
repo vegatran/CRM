@@ -1,0 +1,84 @@
+@model IEnumerable<Domain.Entities.QuyTrinhSanXuat>
+
+<div class="card">
+    <div class="card-header">
+        <div class="card-tools">
+            <button type="button" class="btn btn-primary btn-sm" id="addQuyTrinhBtn" data-san-pham-id="@(Model.FirstOrDefault()?.SanPhamId ?? 0)">
+                <i class="fas fa-plus"></i> Thêm quy trình
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        @if (Model.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>STT</th>
+                            <th>Tên công đoạn</th>
+                            <th>Mô tả</th>
+                            <th>Chi phí nhân công</th>
+                            <th>Thứ tự</th>
+                            <th>Trạng thái</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int stt = 1;
+                            decimal tongChiPhi = 0;
+                            var sanPhamId = Model.FirstOrDefault()?.SanPhamId ?? 0;
+                        }
+                        @foreach (var item in Model.OrderBy(q => q.ThuTu))
+                        {
+                            tongChiPhi += item.ChiPhiNhanCong;
+                            <tr>
+                                <td>@stt</td>
+                                <td><strong>@item.TenCongDoan</strong></td>
+                                <td>@item.MoTa</td>
+                                <td><strong>@item.ChiPhiNhanCong.ToString("N2") VNĐ</strong></td>
+                                <td>
+                                    <span class="badge badge-info">@item.ThuTu</span>
+                                </td>
+                                <td>
+                                    @if (item.TrangThai)
+                                    {
+                                        <span class="badge badge-success">Hoạt động</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge badge-danger">Ngừng hoạt động</span>
+                                    }
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-warning btn-sm edit-quytrinh-btn" data-id="@item.Id">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-danger btn-sm delete-quytrinh-btn ml-1" data-id="@item.Id" data-san-pham-id="@(Model.FirstOrDefault()?.SanPhamId ?? 0)">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            stt++;
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr class="table-info">
+                            <th colspan="3" class="text-right"><strong>Tổng chi phí nhân công:</strong></th>
+                            <th><strong>@tongChiPhi.ToString("N0") VNĐ</strong></th>
+                            <th colspan="3"></th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle"></i>
+                Chưa có quy trình sản xuất cho sản phẩm này.
+            </div>
+        }
+    </div>
+</div> 

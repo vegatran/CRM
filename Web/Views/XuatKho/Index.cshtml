@@ -1,0 +1,134 @@
+@model IEnumerable<Domain.Entities.PhieuXuatKho>
+
+@{
+    ViewData["Title"] = "Quản lý Xuất kho";
+}
+
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">
+            <i class="fas fa-shipping-fast mr-1"></i>
+            Quản lý Xuất kho
+        </h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#xuatKhoModal" onclick="openCreateModal()">
+                <i class="fas fa-plus"></i> Tạo phiếu xuất kho
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped" id="xuatKhoTable">
+                <thead>
+                    <tr>
+                        <th>Số phiếu</th>
+                        <th>Ngày xuất</th>
+                        <th>Khách hàng</th>
+                        <th>Tổng tiền</th>
+                        <th>Trạng thái</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                <strong>@item.SoPhieu</strong>
+                            </td>
+                            <td>@item.NgayXuat.ToString("dd/MM/yyyy")</td>
+                            <td>@(item.KhachHang?.TenKhachHang ?? "Chưa có khách hàng")</td>
+                            <td>@item.TongTien.ToString("N0") VNĐ</td>
+                            <td>
+                                @if (item.TrangThai == "Hoàn thành")
+                                {
+                                    <span class="badge badge-success">@item.TrangThai</span>
+                                }
+                                else if (item.TrangThai == "Chờ xử lý")
+                                {
+                                    <span class="badge badge-warning">@item.TrangThai</span>
+                                }
+                                else
+                                {
+                                    <span class="badge badge-danger">@item.TrangThai</span>
+                                }
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-info btn-sm" onclick="openDetailsModal(@item.Id)">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                @if (item.TrangThai == "Chờ xử lý")
+                                {
+                                    <button type="button" class="btn btn-success btn-sm ml-1" data-action="xac-nhan" data-id="@item.Id">
+                                        <i class="fas fa-check"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-warning btn-sm ml-1" onclick="openEditModal(@item.Id)">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-danger btn-sm ml-1" onclick="openDeleteModal(@item.Id)">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal XuatKho -->
+<div class="modal fade" id="xuatKhoModal" tabindex="-1" role="dialog" aria-labelledby="xuatKhoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="xuatKhoModalLabel">Tạo phiếu xuất kho</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="xuatKhoModalContent">
+                <!-- Content will be loaded here -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Details -->
+<div class="modal fade" id="detailsModal" tabindex="-1" role="dialog" aria-labelledby="detailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="detailsModalLabel">Chi tiết phiếu xuất kho</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="detailsModalContent">
+                <!-- Content will be loaded here -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Delete -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Xác nhận xóa</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="deleteModalContent">
+                <!-- Content will be loaded here -->
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/xuatkho.js"></script>
+}

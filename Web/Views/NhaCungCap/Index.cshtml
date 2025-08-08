@@ -1,0 +1,72 @@
+@model IEnumerable<Domain.Entities.NhaCungCap>
+
+@{
+    ViewData["Title"] = "Quản lý Nhà cung cấp";
+}
+
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Danh sách Nhà cung cấp</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#createModal">
+                <i class="fas fa-plus"></i> Thêm mới
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table id="nhaCungCapTable" class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Tên nhà cung cấp</th>
+                    <th>Địa chỉ</th>
+                    <th>Số điện thoại</th>
+                    <th>Email</th>
+                    <th>Mã số thuế</th>
+                    <th>Người đại diện</th>
+                    <th>Trạng thái</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.TenNhaCungCap</td>
+                        <td>@item.DiaChi</td>
+                        <td>@item.SoDienThoai</td>
+                        <td>@item.Email</td>
+                        <td>@item.MaSoThue</td>
+                        <td>@item.NguoiDaiDien</td>
+                        <td>
+                            @if (item.TrangThai)
+                            {
+                                <span class="badge badge-success">Hoạt động</span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-danger">Ngừng hoạt động</span>
+                            }
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-warning btn-sm edit-btn" data-id="@item.Id">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button type="button" class="btn btn-danger btn-sm delete-btn" data-id="@item.Id">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Containers -->
+<div id="modalContainer"></div>
+
+@section Scripts {
+    <script src="~/js/nhacungcap.js"></script>
+} 

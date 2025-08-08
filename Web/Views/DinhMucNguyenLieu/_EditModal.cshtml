@@ -1,0 +1,88 @@
+@model Domain.Entities.DinhMucNguyenLieu
+
+<div class="modal fade" id="editDinhMucModal" tabindex="-1" role="dialog" aria-labelledby="editDinhMucModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editDinhMucModalLabel">
+                    <i class="fas fa-edit"></i> Chỉnh sửa định mức nguyên liệu
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="editDinhMucForm" asp-action="Edit" method="post">
+                @Html.AntiForgeryToken()
+                <input asp-for="Id" type="hidden" />
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="SanPhamId" class="control-label">Sản phẩm <span class="text-danger">*</span></label>
+                                <select asp-for="SanPhamId" class="form-control" required>
+                                    <option value="">-- Chọn sản phẩm --</option>
+                                    @foreach (var sanPham in ViewBag.SanPhams)
+                                    {
+                                        <option value="@sanPham.Id">@sanPham.MaSanPham - @sanPham.TenSanPham</option>
+                                    }
+                                </select>
+                                <span asp-validation-for="SanPhamId" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="NguyenLieuId" class="control-label">Nguyên liệu <span class="text-danger">*</span></label>
+                                <select asp-for="NguyenLieuId" class="form-control" required>
+                                    <option value="">-- Chọn nguyên liệu --</option>
+                                    @foreach (var nguyenLieu in ViewBag.NguyenLieus)
+                                    {
+                                        <option value="@nguyenLieu.Id">@nguyenLieu.MaNguyenLieu - @nguyenLieu.TenNguyenLieu</option>
+                                    }
+                                </select>
+                                <span asp-validation-for="NguyenLieuId" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label asp-for="SoLuongCan" class="control-label">Số lượng cần <span class="text-danger">*</span></label>
+                                <input asp-for="SoLuongCan" class="form-control" type="number" step="0.01" min="0" required placeholder="0.00" />
+                                <span asp-validation-for="SoLuongCan" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label asp-for="DonViTinh" class="control-label">Đơn vị tính</label>
+                                <input asp-for="DonViTinh" class="form-control" placeholder="VD: mét, cái, cuộn..." />
+                                <span asp-validation-for="DonViTinh" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label asp-for="TrangThai" class="control-label">Trạng thái</label>
+                                <div class="custom-control custom-switch">
+                                    <input asp-for="TrangThai" class="custom-control-input" />
+                                    <label class="custom-control-label" for="TrangThai">Hoạt động</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="GhiChu" class="control-label">Ghi chú</label>
+                        <textarea asp-for="GhiChu" class="form-control" rows="3" placeholder="Mô tả chi tiết về định mức nguyên liệu..."></textarea>
+                        <span asp-validation-for="GhiChu" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        <i class="fas fa-times"></i> Hủy
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Cập nhật
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div> 

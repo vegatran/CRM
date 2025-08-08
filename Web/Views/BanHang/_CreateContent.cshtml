@@ -1,0 +1,114 @@
+@model Domain.Entities.PhieuBanHang
+
+<form id="banHangForm">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="KhachHangId">Khách hàng <span class="text-danger">*</span></label>
+                <select class="form-control" id="KhachHangId" name="KhachHangId" required>
+                    <option value="">-- Chọn khách hàng --</option>
+                    @foreach (var khachHang in ViewBag.KhachHangs)
+                    {
+                        <option value="@khachHang.Id">@khachHang.TenKhachHang</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="NgayBan">Ngày bán <span class="text-danger">*</span></label>
+                <input type="date" class="form-control" id="NgayBan" name="NgayBan" value="@DateTime.Now.ToString("yyyy-MM-dd")" required />
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="GiamGia">Giảm giá</label>
+                <input type="text" class="form-control" id="GiamGia" name="GiamGia" value="0" placeholder="0" />
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="GhiChu">Ghi chú</label>
+                <textarea class="form-control" id="GhiChu" name="GhiChu" rows="3"></textarea>
+            </div>
+        </div>
+    </div>
+
+    <hr />
+
+    <div class="row">
+        <div class="col-12">
+            <h5>Chi tiết bán hàng</h5>
+            <div id="chiTietContainer">
+                <div class="chi-tiet-item row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Sản phẩm <span class="text-danger">*</span></label>
+                            <select class="form-control san-pham" required>
+                                <option value="">-- Chọn sản phẩm --</option>
+                                @foreach (var sanPham in ViewBag.SanPhams)
+                                {
+                                    <option value="@sanPham.Id" data-don-gia="@sanPham.GiaBan">@sanPham.TenSanPham</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label>Số lượng <span class="text-danger">*</span></label>
+                            <input type="number" class="form-control so-luong" min="1" required />
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label>Đơn giá <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control don-gia" required />
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label>Thành tiền</label>
+                            <input type="text" class="form-control thanh-tien" readonly />
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label>&nbsp;</label>
+                            <button type="button" class="btn btn-danger btn-block" data-action="remove-chi-tiet">
+                                <i class="fas fa-trash"></i> Xóa
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="btn btn-success" data-action="add-chi-tiet">
+                <i class="fas fa-plus"></i> Thêm sản phẩm
+            </button>
+        </div>
+    </div>
+
+    <hr />
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label>Tổng tiền</label>
+                <input type="text" class="form-control" id="tongTien" readonly />
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label>Thanh toán</label>
+                <input type="text" class="form-control" id="thanhToan" readonly />
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+        <button type="submit" class="btn btn-primary">Lưu</button>
+    </div>
+</form>

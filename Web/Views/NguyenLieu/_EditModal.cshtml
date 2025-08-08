@@ -1,0 +1,199 @@
+@model Domain.Entities.NguyenLieu
+
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel">
+                    <i class="fas fa-edit"></i> Chỉnh sửa Nguyên liệu
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="editForm" asp-action="Edit" method="post" enctype="multipart/form-data">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="Id" />
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="TenNguyenLieu" class="control-label">Tên nguyên liệu</label>
+                                <input asp-for="TenNguyenLieu" class="form-control" />
+                                <span asp-validation-for="TenNguyenLieu" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="MaNguyenLieu" class="control-label">Mã nguyên liệu</label>
+                                <input asp-for="MaNguyenLieu" class="form-control" />
+                                <span asp-validation-for="MaNguyenLieu" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="LoaiNguyenLieuId" class="control-label">Loại nguyên liệu <span class="text-danger">*</span></label>
+                                <select asp-for="LoaiNguyenLieuId" class="form-control" id="LoaiNguyenLieuId" required>
+                                    <option value="">-- Chọn loại nguyên liệu --</option>
+                                    @foreach (var loai in ViewBag.LoaiNguyenLieus)
+                                    {
+                                        <option value="@loai.Id" selected="@(loai.Id == Model.LoaiNguyenLieuId)">@loai.TenLoai</option>
+                                    }
+                                </select>
+                                <span asp-validation-for="LoaiNguyenLieuId" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="NhaCungCapId" class="control-label">Nhà cung cấp <span class="text-danger">*</span></label>
+                                <select asp-for="NhaCungCapId" class="form-control" id="NhaCungCapId" required>
+                                    <option value="">-- Chọn nhà cung cấp --</option>
+                                    @foreach (var ncc in ViewBag.NhaCungCaps)
+                                    {
+                                        <option value="@ncc.Id" selected="@(ncc.Id == Model.NhaCungCapId)">@ncc.TenNhaCungCap</option>
+                                    }
+                                </select>
+                                <span asp-validation-for="NhaCungCapId" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label asp-for="GiaNhap" class="control-label">Giá nhập</label>
+                                <div class="input-group">
+                                    <input asp-for="GiaNhap" class="form-control" type="text" id="GiaNhapInput" value="@Model.GiaNhap.ToString("F0")" />
+                                    <div class="input-group-append">
+                                        <span class="input-group-text">VNĐ</span>
+                                    </div>
+                                </div>
+                                <span asp-validation-for="GiaNhap" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label asp-for="SoLuongTon" class="control-label">Số lượng tồn</label>
+                                <input asp-for="SoLuongTon" class="form-control" type="number" />
+                                <span asp-validation-for="SoLuongTon" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label asp-for="DonViTinh" class="control-label">Đơn vị tính</label>
+                                <input asp-for="DonViTinh" class="form-control" />
+                                <span asp-validation-for="DonViTinh" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="ChatLieu" class="control-label">Chất liệu</label>
+                                <input asp-for="ChatLieu" class="form-control" />
+                                <span asp-validation-for="ChatLieu" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="MauSac" class="control-label">Màu sắc</label>
+                                <div class="input-group">
+                                    <input asp-for="MauSac" class="form-control" type="text" id="MauSacInput" placeholder="Nhập màu hoặc chọn từ bảng màu" />
+                                    <div class="input-group-append">
+                                        <input type="color" id="ColorPicker" class="form-control" style="width: 50px; height: 38px; padding: 0; border: none;" />
+                                    </div>
+                                </div>
+                                <div class="dropdown mt-2">
+                                    <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fas fa-palette"></i> Chọn Pattern
+                                    </button>
+                                    <div class="dropdown-menu dropdown-menu-right" id="ColorPatternDropdown">
+                                        <h6 class="dropdown-header">Màu đơn</h6>
+                                        <a class="dropdown-item color-pattern" href="#" data-color="#FF0000" data-pattern="Đỏ">🔴 Đỏ</a>
+                                        <a class="dropdown-item color-pattern" href="#" data-color="#0000FF" data-pattern="Xanh dương">🔵 Xanh dương</a>
+                                        <a class="dropdown-item color-pattern" href="#" data-color="#00FF00" data-pattern="Xanh lá">🟢 Xanh lá</a>
+                                        <a class="dropdown-item color-pattern" href="#" data-color="#FFFF00" data-pattern="Vàng">🟡 Vàng</a>
+                                        <a class="dropdown-item color-pattern" href="#" data-color="#FF00FF" data-pattern="Hồng">🟣 Hồng</a>
+                                        <a class="dropdown-item color-pattern" href="#" data-color="#000000" data-pattern="Đen">⚫ Đen</a>
+                                        <a class="dropdown-item color-pattern" href="#" data-color="#FFFFFF" data-pattern="Trắng">⚪ Trắng</a>
+                                        <div class="dropdown-divider"></div>
+                                        <h6 class="dropdown-header">Màu caro (Pattern)</h6>
+                                        <a class="dropdown-item color-pattern" href="#" data-pattern="checkered-red-white" data-pattern-type="checkered">🔴⚪ Caro đỏ trắng</a>
+                                        <a class="dropdown-item color-pattern" href="#" data-pattern="checkered-blue-white" data-pattern-type="checkered">🔵⚪ Caro xanh trắng</a>
+                                        <a class="dropdown-item color-pattern" href="#" data-pattern="checkered-black-white" data-pattern-type="checkered">⚫⚪ Caro đen trắng</a>
+                                        <div class="dropdown-divider"></div>
+                                        <h6 class="dropdown-header">Màu sọc (Stripe)</h6>
+                                        <a class="dropdown-item color-pattern" href="#" data-pattern="stripe-red-white" data-pattern-type="stripe">🔴⚪ Sọc đỏ trắng</a>
+                                        <a class="dropdown-item color-pattern" href="#" data-pattern="stripe-blue-white" data-pattern-type="stripe">🔵⚪ Sọc xanh trắng</a>
+                                        <a class="dropdown-item color-pattern" href="#" data-pattern="stripe-black-white" data-pattern-type="stripe">⚫⚪ Sọc đen trắng</a>
+                                        <div class="dropdown-divider"></div>
+                                        <h6 class="dropdown-header">Màu khác</h6>
+                                        <a class="dropdown-item color-pattern" href="#" data-pattern="Nhiều màu" data-pattern-type="multicolor">🌈 Nhiều màu</a>
+                                        <a class="dropdown-item color-pattern" href="#" data-pattern="Hoa văn" data-pattern-type="pattern">🎨 Hoa văn</a>
+                                    </div>
+                                </div>
+                                <small class="form-text text-muted">Click vào ô màu để chọn, hoặc chọn pattern từ dropdown</small>
+                                <span asp-validation-for="MauSac" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label asp-for="HinhAnh" class="control-label">Hình ảnh</label>
+                                <input type="file" name="HinhAnh" id="HinhAnhInput" class="form-control-file" accept="image/*" />
+                                @if (!string.IsNullOrEmpty(Model.HinhAnh))
+                                {
+                                    <div class="mt-2">
+                                        <p><strong>Hình ảnh hiện tại:</strong></p>
+                                        <img src="@Model.HinhAnh" alt="@Model.TenNguyenLieu" class="img-thumbnail" style="max-width: 200px; max-height: 200px;" />
+                                    </div>
+                                    <input type="hidden" id="currentHinhAnh" value="@Model.HinhAnh" />
+                                }
+                                else
+                                {
+                                    <input type="hidden" id="currentHinhAnh" value="" />
+                                }
+                                <div id="imagePreview" class="mt-2" style="display: none;">
+                                    <p><strong>Hình ảnh mới:</strong></p>
+                                    <img id="previewImg" src="" alt="Preview" class="img-thumbnail" style="max-width: 200px; max-height: 200px;" />
+                                </div>
+                                <span asp-validation-for="HinhAnh" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label asp-for="MoTa" class="control-label">Mô tả</label>
+                                <textarea asp-for="MoTa" class="form-control" rows="3"></textarea>
+                                <span asp-validation-for="MoTa" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="custom-control custom-switch">
+                            <input asp-for="TrangThai" type="checkbox" class="custom-control-input" id="TrangThaiSwitch">
+                            <label class="custom-control-label" for="TrangThaiSwitch">Trạng thái hoạt động</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary modal-close-btn">
+                        <i class="fas fa-times"></i> Hủy
+                    </button>
+                    <button type="submit" class="btn btn-warning">
+                        <i class="fas fa-save"></i> Cập nhật
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div> 

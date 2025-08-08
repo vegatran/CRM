@@ -1,0 +1,78 @@
+@model Domain.Entities.QuyTrinhSanXuat
+
+<div class="modal-header">
+    <h5 class="modal-title" id="deleteQuyTrinhModalLabel">
+        <i class="fas fa-trash"></i> Xóa quy trình sản xuất
+    </h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<form id="deleteQuyTrinhForm" asp-action="Delete" method="post">
+    @Html.AntiForgeryToken()
+    <input asp-for="Id" type="hidden" />
+    <div class="modal-body">
+        <div class="alert alert-warning">
+            <i class="fas fa-exclamation-triangle"></i>
+            <strong>Cảnh báo!</strong> Bạn có chắc chắn muốn xóa quy trình sản xuất này không?
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="control-label">Sản phẩm:</label>
+                    <p class="form-control-static">@Model.SanPham?.MaSanPham - @Model.SanPham?.TenSanPham</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="control-label">Tên công đoạn:</label>
+                    <p class="form-control-static"><strong>@Model.TenCongDoan</strong></p>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="control-label">Thứ tự:</label>
+                    <p class="form-control-static"><span class="badge badge-info">@Model.ThuTu</span></p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="control-label">Chi phí nhân công:</label>
+                    <p class="form-control-static"><strong>@Model.ChiPhiNhanCong.ToString("N0") VNĐ</strong></p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="control-label">Trạng thái:</label>
+                    <p class="form-control-static">
+                        @if (Model.TrangThai)
+                        {
+                            <span class="badge badge-success">Hoạt động</span>
+                        }
+                        else
+                        {
+                            <span class="badge badge-danger">Ngừng hoạt động</span>
+                        }
+                    </p>
+                </div>
+            </div>
+        </div>
+        @if (!string.IsNullOrEmpty(Model.MoTa))
+        {
+            <div class="form-group">
+                <label class="control-label">Mô tả:</label>
+                <p class="form-control-static">@Model.MoTa</p>
+            </div>
+        }
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+            <i class="fas fa-times"></i> Hủy
+        </button>
+        <button type="submit" class="btn btn-danger">
+            <i class="fas fa-trash"></i> Xóa
+        </button>
+    </div>
+</form> 

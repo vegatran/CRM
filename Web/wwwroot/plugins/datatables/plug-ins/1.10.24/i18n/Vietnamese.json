@@ -1,0 +1,247 @@
+{
+    "sProcessing":   "Đang xử lý...",
+    "sLengthMenu":   "Xem _MENU_ mục",
+    "sZeroRecords":  "Không tìm thấy dữ liệu",
+    "sInfo":         "Đang xem _START_ đến _END_ trong tổng số _TOTAL_ mục",
+    "sInfoEmpty":    "Đang xem 0 đến 0 trong tổng số 0 mục",
+    "sInfoFiltered": "(được lọc từ _MAX_ mục)",
+    "sInfoPostFix":  "",
+    "sSearch":       "Tìm kiếm:",
+    "sUrl":          "",
+    "sEmptyTable":   "Không có dữ liệu trong bảng",
+    "sLoadingRecords": "Đang tải...",
+    "sInfoThousands":  ",",
+    "sDecimal":        ".",
+    "sThousands":      ",",
+    "sSearchBuilder":   "Tìm kiếm nâng cao",
+    "sSearchPanes":     {
+        "clearMessage": "Xóa tất cả",
+        "collapse":     "Thu gọn {0}",
+        "count":        "{total}",
+        "countFiltered": "{shown} / {total}",
+        "emptyPanes":   "Không có bảng tìm kiếm",
+        "loadMessage":  "Đang tải bảng tìm kiếm...",
+        "title":        "Bộ lọc hiện tại - %d"
+    },
+    "sSelect":          {
+        "rows": {
+            "_": "Đã chọn %d hàng",
+            "0": "Click vào hàng để chọn",
+            "1": "Đã chọn 1 hàng"
+        }
+    },
+    "sInfoFiltered":    "(được lọc từ _MAX_ mục)",
+    "sZeroRecords":     "Không tìm thấy dữ liệu",
+    "sEmptyTable":      "Không có dữ liệu trong bảng",
+    "sLoadingRecords":  "Đang tải...",
+    "sInfoThousands":   ",",
+    "sDecimal":         ".",
+    "sThousands":       ",",
+    "sSearchBuilder":   "Tìm kiếm nâng cao",
+    "sSearchPanes":     {
+        "clearMessage": "Xóa tất cả",
+        "collapse":     "Thu gọn {0}",
+        "count":        "{total}",
+        "countFiltered": "{shown} / {total}",
+        "emptyPanes":   "Không có bảng tìm kiếm",
+        "loadMessage":  "Đang tải bảng tìm kiếm...",
+        "title":        "Bộ lọc hiện tại - %d"
+    },
+    "sSelect":          {
+        "rows": {
+            "_": "Đã chọn %d hàng",
+            "0": "Click vào hàng để chọn",
+            "1": "Đã chọn 1 hàng"
+        }
+    },
+    "oPaginate": {
+        "sFirst":    "Đầu",
+        "sPrevious": "Trước",
+        "sNext":     "Tiếp",
+        "sLast":     "Cuối"
+    },
+    "oAria": {
+        "sSortAscending":  ": kích hoạt để sắp xếp cột tăng dần",
+        "sSortDescending": ": kích hoạt để sắp xếp cột giảm dần"
+    },
+    "buttons": {
+        "copy": "Sao chép",
+        "colvis": "Hiển thị cột",
+        "collection": "Bộ sưu tập",
+        "colvisRestore": "Khôi phục hiển thị",
+        "copyKeys": "Nhấn Ctrl hoặc u2318 + C để sao chép bảng vào clipboard. <br \/> <br \/>Để hủy, click vào thông báo này hoặc nhấn ESC.",
+        "copySuccess": {
+            "1": "Đã sao chép 1 hàng vào clipboard",
+            "_": "Đã sao chép %d hàng vào clipboard"
+        },
+        "copyTitle": "Sao chép vào clipboard",
+        "csv": "CSV",
+        "excel": "Excel",
+        "pageLength": {
+            "-1": "Hiển thị tất cả các hàng",
+            "_": "Hiển thị %d hàng"
+        },
+        "pdf": "PDF",
+        "print": "In",
+        "renameState": "Đổi tên",
+        "updateState": "Cập nhật",
+        "createState": "Tạo trạng thái",
+        "removeAllStates": "Xóa tất cả trạng thái",
+        "removeState": "Xóa",
+        "savedStates": "Trạng thái đã lưu",
+        "stateRestore": "Trạng thái %d"
+    },
+    "autoFill": {
+        "cancel": "Hủy",
+        "fill": "Điền tất cả các ô với <i>%d<\/i>",
+        "fillHorizontal": "Điền các ô theo chiều ngang",
+        "fillVertical": "Điền các ô theo chiều dọc"
+    },
+    "searchBuilder": {
+        "add": "Thêm điều kiện",
+        "button": {
+            "_": "Tìm kiếm nâng cao (%d)",
+            "0": "Tìm kiếm nâng cao"
+        },
+        "clearAll": "Xóa tất cả",
+        "condition": "Điều kiện",
+        "data": "Dữ liệu",
+        "deleteTitle": "Xóa điều kiện",
+        "leftTitle": "Điều kiện bên trái",
+        "logicAnd": "Và",
+        "logicOr": "Hoặc",
+        "rightTitle": "Điều kiện bên phải",
+        "title": {
+            "_": "Tìm kiếm nâng cao (%d)",
+            "0": "Tìm kiếm nâng cao"
+        },
+        "value": "Giá trị",
+        "conditions": {
+            "date": {
+                "after": "Sau",
+                "before": "Trước",
+                "between": "Giữa",
+                "empty": "Trống",
+                "equals": "Bằng",
+                "not": "Không",
+                "notBetween": "Không giữa",
+                "notEmpty": "Không trống"
+            },
+            "number": {
+                "between": "Giữa",
+                "empty": "Trống",
+                "equals": "Bằng",
+                "gt": "Lớn hơn",
+                "gte": "Lớn hơn hoặc bằng",
+                "lt": "Nhỏ hơn",
+                "lte": "Nhỏ hơn hoặc bằng",
+                "not": "Không",
+                "notBetween": "Không giữa",
+                "notEmpty": "Không trống"
+            },
+            "string": {
+                "contains": "Chứa",
+                "empty": "Trống",
+                "endsWith": "Kết thúc bằng",
+                "equals": "Bằng",
+                "not": "Không",
+                "notEmpty": "Không trống",
+                "startsWith": "Bắt đầu bằng"
+            },
+            "array": {
+                "contains": "Chứa",
+                "empty": "Trống",
+                "equals": "Bằng",
+                "not": "Không",
+                "notEmpty": "Không trống",
+                "without": "Không có"
+            }
+        }
+    },
+    "searchPanes": {
+        "clearMessage": "Xóa tất cả",
+        "collapse": {
+            "_": "Thu gọn %d",
+            "0": "Thu gọn"
+        },
+        "count": "{total}",
+        "countFiltered": "{shown} / {total}",
+        "emptyPanes": "Không có bảng tìm kiếm",
+        "loadMessage": "Đang tải bảng tìm kiếm...",
+        "title": "Bộ lọc hiện tại - %d"
+    },
+    "select": {
+        "rows": {
+            "_": "Đã chọn %d hàng",
+            "0": "Click vào hàng để chọn",
+            "1": "Đã chọn 1 hàng"
+        }
+    },
+    "thousands": ",",
+    "datetime": {
+        "previous": "Trước",
+        "next": "Tiếp",
+        "hours": "Giờ",
+        "minutes": "Phút",
+        "seconds": "Giây",
+        "unknown": "-",
+        "amPm": [
+            "am",
+            "pm"
+        ],
+        "months": {
+            "0": "Tháng 1",
+            "1": "Tháng 2",
+            "10": "Tháng 11",
+            "11": "Tháng 12",
+            "2": "Tháng 3",
+            "3": "Tháng 4",
+            "4": "Tháng 5",
+            "5": "Tháng 6",
+            "6": "Tháng 7",
+            "7": "Tháng 8",
+            "8": "Tháng 9",
+            "9": "Tháng 10"
+        },
+        "weekdays": [
+            "Chủ nhật",
+            "Thứ 2",
+            "Thứ 3",
+            "Thứ 4",
+            "Thứ 5",
+            "Thứ 6",
+            "Thứ 7"
+        ]
+    },
+    "editor": {
+        "close": "Đóng",
+        "create": {
+            "button": "Tạo mới",
+            "title": "Tạo mới",
+            "submit": "Tạo"
+        },
+        "edit": {
+            "button": "Sửa",
+            "title": "Sửa",
+            "submit": "Cập nhật"
+        },
+        "remove": {
+            "button": "Xóa",
+            "title": "Xóa",
+            "submit": "Xóa",
+            "confirm": {
+                "_": "Bạn có chắc chắn muốn xóa %d hàng?",
+                "1": "Bạn có chắc chắn muốn xóa 1 hàng?"
+            }
+        },
+        "error": {
+            "system": "Đã xảy ra lỗi hệ thống (<a target=\"\\\"_blank\\\"\" href=\"\\\"//datatables.net/error\\\"\">Thông tin chi tiết<\/a>)."
+        },
+        "multi": {
+            "title": "Nhiều giá trị",
+            "info": "Các mục đã chọn chứa các giá trị khác nhau cho đầu vào này. Để chỉnh sửa và đặt tất cả các mục cho đầu vào này thành cùng một giá trị, hãy nhấp vào hoặc nhấn vào đây, nếu không chúng sẽ giữ các giá trị riêng lẻ của chúng.",
+            "restore": "Hoàn tác thay đổi",
+            "noMulti": "Đầu vào này có thể được chỉnh sửa riêng lẻ, nhưng không phải là một phần của nhóm."
+        }
+    }
+} 
