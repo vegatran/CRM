@@ -19,9 +19,69 @@ namespace Application.Services
             return await _unitOfWork.Repository<SanPham>().GetByIdAsync(id);
         }
 
+        public async Task<SanPham?> GetByIdWithDetailsAsync(int id)
+        {
+            var sanPham = await _unitOfWork.Repository<SanPham>().GetByIdAsync(id);
+            if (sanPham != null)
+            {
+                // Load QuyTrinhSanXuat
+                var quyTrinhs = await _unitOfWork.QuyTrinhSanXuatRepository.GetAllAsync();
+                sanPham.QuyTrinhSanXuats = quyTrinhs.Where(q => q.SanPhamId == id && q.TrangThai).ToList();
+
+                // Load DinhMucNguyenLieu với NguyenLieu
+                var dinhMucs = await _unitOfWork.DinhMucNguyenLieuRepository.GetAllAsync();
+                var dinhMucsForProduct = dinhMucs.Where(d => d.SanPhamId == id && d.TrangThai).ToList();
+                
+                // Load NguyenLieu cho từng DinhMuc
+                foreach (var dinhMuc in dinhMucsForProduct)
+                {
+                    var nguyenLieu = await _unitOfWork.NguyenLieuRepository.GetByIdAsync(dinhMuc.NguyenLieuId);
+                    if (nguyenLieu != null)
+                    {
+                        dinhMuc.NguyenLieu = nguyenLieu;
+                    }
+                }
+                sanPham.DinhMucNguyenLieus = dinhMucsForProduct;
+            }
+            return sanPham;
+        }
+
         public async Task<IEnumerable<SanPham>> GetAllAsync()
         {
             return await _unitOfWork.Repository<SanPham>().GetAllAsync();
+        }
+
+        public async Task<IEnumerable<SanPham>> GetAllWithDetailsAsync()
+        {
+            var allSanPhams = await GetAllAsync();
+            var allQuyTrinhs = await _unitOfWork.QuyTrinhSanXuatRepository.GetAllAsync();
+            var allDinhMucs = await _unitOfWork.DinhMucNguyenLieuRepository.GetAllAsync();
+            var allNguyenLieus = await _unitOfWork.NguyenLieuRepository.GetAllAsync();
+
+            foreach (var sanPham in allSanPhams)
+            {
+                // Load QuyTrinhSanXuat cho sản phẩm
+                sanPham.QuyTrinhSanXuats = allQuyTrinhs
+                    .Where(q => q.SanPhamId == sanPham.Id && q.TrangThai)
+                    .ToList();
+
+                // Load DinhMucNguyenLieu với NguyenLieu cho sản phẩm
+                var dinhMucsForProduct = allDinhMucs
+                    .Where(d => d.SanPhamId == sanPham.Id && d.TrangThai)
+                    .ToList();
+
+                foreach (var dinhMuc in dinhMucsForProduct)
+                {
+                    var nguyenLieu = allNguyenLieus.FirstOrDefault(nl => nl.Id == dinhMuc.NguyenLieuId);
+                    if (nguyenLieu != null)
+                    {
+                        dinhMuc.NguyenLieu = nguyenLieu;
+                    }
+                }
+                sanPham.DinhMucNguyenLieus = dinhMucsForProduct;
+            }
+
+            return allSanPhams;
         }
 
         public async Task<SanPham> CreateAsync(SanPham sanPham)
@@ -57,9 +117,27 @@ namespace Application.Services
             var allSanPhams = await GetAllAsync();
             return allSanPhams.Where(sp => 
                 sp.TenSanPham.Contains(keyword, StringComparison.OrdinalIgnoreCase) ||
-                sp.MaSanPham.Contains(keyword, StringComparison.OrdinalIgnoreCase) ||
-                (sp.MoTa != null && sp.MoTa.Contains(keyword, StringComparison.OrdinalIgnoreCase))
-            );
+                sp.MaSanPham.Contains(keyword, StringComparison.OrdinalIgnoreCase));
+        }
+        
+        // Tính số lượng sản phẩm có thể sản xuất được
+        public async Task<int> TinhSoLuongCoTheSanXuatAsync(int sanPhamId)
+        {
+            var sanPham = await GetByIdWithDetailsAsync(sanPhamId);
+            if (sanPham == null || sanPham.LoaiSanPham != LoaiSanPham.TuSanXuat)
+                return 0;
+            
+            return sanPham.SoLuongCoTheSanXuat;
+        }
+        
+        // Tính danh sách nguyên liệu thiếu
+        public async Task<List<string>> TinhNguyenLieuThieuAsync(int sanPhamId)
+        {
+            var sanPham = await GetByIdWithDetailsAsync(sanPhamId);
+            if (sanPham == null || sanPham.LoaiSanPham != LoaiSanPham.TuSanXuat)
+                return new List<string>();
+            
+            return sanPham.DanhSachNguyenLieuThieu;
         }
     }
 } 

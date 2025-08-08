@@ -1,12 +1,16 @@
 using Microsoft.EntityFrameworkCore;
 using Domain.Entities;
+using Application.Interfaces;
 
 namespace Infrastructure.Data
 {
     public class ApplicationDbContext : DbContext
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+        private readonly ICurrentUserService _currentUserService;
+
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, ICurrentUserService currentUserService) : base(options)
         {
+            _currentUserService = currentUserService;
         }
 
         public DbSet<SanPham> SanPhams { get; set; }
@@ -20,6 +24,40 @@ namespace Infrastructure.Data
         public DbSet<ThanhPhanCauHinh> ThanhPhanCauHinhs { get; set; }
         public DbSet<PhieuBanHang> PhieuBanHangs { get; set; }
         public DbSet<ChiTietBanHang> ChiTietBanHangs { get; set; }
+        public DbSet<PhieuXuatKho> PhieuXuatKhos { get; set; }
+        public DbSet<ChiTietXuatKho> ChiTietXuatKhos { get; set; }
+        public DbSet<QuyTrinhSanXuat> QuyTrinhSanXuats { get; set; }
+        public DbSet<DinhMucNguyenLieu> DinhMucNguyenLieus { get; set; }
+
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            var entries = ChangeTracker.Entries<BaseEntity>();
+
+            foreach (var entry in entries)
+            {
+                switch (entry.State)
+                {
+                    case EntityState.Added:
+                        entry.Entity.CreatedDate = DateTime.Now;
+                        entry.Entity.CreatedBy = _currentUserService.GetCurrentUserName() ?? "System";
+                        entry.Entity.IsDeleted = false;
+                        break;
+                    case EntityState.Modified:
+                        entry.Entity.UpdatedDate = DateTime.Now;
+                        entry.Entity.UpdatedBy = _currentUserService.GetCurrentUserName() ?? "System";
+                        break;
+                    case EntityState.Deleted:
+                        // Soft delete thay vì hard delete
+                        entry.State = EntityState.Modified;
+                        entry.Entity.IsDeleted = true;
+                        entry.Entity.UpdatedDate = DateTime.Now;
+                        entry.Entity.UpdatedBy = _currentUserService.GetCurrentUserName() ?? "System";
+                        break;
+                }
+            }
+
+            return await base.SaveChangesAsync(cancellationToken);
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -98,6 +136,48 @@ namespace Infrastructure.Data
                 .HasForeignKey(ctbh => ctbh.SanPhamId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<QuyTrinhSanXuat>()
+                .HasOne(qtsx => qtsx.SanPham)
+                .WithMany(sp => sp.QuyTrinhSanXuats)
+                .HasForeignKey(qtsx => qtsx.SanPhamId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<DinhMucNguyenLieu>()
+                .HasOne(dmnl => dmnl.SanPham)
+                .WithMany(sp => sp.DinhMucNguyenLieus)
+                .HasForeignKey(dmnl => dmnl.SanPhamId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<DinhMucNguyenLieu>()
+                .HasOne(dmnl => dmnl.NguyenLieu)
+                .WithMany()
+                .HasForeignKey(dmnl => dmnl.NguyenLieuId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<PhieuXuatKho>()
+                .HasOne(pxk => pxk.KhachHang)
+                .WithMany()
+                .HasForeignKey(pxk => pxk.KhachHangId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<ChiTietXuatKho>()
+                .HasOne(ctxk => ctxk.PhieuXuatKho)
+                .WithMany(pxk => pxk.ChiTietXuatKhos)
+                .HasForeignKey(ctxk => ctxk.PhieuXuatKhoId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<ChiTietXuatKho>()
+                .HasOne(ctxk => ctxk.SanPham)
+                .WithMany()
+                .HasForeignKey(ctxk => ctxk.SanPhamId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<ChiTietXuatKho>()
+                .HasOne(ctxk => ctxk.NguyenLieu)
+                .WithMany()
+                .HasForeignKey(ctxk => ctxk.NguyenLieuId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             // Configure indexes
             modelBuilder.Entity<SanPham>()
                 .HasIndex(sp => sp.MaSanPham)
@@ -118,6 +198,27 @@ namespace Infrastructure.Data
             modelBuilder.Entity<PhieuBanHang>()
                 .HasIndex(pbh => pbh.SoPhieu)
                 .IsUnique();
+
+            modelBuilder.Entity<PhieuXuatKho>()
+                .HasIndex(pxk => pxk.SoPhieu)
+                .IsUnique();
+
+            // Global query filter for soft delete
+            modelBuilder.Entity<SanPham>().HasQueryFilter(e => !e.IsDeleted);
+            modelBuilder.Entity<NhaCungCap>().HasQueryFilter(e => !e.IsDeleted);
+            modelBuilder.Entity<NguyenLieu>().HasQueryFilter(e => !e.IsDeleted);
+            modelBuilder.Entity<LoaiNguyenLieu>().HasQueryFilter(e => !e.IsDeleted);
+            modelBuilder.Entity<KhachHang>().HasQueryFilter(e => !e.IsDeleted);
+            modelBuilder.Entity<KhuVuc>().HasQueryFilter(e => !e.IsDeleted);
+            modelBuilder.Entity<PhieuNhapKho>().HasQueryFilter(e => !e.IsDeleted);
+            modelBuilder.Entity<ChiTietNhapKho>().HasQueryFilter(e => !e.IsDeleted);
+            modelBuilder.Entity<ThanhPhanCauHinh>().HasQueryFilter(e => !e.IsDeleted);
+            modelBuilder.Entity<PhieuBanHang>().HasQueryFilter(e => !e.IsDeleted);
+            modelBuilder.Entity<ChiTietBanHang>().HasQueryFilter(e => !e.IsDeleted);
+            modelBuilder.Entity<QuyTrinhSanXuat>().HasQueryFilter(e => !e.IsDeleted);
+            modelBuilder.Entity<DinhMucNguyenLieu>().HasQueryFilter(e => !e.IsDeleted);
+            modelBuilder.Entity<PhieuXuatKho>().HasQueryFilter(e => !e.IsDeleted);
+            modelBuilder.Entity<ChiTietXuatKho>().HasQueryFilter(e => !e.IsDeleted);
         }
     }
 } 
