@@ -496,12 +496,15 @@ input[type="color"] {
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
         border: 0;
+        width: 100%;
     }
     
     /* Table adjustments for mobile */
     .table {
-        min-width: 600px; /* Ensure minimum width for readability */
+        /* Remove min-width constraint that was causing display issues */
+        width: 100%;
         font-size: 14px;
+        margin-bottom: 0;
     }
     
     .table th,
@@ -509,6 +512,22 @@ input[type="color"] {
         padding: 8px 6px;
         vertical-align: middle;
         white-space: nowrap;
+        min-width: auto;
+    }
+    
+    /* Ensure table cells don't overflow on mobile */
+    .table-responsive .table {
+        min-width: auto;
+        max-width: none;
+    }
+    
+    /* Better mobile table handling */
+    .table-responsive .table th,
+    .table-responsive .table td {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 200px;
     }
     
     /* Hide less important columns on mobile for different tables */
@@ -583,6 +602,23 @@ input[type="color"] {
         padding: 4px 8px;
         margin: 0 2px;
         font-size: 14px;
+    }
+    
+    /* DataTables responsive improvements for mobile */
+    .dataTables_wrapper .dataTables_scroll {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .dataTables_wrapper .dataTables_scrollBody {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    /* Ensure DataTables doesn't break mobile layout */
+    .dataTables_wrapper .dataTables_scrollBody .table {
+        min-width: auto;
+        width: 100%;
     }
     
     /* Card adjustments for mobile */
